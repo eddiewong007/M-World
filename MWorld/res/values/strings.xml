@@ -4,5 +4,6 @@
     <string name="app_name_lower">M-world</string>
     <string name="welcome_pic_desc">登录</string>
     <string name="btn_apikey">来自：M-World</string>
+    <string name="screen_name">昵称</string>
 
 </resources>
