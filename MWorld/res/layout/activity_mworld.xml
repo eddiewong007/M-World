@@ -7,32 +7,32 @@
 
     <include layout="@layout/actionbar" />
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="name"
-        android:text="@string/screen_name" />
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="status"
+            android:text="好友微博" />
+        <Button 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="info"
+            android:text="个人信息"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="status"
-        android:text="公共微博" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="logout"
+            android:text="注销" />
+    </LinearLayout>
+    <!-- com.markupartist.android.widget.PullToRefresh -->
 
     <ListView
         android:id="@+id/status_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="logout"
-        android:text="注销" />
 
 </LinearLayout>

@@ -7,12 +7,34 @@
 
     <TextView
         android:id="@+id/actionbar_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="18dp"
+        android:gravity="center"
         android:text="@string/welcome_pic_desc"
         android:textColor="#fff"
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/home"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/friends"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/friends"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/serach"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/serach"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center" />
 
 </RelativeLayout>

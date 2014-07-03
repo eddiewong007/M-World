@@ -44,7 +44,7 @@ public class OauthActivity extends Activity {
 		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 	}
 
-	private class TokenHandler implements RequestListener {
+	public class TokenHandler implements RequestListener {
 
 		@Override
 		public void onComplete(String jsonString) {

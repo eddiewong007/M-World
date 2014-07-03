@@ -100,7 +100,7 @@ public class StatusesAPI extends BaseAPI {
 		sAPIList.put(READ_API_PUBLIC_TIMELINE, API_BASE_URL
 				+ "/public_timeline.json");
 		sAPIList.put(READ_API_FRIENDS_TIMELINE, API_BASE_URL
-				+ "/public_timeline.json");
+				+ "/friends_timeline.json");
 		sAPIList.put(READ_API_HOME_TIMELINE, API_BASE_URL
 				+ "/home_timeline.json");
 		sAPIList.put(READ_API_FRIENDS_TIMELINE_IDS, API_BASE_URL

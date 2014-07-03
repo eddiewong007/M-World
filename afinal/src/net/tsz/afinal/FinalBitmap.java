@@ -353,6 +353,7 @@ public class FinalBitmap {
 		doDisplay(imageView, uri, config);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void doDisplay(View imageView, String uri,
 			BitmapDisplayConfig displayConfig) {
 		if (!mInit) {
