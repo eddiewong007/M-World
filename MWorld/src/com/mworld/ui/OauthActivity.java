@@ -9,6 +9,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.hannesdorfmann.swipeback.Position;
+import com.hannesdorfmann.swipeback.SwipeBack;
 import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.api.Oauth2API;
 import com.mworld.weibo.api.Oauth2API.WeiboWebViewClient;
@@ -23,7 +25,9 @@ public class OauthActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_oauth);
+		SwipeBack.attach(this, Position.LEFT)
+				.setContentView(R.layout.activity_oauth)
+				.setSwipeBackView(R.layout.swipeback_default);
 		initWebView();
 
 	}

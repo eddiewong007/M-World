@@ -112,7 +112,7 @@ public class Status {
         status.reposts_count    = jsonObject.getIntValue("reposts_count");
         status.comments_count   = jsonObject.getIntValue("comments_count");
         status.attitudes_count  = jsonObject.getIntValue("attitudes_count");
-        status.mlevel           = jsonObject.getIntValue("mlevel", -1);    // Have NOT supported
+        status.mlevel           = jsonObject.getIntValue("mlevel");    // Have NOT supported
         status.visible          = Visible.parse(jsonObject.getJSONObject("visible"));
         
         JSONArray picUrlsArray = jsonObject.getJSONArray("pic_urls");

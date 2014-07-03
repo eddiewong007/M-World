@@ -25,23 +25,20 @@ import org.apache.http.HttpEntity;
 import android.text.TextUtils;
 
 public class FileEntityHandler {
-	
+
 	private boolean mStop = false;
-	
-	
 
 	public boolean isStop() {
 		return mStop;
 	}
 
-
-
 	public void setStop(boolean stop) {
 		this.mStop = stop;
 	}
 
-
-	public Object handleEntity(HttpEntity entity, EntityCallBack callback,String target,boolean isResume) throws IOException {
+	@SuppressWarnings("resource")
+	public Object handleEntity(HttpEntity entity, EntityCallBack callback,
+			String target, boolean isResume) throws IOException {
 		if (TextUtils.isEmpty(target) || target.trim().length() == 0)
 			return null;
 
@@ -51,44 +48,44 @@ public class FileEntityHandler {
 			targetFile.createNewFile();
 		}
 
-		if(mStop){
+		if (mStop) {
 			return targetFile;
 		}
-			
-		
+
 		long current = 0;
 		FileOutputStream os = null;
-		if(isResume){
+		if (isResume) {
 			current = targetFile.length();
 			os = new FileOutputStream(target, true);
-		}else{
+		} else {
 			os = new FileOutputStream(target);
 		}
-		
-		if(mStop){
+
+		if (mStop) {
 			return targetFile;
 		}
-			
+
 		InputStream input = entity.getContent();
 		long count = entity.getContentLength() + current;
-		
-		if(current >= count || mStop){
+
+		if (current >= count || mStop) {
 			return targetFile;
 		}
-		
+
 		int readLen = 0;
 		byte[] buffer = new byte[1024];
-		while (!mStop && !(current >= count) && ((readLen = input.read(buffer,0,1024)) > 0) ) {//未全部读取
+		while (!mStop && !(current >= count)
+				&& ((readLen = input.read(buffer, 0, 1024)) > 0)) {// 未全部读取
 			os.write(buffer, 0, readLen);
 			current += readLen;
-			callback.callBack(count, current,false);
+			callback.callBack(count, current, false);
 		}
-		callback.callBack(count, current,true);
-		
-		if(mStop && current < count){ //用户主动停止
+		callback.callBack(count, current, true);
+
+		if (mStop && current < count) { // 用户主动停止
 			throw new IOException("user stop download thread");
 		}
-		
+
 		return targetFile;
 	}
 

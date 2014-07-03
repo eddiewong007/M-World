@@ -44,7 +44,7 @@ public class MworldActivity extends Activity {
 				.getDrawable(R.drawable.home));
 		((ImageView) findViewById(R.id.friends))
 				.setImageDrawable(getResources().getDrawable(R.drawable.home));
-		((ImageView) findViewById(R.id.serach)).setImageDrawable(getResources()
+		((ImageView) findViewById(R.id.search)).setImageDrawable(getResources()
 				.getDrawable(R.drawable.home));
 		// mList.setOnRefreshListener(new OnRefreshListener() {
 		// @Override
@@ -68,19 +68,38 @@ public class MworldActivity extends Activity {
 						final List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
 						for (Status status : statusList.statusList) {
 							HashMap<String, Object> map = new HashMap<String, Object>();
-							map.put("Icon", status.user.profile_image_url
-									+ "\n" + status.user.id);
-							map.put("Name", status.user.screen_name);
-							map.put("Date", status.created_at);
-							map.put("Text", status.text);
-							map.put("repost", "转发：" + status.reposts_count);
-							map.put("comment", "评论：" + status.comments_count);
+							map.put("user_avatar",
+									status.user.profile_image_url + "\n"
+											+ status.user.id);
+							map.put("user_name", status.user.screen_name);
+							map.put("created_at", status.created_at);
+							map.put("text_status", status.text);
+							if (null != status.retweeted_status) {
+								map.put("text_repost",
+										"@"
+												+ status.retweeted_status.user.screen_name
+												+ "："
+												+ status.retweeted_status.text);
+								map.put("repost_count",
+										"转发 "
+												+ status.retweeted_status.reposts_count
+												+ "评论 "
+												+ status.retweeted_status.comments_count);
+							}
+							map.put("ret_count", status.reposts_count);
+							map.put("com_count", status.comments_count);
+
 							data.add(map);
 						}
-						String[] from = new String[] { "Icon", "Name", "Date",
-								"Text", "repost", "comment" };
-						int[] to = new int[] { R.id.icon, R.id.name, R.id.date,
-								R.id.status, R.id.repost, R.id.comment };
+						String[] from = new String[] { "user_avatar",
+								"user_name", "created_at", "text_status",
+								"text_repost", "repost_count", "ret_count",
+								"com_count" };
+						int[] to = new int[] { R.id.user_avatar,
+								R.id.user_name, R.id.date,
+								R.id.text_status, R.id.text_repost,
+								R.id.repost_count, R.id.ret_count,
+								R.id.com_count };
 						SimpleAdapter adapter = new SimpleAdapter(
 								MworldActivity.this, data, R.layout.list_item,
 								from, to);

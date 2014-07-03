@@ -42,6 +42,7 @@ public class SimpleDisplayer implements Displayer{
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public void loadFailDisplay(View imageView,Bitmap bitmap){
 		if(imageView instanceof ImageView){
 			((ImageView)imageView).setImageBitmap(bitmap);
@@ -52,6 +53,7 @@ public class SimpleDisplayer implements Displayer{
 	
 	
 	
+	@SuppressWarnings("deprecation")
 	private void fadeInDisplay(View imageView,Bitmap bitmap){
 		final TransitionDrawable td =
                 new TransitionDrawable(new Drawable[] {
@@ -67,6 +69,7 @@ public class SimpleDisplayer implements Displayer{
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	private void animationDisplay(View imageView,Bitmap bitmap,Animation animation){
 		animation.setStartTime(AnimationUtils.currentAnimationTimeMillis());		
         if(imageView instanceof ImageView){

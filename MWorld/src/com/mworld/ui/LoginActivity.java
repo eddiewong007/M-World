@@ -15,6 +15,7 @@ public class LoginActivity extends Activity {
 
 	private Animation mAlphaAnimation;
 	private Animation mScaleAnimation;
+
 	private View mLoginLogo;
 	private View mApiKey;
 

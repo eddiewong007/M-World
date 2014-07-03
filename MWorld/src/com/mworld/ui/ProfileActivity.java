@@ -26,7 +26,7 @@ public class ProfileActivity extends Activity {
 		usersAPI.show(Long.parseLong(getIntent().getStringExtra("uid")), new RequestListener() {
 
 			@Override
-			public void onWeiboException(WeiboException arg0) {
+			public void onWeiboException(WeiboException e) {
 
 			}
 
