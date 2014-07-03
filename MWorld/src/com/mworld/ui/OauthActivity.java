@@ -18,17 +18,14 @@ import com.sina.weibo.sdk.net.RequestListener;
 
 public class OauthActivity extends Activity {
 
-	public static OauthActivity instance;
-
 	private WebView mWebView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_oauth);
-		instance = this;
+		initWebView();
 
-		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -44,7 +41,7 @@ public class OauthActivity extends Activity {
 		webSettings.setSavePassword(false);
 		webSettings.setCacheMode(2);
 		webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-
+		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 	}
 
 	private class TokenHandler implements RequestListener {

@@ -26,7 +26,7 @@ public class AccessTokenKeeper {
 		SharedPreferences pref = context.getSharedPreferences(
 				context.getPackageName() + "_preferences", 0);
 		Editor editor = pref.edit();
-		editor.putString("token", accessToken.access_token);
+		editor.putString("access_token", accessToken.access_token);
 		editor.putString("expires_in", accessToken.expires_in);
 		editor.putString("remind_in", accessToken.remind_in);
 		editor.putString("uid", accessToken.uid);

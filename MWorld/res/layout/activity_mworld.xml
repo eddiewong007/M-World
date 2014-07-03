@@ -5,6 +5,14 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
+    <include layout="@layout/actionbar" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="name"
+        android:text="@string/screen_name" />
+
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
@@ -13,7 +21,18 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="name"
-        android:text="@string/screen_name" />
+        android:onClick="status"
+        android:text="公共微博" />
+
+    <ListView
+        android:id="@+id/status_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="logout"
+        android:text="注销" />
 
 </LinearLayout>

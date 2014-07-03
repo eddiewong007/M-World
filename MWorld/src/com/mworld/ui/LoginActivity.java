@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
 
 	private void judgeIsLoggedIn() {
 
-		if (null == AccessTokenKeeper.readAccessToken(this)) {
+		if (null == AccessTokenKeeper.readAccessToken(LoginActivity.this)) {
 			instance = this;
 			loadAnimation();
 		} else {
