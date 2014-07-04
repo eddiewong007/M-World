@@ -103,13 +103,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:src="@drawable/ret" />
-
                 <TextView
                     android:id="@+id/ret_count"
                     android:layout_width="0dp"
@@ -128,13 +121,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:src="@drawable/com" />
 
                 <TextView
                     android:id="@+id/com_count"

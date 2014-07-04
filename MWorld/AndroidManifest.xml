@@ -27,7 +27,7 @@
         </activity>
         <activity android:name="MworldActivity" >
         </activity>
-        <activity android:name="ProfileActivity" >
+        <activity android:name="DisplayActivity" >
         </activity>
     </application>
 
