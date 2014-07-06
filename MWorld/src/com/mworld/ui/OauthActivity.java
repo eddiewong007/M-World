@@ -9,8 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.hannesdorfmann.swipeback.Position;
-import com.hannesdorfmann.swipeback.SwipeBack;
 import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.api.Oauth2API;
 import com.mworld.weibo.api.Oauth2API.WeiboWebViewClient;
@@ -25,9 +23,7 @@ public class OauthActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		SwipeBack.attach(this, Position.LEFT)
-				.setContentView(R.layout.activity_oauth)
-				.setSwipeBackView(R.layout.swipeback_default);
+		setContentView(R.layout.activity_oauth);
 		initWebView();
 
 	}
@@ -38,7 +34,8 @@ public class OauthActivity extends Activity {
 		mWebView = (WebView) findViewById(R.id.webview);
 		mWebView.setVerticalScrollBarEnabled(false);
 		mWebView.setHorizontalScrollBarEnabled(false);
-		mWebView.setWebViewClient(new WeiboWebViewClient(new TokenHandler()));
+		mWebView.setWebViewClient(new WeiboWebViewClient(getIntent().getStringExtra("username"),
+				getIntent().getStringExtra("password"), new TokenHandler()));
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSaveFormData(false);
@@ -53,11 +50,11 @@ public class OauthActivity extends Activity {
 		@Override
 		public void onComplete(String jsonString) {
 			Log.i("------------------", "回调");
+			if (null != AccessTokenKeeper.readAccessToken(OauthActivity.this)) return;
 			AccessToken accessToken = AccessToken.parse(jsonString);
 			if (null == accessToken) {
 				Toast.makeText(OauthActivity.this, "授权失败，请重新授权！",
 						Toast.LENGTH_SHORT).show();
-				mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 			} else {
 				AccessTokenKeeper.keepAccessToken(OauthActivity.this,
 						accessToken);

@@ -6,13 +6,17 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -42,27 +46,12 @@ public class Oauth2API implements OauthConstants {
 	protected static final String KEY_ACCESS_TOKEN = "access_token";
 
 	/**
-	 * API 类型
-	 */
-	private static final int AUTHORIZE = 0;
-	private static final int ACCESS_TOKEN = 1;
-	private static final int GET_TOKEN_INFO = 2;
-	private static final int REVOKE_OAUTH2 = 3;
-	private static final SparseArray<String> sAPIList = new SparseArray<String>();
-	static {
-		sAPIList.put(AUTHORIZE, API_SERVER + "/authorize");
-		sAPIList.put(ACCESS_TOKEN, API_SERVER + "/access_token");
-		sAPIList.put(GET_TOKEN_INFO, API_SERVER + "/get_token_info");
-		sAPIList.put(REVOKE_OAUTH2, API_SERVER + "/revokeOauth2");
-	}
-
-	/**
 	 * 获取用户验证时需要引导用户跳转的url,通过用户验证后授权Token
 	 * 
 	 * @return
 	 */
 	public static String fetchAuthorizeUrl() {
-		return sAPIList.get(AUTHORIZE) + "?client_id=" + APP_KEY
+		return API_SERVER + "/authorize" + "?client_id=" + APP_KEY
 				+ "&redirect_uri=" + REDIRECT_URL
 				+ "&response_type=code&display=mobile";
 
@@ -83,7 +72,7 @@ public class Oauth2API implements OauthConstants {
 		postParameters.add(new BasicNameValuePair("code", code));
 		postParameters
 				.add(new BasicNameValuePair("redirect_uri", REDIRECT_URL));
-		AsyncOauthRunner.requestAsync(sAPIList.get(ACCESS_TOKEN),
+		AsyncOauthRunner.requestAsync(API_SERVER + "/access_token",
 				postParameters, listener);
 
 	}
@@ -102,7 +91,7 @@ public class Oauth2API implements OauthConstants {
 		List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair(KEY_ACCESS_TOKEN,
 				token.access_token));
-		AsyncOauthRunner.requestAsync(sAPIList.get(GET_TOKEN_INFO),
+		AsyncOauthRunner.requestAsync(API_SERVER + "/get_token_info",
 				postParameters, listener);
 	}
 
@@ -135,8 +124,165 @@ public class Oauth2API implements OauthConstants {
 		List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair(KEY_ACCESS_TOKEN,
 				token.access_token));
-		AsyncOauthRunner.requestAsync(sAPIList.get(REVOKE_OAUTH2),
+		AsyncOauthRunner.requestAsync(API_SERVER + "/revokeOauth2",
 				postParameters, listener);
+	}
+
+	/**
+	 * 
+	 * @param context
+	 * @param username
+	 * @param password
+	 * @param listener
+	 */
+	@SuppressWarnings("deprecation")
+	@SuppressLint("SetJavaScriptEnabled")
+	public static void authorize(final Context context, final String username,
+			final String password, final RequestListener listener) {
+		final WebView mWebView = new WebView(context);
+		
+		WebSettings webSettings = mWebView.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setSupportZoom(true);
+		webSettings.setBuiltInZoomControls(true);
+		webSettings.setSavePassword(false);
+
+		WebViewClient webViewClient = new WebViewClient(){
+			boolean oauthFlag = false;
+			boolean reload = false;
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				super.onPageFinished(view, url);
+				String reUrl = view.getUrl();
+				if (!oauthFlag) {
+					if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+						view.loadUrl("javascript:(function() {"
+								+ "   try{document.getElementById('userId').value='"
+								+ username
+								+ "';"
+								+ "   document.getElementById('passwd').value='"
+								+ password
+								+ "';"
+								+ "   document.getElementsByName('authZForm')[0].submit();"
+								+ "   }catch(err){/*alert('oauth_failed');*/}"
+								+ "        })();");
+					}
+					oauthFlag = true;
+				}
+				/**
+				 * 不能一味地判断url相同就是认证失败， 前一步是登录，后一步是授权，需要再判断是否有uid，有了这个表示登录成功。
+				 */
+				if ("https://api.weibo.com/oauth2/authorize".equals(reUrl)) {
+					if (!reload) {
+						view.loadUrl("javascript:(function() {"
+								+ "   var node=document.getElementsByName('uid')[0];"
+								+ "   if(undefined==node){alert('oauth_failed'); return;}"
+								+ "   var uid=document.getElementsByName('uid')[0].value;"
+								+ "   if(uid==''){"
+								+ "       alert('oauth_failed');"
+								+ "   }else {"
+								+ "        document.getElementsByName('authZForm')[0].submit();"
+								+ "   }" + "        })();");
+						reload = true;
+						return;
+					}
+					Log.i("WebView", "out");
+				}
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				view.loadUrl(url);
+				return true;
+			}
+
+			@Override
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				super.onReceivedError(view, errorCode, description, failingUrl);
+				Log.e(TAG, "Argument error!");
+			}
+
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				Log.i("WebView", url);
+				super.onPageStarted(view, url, favicon);
+				processUrl(view, url);
+			}
+
+			private void processUrl(WebView view, String url) {
+				if (url.startsWith(REDIRECT_URL)) {
+					Bundle values = Utility.parseUrl(url);
+					String code = values.getString("code");
+					if (!(null == code || TextUtils.isEmpty(code))) {
+						accessToken(code, listener);
+					} else {
+						Context context = view.getContext();
+						if (context instanceof Activity) {
+							Activity activity = (Activity) context;
+							Toast.makeText(context, "授权失败", Toast.LENGTH_SHORT)
+									.show();
+							activity.finish();
+						} else {
+							view.stopLoading();
+							view.loadUrl("about:blank");
+						}
+					}
+				}
+			}
+		};
+		mWebView.setWebViewClient(webViewClient);
+		WebChromeClient webChromeClient = new WebChromeClient() {
+			@Override
+			public boolean onJsAlert(WebView view, String url, String message,
+					JsResult result) {
+				Log.i("webChromeClient", "onJsAlert:" + message + " url:" + url);
+				try {
+					if ("oauth_failed".equals(message)) {
+						Log.i("webChromeClient", "二次，认证失败");
+						Toast.makeText(context, "用户名/密码错误", Toast.LENGTH_SHORT)
+								.show();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onJsConfirm(WebView view, String url,
+					String message, JsResult result) {
+				Log.i("webChromeClient", "onJsConfirm:" + message + " url:"
+						+ url);
+				return super.onJsConfirm(view, url, message, result);
+			}
+
+			@Override
+			public boolean onJsPrompt(WebView view, String url, String message,
+					String defaultValue, JsPromptResult result) {
+				Log.i("webChromeClient", "onJsPrompt:" + message + " url:"
+						+ url);
+				return super.onJsPrompt(view, url, message, defaultValue,
+						result);
+			}
+
+			@Override
+			public boolean onJsBeforeUnload(WebView view, String url,
+					String message, JsResult result) {
+				Log.i("webChromeClient", "onJsBeforeUnload:" + message
+						+ " url:" + url);
+				return super.onJsBeforeUnload(view, url, message, result);
+			}
+
+			@Override
+			public boolean onJsTimeout() {
+				return super.onJsTimeout();
+			}
+		};
+		mWebView.setWebChromeClient(webChromeClient);
+
+		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 	}
 
 	/**
@@ -146,16 +292,61 @@ public class Oauth2API implements OauthConstants {
 	 * 
 	 */
 	public static class WeiboWebViewClient extends WebViewClient {
-
+		boolean oauthFlag = false;
+		boolean reload = false;
+		String name, pass;
 		RequestListener mListener;
 
-		public WeiboWebViewClient(RequestListener listener) {
+		public WeiboWebViewClient(String n, String p, RequestListener listener) {
 			mListener = listener;
+			name = n;
+			pass = p;
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+			String reUrl = view.getUrl();
+			if (!oauthFlag) {
+				if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(pass)) {
+					view.loadUrl("javascript:(function() {"
+							+ "   try{document.getElementById('userId').value='"
+							+ name
+							+ "';"
+							+ "   document.getElementById('passwd').value='"
+							+ pass
+							+ "';"
+							+ "   document.getElementsByName('authZForm')[0].submit();"
+							+ "   }catch(err){/*alert('oauth_failed');*/}"
+							+ "        })();");
+				}
+				oauthFlag = true;
+			}
+			/**
+			 * 不能一味地判断url相同就是认证失败， 前一步是登录，后一步是授权，需要再判断是否有uid，有了这个表示登录成功。
+			 */
+			if ("https://api.weibo.com/oauth2/authorize".equals(reUrl)) {
+				if (!reload) {
+					view.loadUrl("javascript:(function() {"
+							+ "   var node=document.getElementsByName('uid')[0];"
+							+ "   if(undefined==node){alert('oauth_failed'); return;}"
+							+ "   var uid=document.getElementsByName('uid')[0].value;"
+							+ "   if(uid==''){"
+							+ "       alert('oauth_failed');"
+							+ "   }else {"
+							+ "        document.getElementsByName('authZForm')[0].submit();"
+							+ "   }" + "        })();");
+					reload = true;
+					return;
+				}
+				Log.i("WebView", "out");
+			}
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 
 		@Override
@@ -167,6 +358,12 @@ public class Oauth2API implements OauthConstants {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			Log.i("WebView", url);
+			super.onPageStarted(view, url, favicon);
+			processUrl(view, url);
+		}
+
+		private void processUrl(WebView view, String url) {
 			if (url.startsWith(REDIRECT_URL)) {
 				Bundle values = Utility.parseUrl(url);
 				String code = values.getString("code");
@@ -184,9 +381,7 @@ public class Oauth2API implements OauthConstants {
 						view.loadUrl("about:blank");
 					}
 				}
-
 			}
-			super.onPageStarted(view, url, favicon);
 		}
 	}
 

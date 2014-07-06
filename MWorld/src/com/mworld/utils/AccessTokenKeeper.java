@@ -26,6 +26,7 @@ public class AccessTokenKeeper {
 		SharedPreferences pref = context.getSharedPreferences(
 				context.getPackageName() + "_preferences", 0);
 		Editor editor = pref.edit();
+		editor.putBoolean("islogin", true);
 		editor.putString("access_token", accessToken.access_token);
 		editor.putString("expires_in", accessToken.expires_in);
 		editor.putString("remind_in", accessToken.remind_in);
@@ -43,14 +44,15 @@ public class AccessTokenKeeper {
 		AccessToken accessToken = new AccessToken();
 		SharedPreferences pref = context.getSharedPreferences(
 				context.getPackageName() + "_preferences", 0);
-		accessToken.access_token = pref.getString("access_token", "");
-		accessToken.expires_in = pref.getString("expires_in", "");
-		accessToken.remind_in = pref.getString("remind_in", "");
-		accessToken.uid = pref.getString("uid", "");
-		if ("".equals(accessToken.access_token)) {
-			return null;
+		if (pref.getBoolean("islogin", false)){
+			accessToken.access_token = pref.getString("access_token", "");
+			accessToken.expires_in = pref.getString("expires_in", "");
+			accessToken.remind_in = pref.getString("remind_in", "");
+			accessToken.uid = pref.getString("uid", "");
+			return accessToken;
 		}
-		return accessToken;
+		return null;
+		
 	}
 
 	/**
@@ -62,6 +64,7 @@ public class AccessTokenKeeper {
 		SharedPreferences pref = context.getSharedPreferences(
 				context.getPackageName() + "_preferences", 0);
 		Editor editor = pref.edit();
+		editor.putBoolean("islogin", false);
 		editor.clear();
 		editor.commit();
 	}

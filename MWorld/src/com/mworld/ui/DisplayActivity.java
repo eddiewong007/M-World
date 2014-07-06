@@ -46,6 +46,7 @@ public class DisplayActivity extends Activity {
 
 		switch (getIntent().getIntExtra("type", 0)) {
 		case 0:
+		case 4:
 			friendsTimeline();
 			break;
 		case 1:
@@ -56,9 +57,6 @@ public class DisplayActivity extends Activity {
 			break;
 		case 3:
 			profile();
-			break;
-		case 4:
-			userTimeline();
 			break;
 		case 5:
 			friends();
@@ -156,7 +154,7 @@ public class DisplayActivity extends Activity {
 	}
 
 	private void friendsTimeline() {
-		mStatusesAPI.friendsTimeline(0, 0, 10, 1, false, 0, false,
+		mStatusesAPI.friendsTimeline(0, 0, 50, ++page, false, 0, false,
 				new StatusHandler());
 	}
 
@@ -172,11 +170,8 @@ public class DisplayActivity extends Activity {
 				StatusesAPI.AUTHOR_FILTER_ALL, new StatusHandler());
 	}
 
-	private void userTimeline() {
-		mStatusesAPI.userTimeline(
-				Long.parseLong(getIntent().getStringExtra("uid")), 0, 0, 10, 1,
-				false, StatusesAPI.FEATURE_ALL, false, new StatusHandler());
-	}
+	private int page = 0;
+	private int count = 0;
 
 	private void friends() {
 		mFriendshipsAPI.friends(
@@ -194,6 +189,7 @@ public class DisplayActivity extends Activity {
 
 		@Override
 		public void onComplete(String jsonString) {
+			Log.i("--------------------------", "回调");
 
 			StatusesList statusList = new StatusesList();
 			try {
@@ -209,6 +205,11 @@ public class DisplayActivity extends Activity {
 			}
 			final List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
 			for (Status status : statusList.statusesList) {
+				if (4 == getIntent().getIntExtra("type", 0)
+						&& status.user.id != Long.parseLong(getIntent()
+								.getStringExtra("uid")))
+
+					continue;
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("user_avatar", status.user.profile_image_url + "\n"
 						+ status.user.id);
@@ -229,6 +230,8 @@ public class DisplayActivity extends Activity {
 				map.put("com_count", "评论：" + status.comments_count);
 
 				data.add(map);
+				if (++count >= 10)
+					break;
 			}
 			String[] from = new String[] { "user_avatar", "user_name",
 					"created_at", "text_status", "text_repost", "repost_count",
@@ -269,12 +272,14 @@ public class DisplayActivity extends Activity {
 				}
 
 			});
-
+//			if (count < 10 && 4 == getIntent().getIntExtra("type", 0))
+//				mStatusesAPI.friendsTimeline(0, 0, 10, ++page, false, 0, false,
+//						new StatusHandler());
 		}
 
 		@Override
-		public void onWeiboException(WeiboException arg0) {
-			Log.d("-------------------", "请求异常");
+		public void onWeiboException(WeiboException e) {
+			Log.e("-------------------", e.getMessage());
 		}
 
 	}
@@ -283,6 +288,7 @@ public class DisplayActivity extends Activity {
 
 		@Override
 		public void onComplete(String jsonString) {
+			Log.i("--------------------------", "回调");
 			UsersList userList = new UsersList();
 			try {
 				userList = UsersList.parse(jsonString);
@@ -342,8 +348,8 @@ public class DisplayActivity extends Activity {
 		}
 
 		@Override
-		public void onWeiboException(WeiboException arg0) {
-			Log.d("-------------------", "请求异常");
+		public void onWeiboException(WeiboException e) {
+			Log.d("-------------------", e.getMessage());
 		}
 
 	}

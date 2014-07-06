@@ -10,6 +10,8 @@ import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.entities.AccessToken;
 
 public class MworldActivity extends Activity {
+	public static MworldActivity instance = null;
+	
 	private AccessToken mAccessToken = null;
 
 	@Override
@@ -20,6 +22,7 @@ public class MworldActivity extends Activity {
 	}
 
 	private void initComponents() {
+		instance = this;
 		mAccessToken = AccessTokenKeeper.readAccessToken(MworldActivity.this);
 		((TextView) findViewById(R.id.actionbar_title)).setText("M-World");
 		// ((ImageView) findViewById(R.id.home)).setImageDrawable(getResources()
