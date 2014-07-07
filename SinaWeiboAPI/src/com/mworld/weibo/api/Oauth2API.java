@@ -1,6 +1,7 @@
 package com.mworld.weibo.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -13,7 +14,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -140,149 +140,43 @@ public class Oauth2API implements OauthConstants {
 	public static void authorize(final Context context, final String username,
 			final String password, final RequestListener listener) {
 		final WebView mWebView = new WebView(context);
-		
+
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSupportZoom(true);
 		webSettings.setBuiltInZoomControls(true);
 		webSettings.setSavePassword(false);
 
-		WebViewClient webViewClient = new WebViewClient(){
-			boolean oauthFlag = false;
-			boolean reload = false;
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				String reUrl = view.getUrl();
-				if (!oauthFlag) {
-					if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-						view.loadUrl("javascript:(function() {"
-								+ "   try{document.getElementById('userId').value='"
-								+ username
-								+ "';"
-								+ "   document.getElementById('passwd').value='"
-								+ password
-								+ "';"
-								+ "   document.getElementsByName('authZForm')[0].submit();"
-								+ "   }catch(err){/*alert('oauth_failed');*/}"
-								+ "        })();");
-					}
-					oauthFlag = true;
-				}
-				/**
-				 * 不能一味地判断url相同就是认证失败， 前一步是登录，后一步是授权，需要再判断是否有uid，有了这个表示登录成功。
-				 */
-				if ("https://api.weibo.com/oauth2/authorize".equals(reUrl)) {
-					if (!reload) {
-						view.loadUrl("javascript:(function() {"
-								+ "   var node=document.getElementsByName('uid')[0];"
-								+ "   if(undefined==node){alert('oauth_failed'); return;}"
-								+ "   var uid=document.getElementsByName('uid')[0].value;"
-								+ "   if(uid==''){"
-								+ "       alert('oauth_failed');"
-								+ "   }else {"
-								+ "        document.getElementsByName('authZForm')[0].submit();"
-								+ "   }" + "        })();");
-						reload = true;
-						return;
-					}
-					Log.i("WebView", "out");
-				}
-			}
-
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				view.loadUrl(url);
-				return true;
-			}
-
-			@Override
-			public void onReceivedError(WebView view, int errorCode,
-					String description, String failingUrl) {
-				super.onReceivedError(view, errorCode, description, failingUrl);
-				Log.e(TAG, "Argument error!");
-			}
-
-			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				Log.i("WebView", url);
-				super.onPageStarted(view, url, favicon);
-				processUrl(view, url);
-			}
-
-			private void processUrl(WebView view, String url) {
-				if (url.startsWith(REDIRECT_URL)) {
-					Bundle values = Utility.parseUrl(url);
-					String code = values.getString("code");
-					if (!(null == code || TextUtils.isEmpty(code))) {
-						accessToken(code, listener);
-					} else {
-						Context context = view.getContext();
-						if (context instanceof Activity) {
-							Activity activity = (Activity) context;
-							Toast.makeText(context, "授权失败", Toast.LENGTH_SHORT)
-									.show();
-							activity.finish();
-						} else {
-							view.stopLoading();
-							view.loadUrl("about:blank");
-						}
-					}
-				}
-			}
-		};
-		mWebView.setWebViewClient(webViewClient);
+		mWebView.setWebViewClient(new WeiboWebViewClient(username, password,
+				listener));
 		WebChromeClient webChromeClient = new WebChromeClient() {
+
 			@Override
 			public boolean onJsAlert(WebView view, String url, String message,
 					JsResult result) {
 				Log.i("webChromeClient", "onJsAlert:" + message + " url:" + url);
-				try {
-					if ("oauth_failed".equals(message)) {
-						Log.i("webChromeClient", "二次，认证失败");
-						Toast.makeText(context, "用户名/密码错误", Toast.LENGTH_SHORT)
-								.show();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+				if ("oauth_failed".equals(message)) {
+					Log.i("WebChromeClient", "认证失败");
+					Toast.makeText(context, "用户名/密码错误", Toast.LENGTH_SHORT)
+							.show();
 				}
+				result.confirm();
 				return true;
 			}
 
 			@Override
 			public boolean onJsConfirm(WebView view, String url,
 					String message, JsResult result) {
-				Log.i("webChromeClient", "onJsConfirm:" + message + " url:"
+				Log.i("WebChromeClient", "onJsConfirm:" + message + " url:"
 						+ url);
 				return super.onJsConfirm(view, url, message, result);
-			}
-
-			@Override
-			public boolean onJsPrompt(WebView view, String url, String message,
-					String defaultValue, JsPromptResult result) {
-				Log.i("webChromeClient", "onJsPrompt:" + message + " url:"
-						+ url);
-				return super.onJsPrompt(view, url, message, defaultValue,
-						result);
-			}
-
-			@Override
-			public boolean onJsBeforeUnload(WebView view, String url,
-					String message, JsResult result) {
-				Log.i("webChromeClient", "onJsBeforeUnload:" + message
-						+ " url:" + url);
-				return super.onJsBeforeUnload(view, url, message, result);
-			}
-
-			@Override
-			public boolean onJsTimeout() {
-				return super.onJsTimeout();
 			}
 		};
 		mWebView.setWebChromeClient(webChromeClient);
 
-		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
+		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl() + "&timestamp="
+				+ new Date().getTime());
+		Log.i("method:authorize", "Load Url:" + Oauth2API.fetchAuthorizeUrl());
 	}
 
 	/**
@@ -294,13 +188,15 @@ public class Oauth2API implements OauthConstants {
 	public static class WeiboWebViewClient extends WebViewClient {
 		boolean oauthFlag = false;
 		boolean reload = false;
-		String name, pass;
+		String username, password;
 		RequestListener mListener;
 
-		public WeiboWebViewClient(String n, String p, RequestListener listener) {
-			mListener = listener;
-			name = n;
-			pass = p;
+		public WeiboWebViewClient(String username, String password,
+				RequestListener mListener) {
+			super();
+			this.username = username;
+			this.password = password;
+			this.mListener = mListener;
 		}
 
 		@Override
@@ -308,13 +204,14 @@ public class Oauth2API implements OauthConstants {
 			super.onPageFinished(view, url);
 			String reUrl = view.getUrl();
 			if (!oauthFlag) {
-				if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(pass)) {
+				if (!TextUtils.isEmpty(username)
+						&& !TextUtils.isEmpty(password)) {
 					view.loadUrl("javascript:(function() {"
 							+ "   try{document.getElementById('userId').value='"
-							+ name
+							+ username
 							+ "';"
 							+ "   document.getElementById('passwd').value='"
-							+ pass
+							+ password
 							+ "';"
 							+ "   document.getElementsByName('authZForm')[0].submit();"
 							+ "   }catch(err){/*alert('oauth_failed');*/}"
@@ -350,13 +247,6 @@ public class Oauth2API implements OauthConstants {
 		}
 
 		@Override
-		public void onReceivedError(WebView view, int errorCode,
-				String description, String failingUrl) {
-			super.onReceivedError(view, errorCode, description, failingUrl);
-			Log.e(TAG, "Argument error!");
-		}
-
-		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			Log.i("WebView", url);
 			super.onPageStarted(view, url, favicon);
@@ -367,19 +257,19 @@ public class Oauth2API implements OauthConstants {
 			if (url.startsWith(REDIRECT_URL)) {
 				Bundle values = Utility.parseUrl(url);
 				String code = values.getString("code");
-				if (!(null == code || TextUtils.isEmpty(code))) {
-					accessToken(code, mListener);
-				} else {
+				if (null == code || TextUtils.isEmpty(code)) {
 					Context context = view.getContext();
 					if (context instanceof Activity) {
 						Activity activity = (Activity) context;
 						Toast.makeText(context, "授权失败", Toast.LENGTH_SHORT)
 								.show();
 						activity.finish();
-					} else {
-						view.stopLoading();
-						view.loadUrl("about:blank");
 					}
+					view.stopLoading();
+					view.loadUrl("about:blank");
+
+				} else {
+					accessToken(code, mListener);
 				}
 			}
 		}

@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,12 +19,6 @@ import com.sina.weibo.sdk.net.RequestListener;
 public class LoginActivity extends Activity {
 
 	public static LoginActivity instance = null;
-
-	private Animation mAlphaAnimation;
-	private Animation mScaleAnimation;
-
-	private View mLoginLogo;
-	private View mApiKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +34,9 @@ public class LoginActivity extends Activity {
 				.getEditableText().toString();
 		String password = ((EditText) findViewById(R.id.editText2))
 				.getEditableText().toString();
+		if (TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
+			Toast.makeText(this, "输入用户名密码", Toast.LENGTH_SHORT).show();
+		}
 		Oauth2API.authorize(this, username, password, new TokenHandler());
 
 	}
@@ -94,32 +91,14 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public void changeApikey(View v) {
-		mLoginLogo.startAnimation(mAlphaAnimation);
-		mApiKey.startAnimation(mScaleAnimation);
-	}
-
 	private void judgeIsLoggedIn() {
 
 		if (null == AccessTokenKeeper.readAccessToken(LoginActivity.this)) {
 			instance = this;
-			// loadAnimation();
 		} else {
 			Intent intent = new Intent(LoginActivity.this, MworldActivity.class);
 			startActivity(intent);
-			finish();
 		}
 	}
-
-	// private void loadAnimation() {
-	// mAlphaAnimation = AnimationUtils.loadAnimation(this, R.anim.logo_anim);
-	// mLoginLogo = findViewById(R.id.login_logo);
-	// mLoginLogo.setAnimation(mAlphaAnimation);
-	//
-	// mScaleAnimation = AnimationUtils
-	// .loadAnimation(this, R.anim.apikey_anim);
-	// mApiKey = findViewById(R.id.btn_apikey);
-	// mApiKey.setAnimation(mScaleAnimation);
-	// }
 
 }
