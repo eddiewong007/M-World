@@ -18,6 +18,7 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.api.FriendshipsAPI;
 import com.mworld.weibo.api.StatusesAPI;
@@ -154,7 +155,7 @@ public class DisplayActivity extends Activity {
 	}
 
 	private void friendsTimeline() {
-		mStatusesAPI.friendsTimeline(0, 0, 50, ++page, false, 0, false,
+		mStatusesAPI.friendsTimeline(0, 0, 10, ++page, false, 0, false,
 				new StatusHandler());
 	}
 
@@ -203,78 +204,18 @@ public class DisplayActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			final List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-			for (Status status : statusList.statusesList) {
-				if (4 == getIntent().getIntExtra("type", 0)
-						&& status.user.id != Long.parseLong(getIntent()
-								.getStringExtra("uid")))
-
-					continue;
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("user_avatar", status.user.profile_image_url + "\n"
-						+ status.user.id);
-				map.put("user_name", status.user.screen_name);
-				map.put("created_at", status.created_at);
-				map.put("text_status", status.text);
-				if (null != status.retweeted_status) {
-					String text = status.retweeted_status.user == null ? ""
-							: "@" + status.retweeted_status.user.screen_name
-									+ "：";
-					text += status.retweeted_status.text;
-					map.put("text_repost", text);
-					map.put("repost_count", "转发 "
-							+ status.retweeted_status.reposts_count + "评论 "
-							+ status.retweeted_status.comments_count);
+			if (4 == getIntent().getIntExtra("type", 0)) {
+				for (int index = 0; index < statusList.statusesList.size(); index++) {
+					Status status = statusList.statusesList.get(index);
+					if (status.user.id != Long.parseLong(getIntent()
+							.getStringExtra("uid"))) {
+						statusList.statusesList.remove(index--);
+					}
 				}
-				map.put("ret_count", "转发：" + status.reposts_count);
-				map.put("com_count", "评论：" + status.comments_count);
-
-				data.add(map);
-				if (++count >= 10)
-					break;
 			}
-			String[] from = new String[] { "user_avatar", "user_name",
-					"created_at", "text_status", "text_repost", "repost_count",
-					"ret_count", "com_count" };
-			int[] to = new int[] { R.id.user_avatar, R.id.user_name, R.id.date,
-					R.id.text_status, R.id.text_repost, R.id.repost_count,
-					R.id.ret_count, R.id.com_count };
-			SimpleAdapter adapter = new SimpleAdapter(DisplayActivity.this,
-					data, R.layout.list_item, from, to);
+			StatusesListAdapter adapter = new StatusesListAdapter(
+					DisplayActivity.this, statusList.statusesList);
 			mList.setAdapter(adapter);
-			adapter.setViewBinder(new ViewBinder() {
-
-				@Override
-				public boolean setViewValue(View view, Object data,
-						String textRepresentation) {
-
-					if (view instanceof ImageView) {
-						ImageView iv = (ImageView) view;
-						final String[] tokens = ((String) data).split("\n");
-						FinalBitmap.create(DisplayActivity.this).display(iv,
-								tokens[0]);
-						view.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-
-								Intent intent = new Intent(
-										DisplayActivity.this,
-										DisplayActivity.class);
-								intent.putExtra("type", 3);
-								intent.putExtra("uid", tokens[1]);
-								startActivity(intent);
-							}
-						});
-						return true;
-					} else
-						return false;
-				}
-
-			});
-//			if (count < 10 && 4 == getIntent().getIntExtra("type", 0))
-//				mStatusesAPI.friendsTimeline(0, 0, 10, ++page, false, 0, false,
-//						new StatusHandler());
 		}
 
 		@Override

@@ -6,7 +6,7 @@
 
     <include layout="@layout/actionbar" />
 
-    <include layout="@layout/list_item" />
+    <include layout="@layout/status_list_item" />
 
     <ListView
         android:id="@+id/comments_list"

@@ -98,6 +98,7 @@ public class LoginActivity extends Activity {
 		} else {
 			Intent intent = new Intent(LoginActivity.this, MworldActivity.class);
 			startActivity(intent);
+			finish();
 		}
 	}
 
