@@ -18,6 +18,8 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.api.FriendshipsAPI;
@@ -34,47 +36,58 @@ import com.sina.weibo.sdk.net.RequestListener;
 public class DisplayActivity extends Activity {
 
 	private AccessToken mAccessToken = null;
-	private ListView mList;
+	private PullToRefreshListView mList;
 	private StatusesAPI mStatusesAPI;
 	private UsersAPI mUsersAPI;
 	private FriendshipsAPI mFriendshipsAPI;
+	private ArrayList<Status> mArrayList;
+	StatusesListAdapter mAdapter;
+	private long since_id = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display);
 		initComponents();
-
-		switch (getIntent().getIntExtra("type", 0)) {
-		case 0:
-		case 4:
-			friendsTimeline();
-			break;
-		case 1:
-			toMe();
-			break;
-		case 2:
-			repost();
-			break;
-		case 3:
-			profile();
-			break;
-		case 5:
-			friends();
-			break;
-		case 6:
-			fans();
-			break;
-		default:
-
-		}
-
+		mList.onRefresh();
 	}
 
 	private void initComponents() {
 		mAccessToken = AccessTokenKeeper.readAccessToken(DisplayActivity.this);
 		((TextView) findViewById(R.id.actionbar_title)).setText("M-World");
-		mList = (ListView) findViewById(R.id.status_list);
+		mList = (PullToRefreshListView) findViewById(R.id.status_list);
+		mList.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				switch (getIntent().getIntExtra("type", 0)) {
+				case 0:
+				case 4:
+					friendsTimeline();
+					break;
+				case 1:
+					toMe();
+					break;
+				case 2:
+					repost();
+					break;
+				case 3:
+					profile();
+					break;
+				case 5:
+					friends();
+					break;
+				case 6:
+					fans();
+					break;
+				default:
+
+				}
+			}
+		});
+		mArrayList = new ArrayList<Status>();
+		mAdapter = new StatusesListAdapter(DisplayActivity.this, mArrayList);
+		mList.setAdapter(mAdapter);
+
 		mStatusesAPI = new StatusesAPI(mAccessToken);
 		mUsersAPI = new UsersAPI(mAccessToken);
 		mFriendshipsAPI = new FriendshipsAPI(mAccessToken);
@@ -144,8 +157,8 @@ public class DisplayActivity extends Activity {
 							}
 
 						});
-						findViewById(R.id.status_loading).setVisibility(
-								View.GONE);
+						// findViewById(R.id.status_loading).setVisibility(
+						// View.GONE);
 					}
 
 					@Override
@@ -157,20 +170,20 @@ public class DisplayActivity extends Activity {
 	}
 
 	private void friendsTimeline() {
-		mStatusesAPI.friendsTimeline(0, 0, 10, ++page, false, 0, false,
+		mStatusesAPI.friendsTimeline(since_id, 0, 10, ++page, false, 0, false,
 				new StatusHandler());
 	}
 
 	private void toMe() {
-		mStatusesAPI.mentions(0, 0, 10, 1, StatusesAPI.AUTHOR_FILTER_ALL,
-				StatusesAPI.SRC_FILTER_ALL, StatusesAPI.TYPE_FILTER_ALL, false,
-				new StatusHandler());
+		mStatusesAPI.mentions(since_id, 0, 10, 1,
+				StatusesAPI.AUTHOR_FILTER_ALL, StatusesAPI.SRC_FILTER_ALL,
+				StatusesAPI.TYPE_FILTER_ALL, false, new StatusHandler());
 	}
 
 	private void repost() {
 		mStatusesAPI.repostTimeline(
-				Long.parseLong(getIntent().getStringExtra("uid")), 0, 0, 10, 1,
-				StatusesAPI.AUTHOR_FILTER_ALL, new StatusHandler());
+				Long.parseLong(getIntent().getStringExtra("uid")), since_id, 0,
+				10, 1, StatusesAPI.AUTHOR_FILTER_ALL, new StatusHandler());
 	}
 
 	private int page = 0;
@@ -198,14 +211,16 @@ public class DisplayActivity extends Activity {
 			try {
 				statusList = StatusesList.parse(jsonString);
 			} catch (Exception e) {
-
 				e.printStackTrace();
 			}
-			if (statusList.statusesList == null) {
-				Toast.makeText(DisplayActivity.this, "没有获取到微博",
+			if (statusList.statusesList == null
+					|| statusList.statusesList.isEmpty()) {
+				Toast.makeText(DisplayActivity.this, "没有更新的微博",
 						Toast.LENGTH_SHORT).show();
+				mList.onRefreshComplete();
 				return;
 			}
+			since_id = statusList.statusesList.get(0).id;
 			if (4 == getIntent().getIntExtra("type", 0)) {
 				for (int index = 0; index < statusList.statusesList.size(); index++) {
 					Status status = statusList.statusesList.get(index);
@@ -215,10 +230,10 @@ public class DisplayActivity extends Activity {
 					}
 				}
 			}
-			StatusesListAdapter adapter = new StatusesListAdapter(
-					DisplayActivity.this, statusList.statusesList);
-			mList.setAdapter(adapter);
-			findViewById(R.id.status_loading).setVisibility(View.GONE);
+			mArrayList.addAll(0, statusList.statusesList);
+			mAdapter.notifyDataSetChanged();
+			mList.onRefreshComplete();
+			// findViewById(R.id.status_loading).setVisibility(View.GONE);
 		}
 
 		@Override
