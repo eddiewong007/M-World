@@ -34,7 +34,7 @@ import com.sina.weibo.sdk.utils.Utility;
  */
 public class Oauth2API implements OauthConstants {
 
-	private static final String TAG = Oauth2API.class.getName();
+	//private static final String TAG = Oauth2API.class.getName();
 
 	/** 微博授权服务的地址 */
 	private static final String API_SERVER = "https://api.weibo.com/oauth2";

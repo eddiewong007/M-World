@@ -3,8 +3,6 @@ package com.mworld.adapter;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -18,8 +16,7 @@ import android.widget.TextView;
 
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
-import com.mworld.weibo.api.Comment;
-import com.mworld.weibo.entities.Status;
+import com.mworld.weibo.entities.Comment;
 
 public class CommentsListAdapter extends BaseAdapter {
 
@@ -64,15 +61,39 @@ public class CommentsListAdapter extends BaseAdapter {
 
 		ViewHolder holder = null;
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.status_list_item, null);
+			convertView = mInflater.inflate(R.layout.comment_list_item, null);
 			holder = new ViewHolder();
+			holder.userAvatar = (ImageView) convertView
+					.findViewById(R.id.user_com_avatar);
+			holder.userName = (TextView) convertView
+					.findViewById(R.id.user_com_name);
+			holder.date = (TextView) convertView.findViewById(R.id.com_date);
+			holder.textComment = (TextView) convertView
+					.findViewById(R.id.text_comment);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		final Comment comment = mCommentsList.get(position);
+		FinalBitmap.create(mContext).display(holder.userAvatar,
+				comment.user.avatar_large);
+		
+		holder.userAvatar.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				Log.i("adapter", "click");
+				Intent intent = new Intent(mContext,
+						DisplayActivity.class);
+				intent.putExtra("type", 3);
+				intent.putExtra("uid", String.valueOf(comment.user.id));
+				mContext.startActivity(intent);
+			}
+		});
+		holder.userName.setText(comment.user.screen_name);
+		holder.date.setText(comment.created_at);
+		holder.textComment.setText(comment.text);
 		return convertView;
 	}
 
@@ -80,11 +101,8 @@ public class CommentsListAdapter extends BaseAdapter {
 		ImageView userAvatar;
 		TextView userName;
 		TextView date;
-		TextView textStatus;
-		TextView textRepost;
-		TextView repostCount;
-		TextView retCount;
-		TextView comCount;
+		TextView textComment;
+
 	}
 
 }

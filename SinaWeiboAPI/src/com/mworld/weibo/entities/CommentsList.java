@@ -1,4 +1,4 @@
-package com.mworld.weibo.api;
+package com.mworld.weibo.entities;
 
 import java.util.ArrayList;
 
@@ -15,19 +15,19 @@ import android.text.TextUtils;
  * @author MengMeng
  * 
  */
-public class CommentList {
+public class CommentsList {
 	/** 评论列表 */
 	public ArrayList<Comment> commentList;
 	public String previous_cursor;
 	public String next_cursor;
 	public int total_number;
 
-	public static CommentList parse(String jsonString) {
+	public static CommentsList parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
 		}
 
-		CommentList comments = new CommentList();
+		CommentsList comments = new CommentsList();
 		try {
 			JSONObject jsonObject = JSON.parseObject(jsonString);
 			comments.previous_cursor = jsonObject.getString("previous_cursor",
@@ -36,13 +36,15 @@ public class CommentList {
 			comments.total_number = jsonObject.getIntValue("total_number", 0);
 
 			JSONArray jsonArray = jsonObject.getJSONArray("comments");
+			comments.commentList = new ArrayList<Comment>();
 			if (jsonArray != null && !jsonArray.isEmpty()) {
 				int size = jsonArray.size();
-				comments.commentList = new ArrayList<Comment>(size);
 				for (int ix = 0; ix < size; ix++) {
 					comments.commentList.add(Comment.parse(jsonArray
 							.getJSONObject(ix)));
 				}
+			} else {
+
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

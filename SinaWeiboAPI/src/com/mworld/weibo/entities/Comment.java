@@ -1,10 +1,8 @@
-package com.mworld.weibo.api;
+package com.mworld.weibo.entities;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.mworld.weibo.entities.Status;
-import com.mworld.weibo.entities.User;
 
 /**
  * 评论（comment）对象结构体

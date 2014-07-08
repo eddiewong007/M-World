@@ -9,9 +9,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 
-
-
-
 /**
  * 微博（status）对象数据结构
  * 
@@ -19,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
  * 
  */
 public class Status {
+
 	/** 微博创建时间 */
 	public String created_at;
 	/** 微博ID */
@@ -71,9 +69,9 @@ public class Status {
 
 	public static Status parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
-            return null;
-        }
-		
+			return null;
+		}
+
 		try {
 			return Status.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
@@ -89,48 +87,52 @@ public class Status {
 		}
 
 		Status status = new Status();
-        status.created_at       = jsonObject.getString("created_at");
-        status.id               = jsonObject.getLongValue("id");
-        status.mid              = jsonObject.getLongValue("mid");
-        status.idstr            = jsonObject.getString("idstr");
-        status.text             = jsonObject.getString("text");
-        status.source           = jsonObject.getString("source");
-        status.favorited        = jsonObject.getBooleanValue("favorited", false);
-        status.truncated        = jsonObject.getBooleanValue("truncated", false);
-        
-        // Have NOT supported
-        status.in_reply_to_status_id   = jsonObject.getString("in_reply_to_status_id");
-        status.in_reply_to_user_id     = jsonObject.getString("in_reply_to_user_id");
-        status.in_reply_to_screen_name = jsonObject.getString("in_reply_to_screen_name");
-        
-        status.thumbnail_pic    = jsonObject.getString("thumbnail_pic");
-        status.bmiddle_pic      = jsonObject.getString("bmiddle_pic");
-        status.original_pic     = jsonObject.getString("original_pic");
-        status.geo              = Geo.parse(jsonObject.getJSONObject("geo"));
-        status.user             = User.parse(jsonObject.getJSONObject("user"));
-        status.retweeted_status = Status.parse(jsonObject.getJSONObject("retweeted_status"));
-        status.reposts_count    = jsonObject.getIntValue("reposts_count");
-        status.comments_count   = jsonObject.getIntValue("comments_count");
-        status.attitudes_count  = jsonObject.getIntValue("attitudes_count");
-        status.mlevel           = jsonObject.getIntValue("mlevel");    // Have NOT supported
-        status.visible          = Visible.parse(jsonObject.getJSONObject("visible"));
-        
-        JSONArray picUrlsArray = jsonObject.getJSONArray("pic_urls");
-        if (picUrlsArray != null && !picUrlsArray.isEmpty()) {
-            int size = picUrlsArray.size();
-            status.pic_urls = new ArrayList<String>(size);
-            JSONObject tmpObject = null;
-            for (int ix = 0; ix < size; ix++) {
-                tmpObject = picUrlsArray.getJSONObject(ix);
-                if (tmpObject != null) {
-                    status.pic_urls.add(tmpObject.getString("thumbnail_pic"));
-                }
-            }
-        }
-        
-        status.ad = jsonObject.getString("ad", "");
-        
-        return status;
+		status.created_at = jsonObject.getString("created_at");
+		status.id = jsonObject.getLongValue("id");
+		status.mid = jsonObject.getLongValue("mid");
+		status.idstr = jsonObject.getString("idstr");
+		status.text = jsonObject.getString("text");
+		status.source = jsonObject.getString("source");
+		status.favorited = jsonObject.getBooleanValue("favorited", false);
+		status.truncated = jsonObject.getBooleanValue("truncated", false);
+
+		// Have NOT supported
+		status.in_reply_to_status_id = jsonObject
+				.getString("in_reply_to_status_id");
+		status.in_reply_to_user_id = jsonObject
+				.getString("in_reply_to_user_id");
+		status.in_reply_to_screen_name = jsonObject
+				.getString("in_reply_to_screen_name");
+
+		status.thumbnail_pic = jsonObject.getString("thumbnail_pic");
+		status.bmiddle_pic = jsonObject.getString("bmiddle_pic");
+		status.original_pic = jsonObject.getString("original_pic");
+		status.geo = Geo.parse(jsonObject.getJSONObject("geo"));
+		status.user = User.parse(jsonObject.getJSONObject("user"));
+		status.retweeted_status = Status.parse(jsonObject
+				.getJSONObject("retweeted_status"));
+		status.reposts_count = jsonObject.getIntValue("reposts_count");
+		status.comments_count = jsonObject.getIntValue("comments_count");
+		status.attitudes_count = jsonObject.getIntValue("attitudes_count");
+		status.mlevel = jsonObject.getIntValue("mlevel"); // Have NOT supported
+		status.visible = Visible.parse(jsonObject.getJSONObject("visible"));
+
+		JSONArray picUrlsArray = jsonObject.getJSONArray("pic_urls");
+		if (picUrlsArray != null && !picUrlsArray.isEmpty()) {
+			int size = picUrlsArray.size();
+			status.pic_urls = new ArrayList<String>(size);
+			JSONObject tmpObject = null;
+			for (int ix = 0; ix < size; ix++) {
+				tmpObject = picUrlsArray.getJSONObject(ix);
+				if (tmpObject != null) {
+					status.pic_urls.add(tmpObject.getString("thumbnail_pic"));
+				}
+			}
+		}
+
+		status.ad = jsonObject.getString("ad", "");
+
+		return status;
 	}
 
 }

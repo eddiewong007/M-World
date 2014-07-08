@@ -3,7 +3,6 @@ package com.mworld.adapter;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mworld.ui.CommentsActivity;
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
 import com.mworld.weibo.entities.Status;
@@ -93,18 +93,21 @@ public class StatusesListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				Log.i("adapter", "click");
-				Activity currentActivity = (Activity) mContext;
-				Intent intent = new Intent(currentActivity,
-						DisplayActivity.class);
+				Intent intent = new Intent(mContext, DisplayActivity.class);
 				intent.putExtra("type", 3);
 				intent.putExtra("uid", String.valueOf(status.user.id));
-				currentActivity.startActivity(intent);
+				mContext.startActivity(intent);
 			}
 		});
 		holder.userName.setText(status.user.screen_name);
 		holder.date.setText(status.created_at);
 		holder.textStatus.setText(status.text);
-		if (null != status.retweeted_status) {
+		if (null == status.retweeted_status) {
+			convertView.findViewById(R.id.layout_repost).setVisibility(
+					View.GONE);
+		} else {
+			convertView.findViewById(R.id.layout_repost).setVisibility(
+					View.VISIBLE);
 			holder.textRepost.setText("@"
 					+ status.retweeted_status.user.screen_name + ":"
 					+ status.retweeted_status.text);
@@ -114,6 +117,18 @@ public class StatusesListAdapter extends BaseAdapter {
 		}
 		holder.retCount.setText(String.valueOf(status.reposts_count));
 		holder.comCount.setText(String.valueOf(status.comments_count));
+
+		convertView.findViewById(R.id.layout_message).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mContext,
+								CommentsActivity.class);
+						intent.putExtra("id", status.id);
+						mContext.startActivity(intent);
+					}
+				});
 
 		return convertView;
 	}

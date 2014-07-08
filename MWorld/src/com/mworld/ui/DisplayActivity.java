@@ -144,6 +144,8 @@ public class DisplayActivity extends Activity {
 							}
 
 						});
+						findViewById(R.id.status_loading).setVisibility(
+								View.GONE);
 					}
 
 					@Override
@@ -216,6 +218,7 @@ public class DisplayActivity extends Activity {
 			StatusesListAdapter adapter = new StatusesListAdapter(
 					DisplayActivity.this, statusList.statusesList);
 			mList.setAdapter(adapter);
+			findViewById(R.id.status_loading).setVisibility(View.GONE);
 		}
 
 		@Override

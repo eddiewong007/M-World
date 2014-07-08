@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/user_avatar"
-            android:text="用户名"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -37,7 +36,6 @@
             android:layout_alignBottom="@id/user_avatar"
             android:layout_below="@id/user_name"
             android:layout_toRightOf="@id/user_avatar"
-            android:text="时间"
             android:textSize="12sp" />
 
         <View
@@ -54,8 +52,7 @@
             android:layout_below="@id/divider_username"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:autoLink="web|email|phone"
-            android:text="这是一条微博" />
+            android:autoLink="web|email|phone" />
 
         <LinearLayout
             android:id="@+id/layout_repost"
@@ -70,8 +67,7 @@
                 android:id="@+id/text_repost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web|email|phone"
-                android:text="转发微博" />
+                android:autoLink="web|email|phone" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -105,9 +101,8 @@
 
                 <TextView
                     android:id="@+id/ret_count"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="0" />
             </LinearLayout>
@@ -124,9 +119,8 @@
 
                 <TextView
                     android:id="@+id/com_count"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="0" />
             </LinearLayout>
