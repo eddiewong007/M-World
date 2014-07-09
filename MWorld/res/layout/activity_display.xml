@@ -5,17 +5,6 @@
     android:background="#efefef"
     android:orientation="vertical" >
 
-    <include layout="@layout/actionbar" />
-
-   <!--   <TextView
-        android:id="@+id/status_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="#efefef"
-        android:text="加载中..."
-        android:textSize="20sp" />-->
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -79,12 +68,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <com.markupartist.android.widget.PullToRefreshListView
-            android:id="@+id/status_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#efefef" />
     </FrameLayout>
 
 </LinearLayout>

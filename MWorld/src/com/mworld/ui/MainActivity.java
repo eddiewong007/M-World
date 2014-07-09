@@ -15,8 +15,9 @@ import com.mworld.fragment.CommentFragment;
 import com.mworld.fragment.HomeFragment;
 
 public class MainActivity extends ActionBarActivity {
-	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter;
+
+	private ViewPager mViewPager;
+	private TabsAdapter mTabsAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +25,19 @@ public class MainActivity extends ActionBarActivity {
 
 		mViewPager = new ViewPager(this);
 		mViewPager.setId(R.id.vPager);
-		this.setContentView(mViewPager);
+		setContentView(mViewPager);
 
 		// ActionBar and Tabs
-		ActionBar actionBar = this.getActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
+
 		// 设置ActionBar的背景
 		actionBar.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.actionbar_gradient_bg));
 		actionBar.setDisplayUseLogoEnabled(true);
 
-		mTabsAdapter = new TabsAdapter(this.getSupportFragmentManager(), this,
+		mTabsAdapter = new TabsAdapter(getSupportFragmentManager(), this,
 				mViewPager);
 		mTabsAdapter.addTab(actionBar.newTab().setText("Home"),
 				HomeFragment.class, null);
@@ -53,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return super.onCreateOptionsMenu(menu);
 	}

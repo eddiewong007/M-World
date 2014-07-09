@@ -105,11 +105,11 @@ public class StatusesListAdapter extends BaseAdapter {
 		if (null == status.retweeted_status) {
 			convertView.findViewById(R.id.layout_repost).setVisibility(
 					View.GONE);
-		} else {
+		} else if (null != status.retweeted_status.user) {
 			convertView.findViewById(R.id.layout_repost).setVisibility(
 					View.VISIBLE);
 			holder.textRepost.setText("@"
-					+ status.retweeted_status.user.screen_name + ":"
+					+ status.retweeted_status.user.screen_name + ":\n"
 					+ status.retweeted_status.text);
 			holder.repostCount.setText("转发 "
 					+ status.retweeted_status.reposts_count + " 评论 "

@@ -1,12 +1,10 @@
 package com.mworld.ui;
 
 import net.tsz.afinal.FinalActivity;
-import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.mworld.utils.PreUtils;
 import com.mworld.weibo.entities.AccessToken;
@@ -14,8 +12,6 @@ import com.mworld.weibo.entities.AccessToken;
 public class MworldActivity extends Activity {
 
 	private AccessToken mAccessToken = null;
-	@ViewInject(id = R.id.actionbar_title)
-	TextView mTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +23,6 @@ public class MworldActivity extends Activity {
 
 	private void initComponents() {
 		mAccessToken = PreUtils.readAccessToken(MworldActivity.this);
-		mTitle.setText("M-World");
 	}
 
 	public void friendsTimeline(View v) {

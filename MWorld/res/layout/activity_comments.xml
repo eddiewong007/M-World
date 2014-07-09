@@ -5,7 +5,6 @@
     android:background="#efefef"
     android:orientation="vertical" >
 
-    <include layout="@layout/actionbar" />
 
     <include layout="@layout/status_list_item" />
 

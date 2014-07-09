@@ -7,6 +7,5 @@
         android:endColor="#3AAAE1"
         android:startColor="#3A93E1"
         android:type="linear" />
-    <!-- android:endColor="#1E90FF"
-        android:startColor="#1C86EE" -->
+
 </shape>

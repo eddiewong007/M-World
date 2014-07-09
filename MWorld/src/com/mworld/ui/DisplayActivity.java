@@ -22,11 +22,9 @@ import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.utils.PreUtils;
 import com.mworld.weibo.api.FriendshipsAPI;
-import com.mworld.weibo.api.StatusesAPI;
 import com.mworld.weibo.api.UsersAPI;
 import com.mworld.weibo.entities.AccessToken;
 import com.mworld.weibo.entities.Status;
-import com.mworld.weibo.entities.StatusesList;
 import com.mworld.weibo.entities.User;
 import com.mworld.weibo.entities.UsersList;
 import com.sina.weibo.sdk.exception.WeiboException;
@@ -36,12 +34,10 @@ public class DisplayActivity extends Activity {
 
 	private AccessToken mAccessToken = null;
 	private PullToRefreshListView mList;
-	private StatusesAPI mStatusesAPI;
 	private UsersAPI mUsersAPI;
 	private FriendshipsAPI mFriendshipsAPI;
 	private ArrayList<Status> mArrayList;
 	StatusesListAdapter mAdapter;
-	private long since_id = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +49,11 @@ public class DisplayActivity extends Activity {
 
 	private void initComponents() {
 		mAccessToken = PreUtils.readAccessToken(DisplayActivity.this);
-		((TextView) findViewById(R.id.actionbar_title)).setText("M-World");
 		mList = (PullToRefreshListView) findViewById(R.id.status_list);
 		mList.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				switch (getIntent().getIntExtra("type", 0)) {
-				case 0:
-				case 4:
-					friendsTimeline();
-					break;
-				case 1:
-					toMe();
-					break;
-				case 2:
-					repost();
-					break;
 				case 3:
 					profile();
 					break;
@@ -87,7 +72,6 @@ public class DisplayActivity extends Activity {
 		mAdapter = new StatusesListAdapter(DisplayActivity.this, mArrayList);
 		mList.setAdapter(mAdapter);
 
-		mStatusesAPI = new StatusesAPI(mAccessToken);
 		mUsersAPI = new UsersAPI(mAccessToken);
 		mFriendshipsAPI = new FriendshipsAPI(mAccessToken);
 	}
@@ -112,13 +96,13 @@ public class DisplayActivity extends Activity {
 
 							@Override
 							public void onClick(View v) {
-								Intent intent = new Intent(
-										DisplayActivity.this,
-										DisplayActivity.class);
-								intent.putExtra("type", 5);
-								intent.putExtra("uid", getIntent()
-										.getStringExtra("uid"));
-								startActivity(intent);
+								// Intent intent = new Intent(
+								// DisplayActivity.this,
+								// DisplayActivity.class);
+								// intent.putExtra("type", 5);
+								// intent.putExtra("uid", getIntent()
+								// .getStringExtra("uid"));
+								// startActivity(intent);
 							}
 
 						});
@@ -129,13 +113,13 @@ public class DisplayActivity extends Activity {
 
 							@Override
 							public void onClick(View v) {
-								Intent intent = new Intent(
-										DisplayActivity.this,
-										DisplayActivity.class);
-								intent.putExtra("type", 6);
-								intent.putExtra("uid", getIntent()
-										.getStringExtra("uid"));
-								startActivity(intent);
+								// Intent intent = new Intent(
+								// DisplayActivity.this,
+								// DisplayActivity.class);
+								// intent.putExtra("type", 6);
+								// intent.putExtra("uid", getIntent()
+								// .getStringExtra("uid"));
+								// startActivity(intent);
 							}
 
 						});
@@ -146,18 +130,16 @@ public class DisplayActivity extends Activity {
 
 							@Override
 							public void onClick(View v) {
-								Intent intent = new Intent(
-										DisplayActivity.this,
-										DisplayActivity.class);
-								intent.putExtra("type", 4);
-								intent.putExtra("uid", getIntent()
-										.getStringExtra("uid"));
-								startActivity(intent);
+								// Intent intent = new Intent(
+								// DisplayActivity.this,
+								// DisplayActivity.class);
+								// intent.putExtra("type", 4);
+								// intent.putExtra("uid", getIntent()
+								// .getStringExtra("uid"));
+								// startActivity(intent);
 							}
 
 						});
-						// findViewById(R.id.status_loading).setVisibility(
-						// View.GONE);
 					}
 
 					@Override
@@ -167,25 +149,6 @@ public class DisplayActivity extends Activity {
 
 				});
 	}
-
-	private void friendsTimeline() {
-		mStatusesAPI.friendsTimeline(since_id, 0, 10, ++page, false, 0, false,
-				new StatusHandler());
-	}
-
-	private void toMe() {
-		mStatusesAPI.mentions(since_id, 0, 10, 1,
-				StatusesAPI.AUTHOR_FILTER_ALL, StatusesAPI.SRC_FILTER_ALL,
-				StatusesAPI.TYPE_FILTER_ALL, false, new StatusHandler());
-	}
-
-	private void repost() {
-		mStatusesAPI.repostTimeline(
-				Long.parseLong(getIntent().getStringExtra("uid")), since_id, 0,
-				10, 1, StatusesAPI.AUTHOR_FILTER_ALL, new StatusHandler());
-	}
-
-	private int page = 0;
 
 	private void friends() {
 		mFriendshipsAPI.friends(
@@ -197,48 +160,6 @@ public class DisplayActivity extends Activity {
 		mFriendshipsAPI.followers(
 				Long.parseLong(getIntent().getStringExtra("uid")), 20, 0,
 				false, new UserHandler());
-	}
-
-	public class StatusHandler implements RequestListener {
-
-		@Override
-		public void onComplete(String jsonString) {
-			Log.i("--------------------------", "回调");
-
-			StatusesList statusList = new StatusesList();
-			try {
-				statusList = StatusesList.parse(jsonString);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (statusList.statusesList == null
-					|| statusList.statusesList.isEmpty()) {
-				Toast.makeText(DisplayActivity.this, "没有更新的微博",
-						Toast.LENGTH_SHORT).show();
-				mList.onRefreshComplete();
-				return;
-			}
-			since_id = statusList.statusesList.get(0).id;
-			if (4 == getIntent().getIntExtra("type", 0)) {
-				for (int index = 0; index < statusList.statusesList.size(); index++) {
-					Status status = statusList.statusesList.get(index);
-					if (status.user.id != Long.parseLong(getIntent()
-							.getStringExtra("uid"))) {
-						statusList.statusesList.remove(index--);
-					}
-				}
-			}
-			mArrayList.addAll(0, statusList.statusesList);
-			mAdapter.notifyDataSetChanged();
-			mList.onRefreshComplete();
-			// findViewById(R.id.status_loading).setVisibility(View.GONE);
-		}
-
-		@Override
-		public void onWeiboException(WeiboException e) {
-			Log.e("-------------------", e.getMessage());
-		}
-
 	}
 
 	public class UserHandler implements RequestListener {

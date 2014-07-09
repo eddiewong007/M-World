@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		if (null != PreUtils.readAccessToken(this)) {
-			Intent intent = new Intent(this, MworldActivity.class);
+			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
 		}
@@ -65,8 +65,7 @@ public class LoginActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 			} else {
 				PreUtils.keepAccessToken(LoginActivity.this, accessToken);
-				startActivity(new Intent(LoginActivity.this,
-						MworldActivity.class));
+				startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				finish();
 			}
 		}
