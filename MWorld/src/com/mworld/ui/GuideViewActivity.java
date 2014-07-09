@@ -147,7 +147,7 @@ public class GuideViewActivity extends Activity {
       	Intent intent = new Intent();
 		intent.setClass(GuideViewActivity.this,LoginActivity.class);
 		startActivity(intent);
-		this.finish();
+		finish();
       }
 	
 }

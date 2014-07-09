@@ -1,5 +1,6 @@
 package com.mworld.ui;
 
+import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +11,10 @@ import com.mworld.utils.AccessTokenKeeper;
 import com.mworld.weibo.entities.AccessToken;
 
 public class MworldActivity extends Activity {
-	public static MworldActivity instance = null;
-	
+
 	private AccessToken mAccessToken = null;
+	@ViewInject(id = R.id.actionbar_title)
+	TextView mTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +24,8 @@ public class MworldActivity extends Activity {
 	}
 
 	private void initComponents() {
-		instance = this;
 		mAccessToken = AccessTokenKeeper.readAccessToken(MworldActivity.this);
-		((TextView) findViewById(R.id.actionbar_title)).setText("M-World");
-		// ((ImageView) findViewById(R.id.home)).setImageDrawable(getResources()
-		// .getDrawable(R.drawable.home));
-		// ((ImageView) findViewById(R.id.friends))
-		// .setImageDrawable(getResources().getDrawable(R.drawable.home));
-		// ((ImageView)
-		// findViewById(R.id.search)).setImageDrawable(getResources()
-		// .getDrawable(R.drawable.home));
-
+		mTitle.setText("M-World");
 	}
 
 	public void friendsTimeline(View v) {

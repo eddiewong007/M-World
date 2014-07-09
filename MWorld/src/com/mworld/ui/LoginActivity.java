@@ -21,15 +21,22 @@ import com.sina.weibo.sdk.net.RequestListener;
 
 public class LoginActivity extends Activity {
 
+	private static final String TAG = "LoginActivity";
+
 	public static LoginActivity instance = null;
-	
-	@ViewInject(id=R.id.signin_button,click="gologin") Button mButton;
+
+	@ViewInject(id = R.id.signin_button, click = "gologin")
+	Button mButton;
+	@ViewInject(id = R.id.username_edit)
+	EditText mUsername;
+	@ViewInject(id = R.id.password_edit)
+	EditText mPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		FinalActivity.initInjectedView(this);
 
 		judgeIsLoggedIn();
@@ -37,11 +44,9 @@ public class LoginActivity extends Activity {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	public void gologin(View v) {
-		String username = ((EditText) findViewById(R.id.username_edit))
-				.getEditableText().toString();
-		String password = ((EditText) findViewById(R.id.password_edit))
-				.getEditableText().toString();
-		if (TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
+		String username = mUsername.getEditableText().toString();
+		String password = mPassword.getEditableText().toString();
+		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 			Toast.makeText(this, "输入用户名密码", Toast.LENGTH_SHORT).show();
 		}
 		Oauth2API.authorize(this, username, password, new TokenHandler());
@@ -53,26 +58,15 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onComplete(String jsonString) {
 
-			Log.i("------------------", "回调");
 			AccessToken accessToken = AccessToken.parse(jsonString);
 			if (null == accessToken) {
 				Toast.makeText(LoginActivity.this, "授权失败，请重新授权！",
 						Toast.LENGTH_SHORT).show();
-				String username = ((EditText) findViewById(R.id.username_edit))
-						.getEditableText().toString();
-				String password = ((EditText) findViewById(R.id.password_edit))
-						.getEditableText().toString();
-				Intent intent = new Intent(LoginActivity.this,
-						OauthActivity.class);
-				intent.putExtra("username", username);
-				intent.putExtra("password", password);
-				startActivity(intent);
-				finish();
 			} else {
 				AccessTokenKeeper.keepAccessToken(LoginActivity.this,
 						accessToken);
 				startActivity(new Intent(LoginActivity.this,
-						MainActivity.class));
+						MworldActivity.class));
 				finish();
 			}
 
@@ -80,22 +74,21 @@ public class LoginActivity extends Activity {
 
 		@Override
 		public void onWeiboException(WeiboException e) {
-			Log.e("----------------------", e.getMessage());
+			Toast.makeText(LoginActivity.this, "授权失败，请重新授权！",
+					Toast.LENGTH_SHORT).show();
+			Log.e(TAG, e.getMessage());
 		}
 
 	}
 
 	public void login(View v) {
-		String username = ((EditText) findViewById(R.id.username_edit))
-				.getEditableText().toString();
-		String password = ((EditText) findViewById(R.id.password_edit))
-				.getEditableText().toString();
+		String username = mUsername.getEditableText().toString();
+		String password = mPassword.getEditableText().toString();
 		Intent intent = new Intent(LoginActivity.this, OauthActivity.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
 		startActivity(intent);
 		finish();
-
 	}
 
 	private void judgeIsLoggedIn() {
@@ -103,7 +96,7 @@ public class LoginActivity extends Activity {
 		if (null == AccessTokenKeeper.readAccessToken(LoginActivity.this)) {
 			instance = this;
 		} else {
-			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			Intent intent = new Intent(LoginActivity.this, MworldActivity.class);
 			startActivity(intent);
 			finish();
 		}

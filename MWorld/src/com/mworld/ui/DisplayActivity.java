@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
@@ -187,7 +186,6 @@ public class DisplayActivity extends Activity {
 	}
 
 	private int page = 0;
-	private int count = 0;
 
 	private void friends() {
 		mFriendshipsAPI.friends(
