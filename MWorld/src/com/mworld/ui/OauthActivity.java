@@ -2,14 +2,13 @@ package com.mworld.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.mworld.utils.AccessTokenKeeper;
+import com.mworld.utils.PreUtils;
 import com.mworld.weibo.api.Oauth2API;
 import com.mworld.weibo.api.Oauth2API.WeiboWebViewClient;
 import com.mworld.weibo.entities.AccessToken;
@@ -25,7 +24,6 @@ public class OauthActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_oauth);
 		initWebView();
-
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -34,8 +32,9 @@ public class OauthActivity extends Activity {
 		mWebView = (WebView) findViewById(R.id.webview);
 		mWebView.setVerticalScrollBarEnabled(false);
 		mWebView.setHorizontalScrollBarEnabled(false);
-		mWebView.setWebViewClient(new WeiboWebViewClient(getIntent().getStringExtra("username"),
-				getIntent().getStringExtra("password"), new TokenHandler()));
+		mWebView.setWebViewClient(new WeiboWebViewClient(getIntent()
+				.getStringExtra("username"), getIntent().getStringExtra(
+				"password"), new TokenHandler()));
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSaveFormData(false);
@@ -50,17 +49,12 @@ public class OauthActivity extends Activity {
 		@Override
 		public void onComplete(String jsonString) {
 			Log.i("------------------", "回调");
-			if (null != AccessTokenKeeper.readAccessToken(OauthActivity.this)) return;
 			AccessToken accessToken = AccessToken.parse(jsonString);
 			if (null == accessToken) {
 				Toast.makeText(OauthActivity.this, "授权失败，请重新授权！",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				AccessTokenKeeper.keepAccessToken(OauthActivity.this,
-						accessToken);
-				startActivity(new Intent(OauthActivity.this,
-						MworldActivity.class));
-				LoginActivity.instance.finish();
+				PreUtils.keepAccessToken(OauthActivity.this, accessToken);
 				finish();
 			}
 
@@ -68,7 +62,8 @@ public class OauthActivity extends Activity {
 
 		@Override
 		public void onWeiboException(WeiboException e) {
-			Log.e("----------------------", e.getMessage());
+			Toast.makeText(OauthActivity.this, "授权失败，请重新授权！",
+					Toast.LENGTH_SHORT).show();
 		}
 
 	}

@@ -5,16 +5,6 @@
     android:background="@drawable/wallpaper_night"
     android:orientation="vertical" >
 
-    <!--  TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="35dp"
-        android:gravity="center"
-        android:text="@string/guide_text04"
-        android:textColor="#fff"
-        android:textSize="22sp" /-->
-
     <Button
         android:id="@+id/startBtn"
         android:layout_width="40dip"
@@ -23,7 +13,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="18dp"
         android:layout_marginRight="18dp"
-        android:background="@drawable/ic_play"
-        android:textColor="#fff" />
+        android:background="@drawable/ic_play" />
 
 </RelativeLayout>

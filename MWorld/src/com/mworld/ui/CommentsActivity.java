@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mworld.adapter.CommentsListAdapter;
-import com.mworld.utils.AccessTokenKeeper;
+import com.mworld.utils.PreUtils;
 import com.mworld.weibo.api.CommentsAPI;
 import com.mworld.weibo.api.StatusesAPI;
 import com.mworld.weibo.entities.CommentsList;
@@ -34,7 +34,7 @@ public class CommentsActivity extends Activity {
 
 	private void loadStatus() {
 		StatusesAPI statusesAPI = new StatusesAPI(
-				AccessTokenKeeper.readAccessToken(this));
+				PreUtils.readAccessToken(this));
 		statusesAPI.show(getIntent().getLongExtra("id", 0),
 				new RequestListener() {
 
@@ -93,7 +93,7 @@ public class CommentsActivity extends Activity {
 
 	private void loadComments() {
 		CommentsAPI commentsAPI = new CommentsAPI(
-				AccessTokenKeeper.readAccessToken(this));
+				PreUtils.readAccessToken(this));
 		long id = getIntent().getLongExtra("id", 0);
 		commentsAPI.show(id, 0, 0, 10, 1, 0, new RequestListener() {
 

@@ -2,8 +2,11 @@ package com.mworld.ui;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -14,119 +17,116 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.mworld.adapter.ViewPagerAdapter;
-
+import com.mworld.utils.PreUtils;
 
 public class GuideViewActivity extends Activity {
+
 	// 定义ViewPager对象
+	@ViewInject(id = R.id.viewpager)
 	private ViewPager viewPager;
 
-	// 定义ViewPager适配器
-	private ViewPagerAdapter vpAdapter;
-
-	// 定义一个ArrayList来存放View
-	private ArrayList<View> views;
-
-	//定义各个界面View对象
-	private View view1,view2,view3,view4;
-	
 	// 定义底部小点图片
-	private ImageView pointImage0, pointImage1, pointImage2, pointImage3;
+	@ViewInject(id = R.id.page0)
+	private ImageView pointImage0;
+	@ViewInject(id = R.id.page1)
+	private ImageView pointImage1;
+	@ViewInject(id = R.id.page2)
+	private ImageView pointImage2;
+	@ViewInject(id = R.id.page3)
+	private ImageView pointImage3;
 
-	//定义开始按钮对象
-	private Button startBt;
-	
-	// 当前的位置索引值
-	private int currIndex = 0;
+	// 定义开始按钮对象
+	private Button startBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guideview);
+		FinalActivity.initInjectedView(this);
 
 		initView();
+	}
 
-		initData();
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (PreUtils.isGuided(this)) {
+			start();
+		} else {
+			PreUtils.setGuided(this);
+		}
 	}
 
 	/**
 	 * 初始化组件
 	 */
 	private void initView() {
-		//实例化各个界面的布局对象 
-		LayoutInflater mLi = LayoutInflater.from(this);
-		view1 = mLi.inflate(R.layout.guide_view01, null);
-		view2 = mLi.inflate(R.layout.guide_view02, null);
-		view3 = mLi.inflate(R.layout.guide_view03, null);
-		view4 = mLi.inflate(R.layout.guide_view04, null);
-				
-		// 实例化ViewPager
-		viewPager = (ViewPager) findViewById(R.id.viewpager);
 
 		// 实例化ArrayList对象
-		views = new ArrayList<View>();
+		ArrayList<View> views = new ArrayList<View>();
 
-		// 实例化ViewPager适配器
-		vpAdapter = new ViewPagerAdapter(views);
+		// 实例化各个界面的布局对象
+		LayoutInflater mLi = LayoutInflater.from(this);
+		View view1 = mLi.inflate(R.layout.guide_view01, null);
+		View view2 = mLi.inflate(R.layout.guide_view02, null);
+		View view3 = mLi.inflate(R.layout.guide_view03, null);
+		View view4 = mLi.inflate(R.layout.guide_view04, null);
 
-		// 实例化底部小点图片对象
-		pointImage0 = (ImageView) findViewById(R.id.page0);
-		pointImage1 = (ImageView) findViewById(R.id.page1);
-		pointImage2 = (ImageView) findViewById(R.id.page2);
-		pointImage3 = (ImageView) findViewById(R.id.page3);
-		
-		//实例化开始按钮
-		startBt = (Button) view4.findViewById(R.id.startBtn);
-	}
-
-	/**
-	 * 初始化数据
-	 */
-	private void initData() {
-		// 设置监听
-		viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
-		// 设置适配器数据
-		viewPager.setAdapter(vpAdapter);
-
-		//将要分页显示的View装入数组中		
+		// 将要分页显示的View装入数组中
 		views.add(view1);
 		views.add(view2);
 		views.add(view3);
 		views.add(view4);
-		vpAdapter.notifyDataSetChanged();	
-						
-		// 给开始按钮设置监听
-		startBt.setOnClickListener(new OnClickListener() {
+
+		// 实例化ViewPager适配器
+		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(views);
+
+		// 设置适配器数据
+		viewPager.setAdapter(vpAdapter);
+
+		// 设置viewpager监听
+		viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
+
+		// 实例化button并设置监听
+		startBtn = ((Button) view4.findViewById(R.id.startBtn));
+		startBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				 startbutton();
+				start();
 			}
 		});
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {
+
+		private Drawable focusedImage = getResources().getDrawable(
+				R.drawable.page_indicator_focused);
+
+		private Drawable unfocusedImage = getResources().getDrawable(
+				R.drawable.page_indicator_unfocused);
+
 		@Override
 		public void onPageSelected(int position) {
 			switch (position) {
 			case 0:
-				pointImage0.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_focused));
-				pointImage1.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
+				pointImage0.setImageDrawable(focusedImage);
+				pointImage1.setImageDrawable(unfocusedImage);
 				break;
 			case 1:
-				pointImage1.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_focused));
-				pointImage0.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
-				pointImage2.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
+				pointImage1.setImageDrawable(focusedImage);
+				pointImage0.setImageDrawable(unfocusedImage);
+				pointImage2.setImageDrawable(unfocusedImage);
 				break;
 			case 2:
-				pointImage2.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_focused));
-				pointImage1.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
-				pointImage3.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
+				pointImage2.setImageDrawable(focusedImage);
+				pointImage1.setImageDrawable(unfocusedImage);
+				pointImage3.setImageDrawable(unfocusedImage);
 				break;
 			case 3:
-				pointImage3.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_focused));
-				pointImage2.setImageDrawable(getResources().getDrawable(R.drawable.page_indicator_unfocused));
+				pointImage3.setImageDrawable(focusedImage);
+				pointImage2.setImageDrawable(unfocusedImage);
 				break;
 			}
-			currIndex = position;
 		}
 
 		@Override
@@ -138,16 +138,16 @@ public class GuideViewActivity extends Activity {
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
 
 		}
+
 	}
-	
+
 	/**
 	 * 相应按钮点击事件
 	 */
-	private void startbutton() {  
-      	Intent intent = new Intent();
-		intent.setClass(GuideViewActivity.this,LoginActivity.class);
+	public void start() {
+		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
-      }
-	
+	}
+
 }

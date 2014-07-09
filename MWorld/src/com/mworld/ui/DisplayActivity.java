@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.mworld.adapter.StatusesListAdapter;
-import com.mworld.utils.AccessTokenKeeper;
+import com.mworld.utils.PreUtils;
 import com.mworld.weibo.api.FriendshipsAPI;
 import com.mworld.weibo.api.StatusesAPI;
 import com.mworld.weibo.api.UsersAPI;
@@ -52,7 +52,7 @@ public class DisplayActivity extends Activity {
 	}
 
 	private void initComponents() {
-		mAccessToken = AccessTokenKeeper.readAccessToken(DisplayActivity.this);
+		mAccessToken = PreUtils.readAccessToken(DisplayActivity.this);
 		((TextView) findViewById(R.id.actionbar_title)).setText("M-World");
 		mList = (PullToRefreshListView) findViewById(R.id.status_list);
 		mList.setOnRefreshListener(new OnRefreshListener() {

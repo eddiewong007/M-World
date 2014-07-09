@@ -1,5 +1,6 @@
 package com.mworld.ui;
 
+import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mworld.utils.AccessTokenKeeper;
+import com.mworld.utils.PreUtils;
 import com.mworld.weibo.entities.AccessToken;
 
 public class MworldActivity extends Activity {
@@ -20,11 +21,12 @@ public class MworldActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mworld);
+		FinalActivity.initInjectedView(this);
 		initComponents();
 	}
 
 	private void initComponents() {
-		mAccessToken = AccessTokenKeeper.readAccessToken(MworldActivity.this);
+		mAccessToken = PreUtils.readAccessToken(MworldActivity.this);
 		mTitle.setText("M-World");
 	}
 
@@ -57,7 +59,7 @@ public class MworldActivity extends Activity {
 	}
 
 	public void logout(View v) {
-		AccessTokenKeeper.clear(this);
+		PreUtils.clear(this);
 		startActivity(new Intent(MworldActivity.this, LoginActivity.class));
 		finish();
 	}
