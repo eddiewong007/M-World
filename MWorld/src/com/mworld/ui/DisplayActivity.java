@@ -18,13 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
-import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.utils.PreUtils;
 import com.mworld.weibo.api.FriendshipsAPI;
 import com.mworld.weibo.api.UsersAPI;
 import com.mworld.weibo.entities.AccessToken;
-import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.User;
 import com.mworld.weibo.entities.UsersList;
 import com.sina.weibo.sdk.exception.WeiboException;
@@ -36,118 +33,126 @@ public class DisplayActivity extends Activity {
 	private PullToRefreshListView mList;
 	private UsersAPI mUsersAPI;
 	private FriendshipsAPI mFriendshipsAPI;
-	private ArrayList<Status> mArrayList;
-	StatusesListAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display);
 		initComponents();
-		mList.onRefresh();
+		switch (getIntent().getIntExtra("type", 0)) {
+		case 3:
+			profile();
+			break;
+		case 5:
+			friends();
+			break;
+		case 6:
+			fans();
+			break;
+		default:
+
+		}
 	}
 
 	private void initComponents() {
 		mAccessToken = PreUtils.readAccessToken(DisplayActivity.this);
-		mList = (PullToRefreshListView) findViewById(R.id.status_list);
-		mList.setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				switch (getIntent().getIntExtra("type", 0)) {
-				case 3:
-					profile();
-					break;
-				case 5:
-					friends();
-					break;
-				case 6:
-					fans();
-					break;
-				default:
-
-				}
-			}
-		});
-		mArrayList = new ArrayList<Status>();
-		mAdapter = new StatusesListAdapter(DisplayActivity.this, mArrayList);
-		mList.setAdapter(mAdapter);
 
 		mUsersAPI = new UsersAPI(mAccessToken);
 		mFriendshipsAPI = new FriendshipsAPI(mAccessToken);
 	}
 
 	private void profile() {
-		mUsersAPI.show(Long.parseLong(getIntent().getStringExtra("uid")),
-				new RequestListener() {
+		long uid = getIntent().getLongExtra("uid", 0);
+		if (uid == MainActivity.sUser.id) {
+			User user = MainActivity.sUser;
+			FinalBitmap.create(DisplayActivity.this)
+					.display(((ImageView) findViewById(R.id.my_icon)),
+							user.avatar_large);
 
-					@Override
-					public void onComplete(String jsonString) {
-						User user = User.parse(jsonString);
-						FinalBitmap.create(DisplayActivity.this).display(
-								((ImageView) findViewById(R.id.my_icon)),
-								user.avatar_large);
+			TextView myName = (TextView) findViewById(R.id.my_name);
+			myName.setText(user.screen_name);
 
-						TextView myName = (TextView) findViewById(R.id.my_name);
-						myName.setText(user.screen_name);
+			TextView myFriends = (TextView) findViewById(R.id.my_friends);
+			myFriends.setText("关注：" + user.friends_count);
+			myFriends.setOnClickListener(new OnClickListener() {
 
-						TextView myFriends = (TextView) findViewById(R.id.my_friends);
-						myFriends.setText("关注：" + user.friends_count);
-						myFriends.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Intent intent = new Intent(
+					// DisplayActivity.this,
+					// DisplayActivity.class);
+					// intent.putExtra("type", 5);
+					// intent.putExtra("uid", getIntent()
+					// .getStringExtra("uid"));
+					// startActivity(intent);
+				}
 
-							@Override
-							public void onClick(View v) {
-								// Intent intent = new Intent(
-								// DisplayActivity.this,
-								// DisplayActivity.class);
-								// intent.putExtra("type", 5);
-								// intent.putExtra("uid", getIntent()
-								// .getStringExtra("uid"));
-								// startActivity(intent);
-							}
+			});
 
-						});
+			TextView myFans = (TextView) findViewById(R.id.my_fans);
+			myFans.setText("粉丝：" + user.followers_count);
+			myFans.setOnClickListener(new OnClickListener() {
 
-						TextView myFans = (TextView) findViewById(R.id.my_fans);
-						myFans.setText("粉丝：" + user.followers_count);
-						myFans.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Intent intent = new Intent(
+					// DisplayActivity.this,
+					// DisplayActivity.class);
+					// intent.putExtra("type", 6);
+					// intent.putExtra("uid", getIntent()
+					// .getStringExtra("uid"));
+					// startActivity(intent);
+				}
 
-							@Override
-							public void onClick(View v) {
-								// Intent intent = new Intent(
-								// DisplayActivity.this,
-								// DisplayActivity.class);
-								// intent.putExtra("type", 6);
-								// intent.putExtra("uid", getIntent()
-								// .getStringExtra("uid"));
-								// startActivity(intent);
-							}
+			});
 
-						});
+			TextView myStatus = (TextView) findViewById(R.id.my_status);
+			myStatus.setText("微博：" + user.statuses_count);
+			myStatus.setOnClickListener(new OnClickListener() {
 
-						TextView myStatus = (TextView) findViewById(R.id.my_status);
-						myStatus.setText("微博：" + user.statuses_count);
-						myStatus.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Intent intent = new Intent(
+					// DisplayActivity.this,
+					// DisplayActivity.class);
+					// intent.putExtra("type", 4);
+					// intent.putExtra("uid", getIntent()
+					// .getStringExtra("uid"));
+					// startActivity(intent);
+				}
 
-							@Override
-							public void onClick(View v) {
-								// Intent intent = new Intent(
-								// DisplayActivity.this,
-								// DisplayActivity.class);
-								// intent.putExtra("type", 4);
-								// intent.putExtra("uid", getIntent()
-								// .getStringExtra("uid"));
-								// startActivity(intent);
-							}
+			});
+		} else {
+			mUsersAPI.show(uid, new RequestListener() {
 
-						});
-					}
+				@Override
+				public void onComplete(String jsonString) {
+					User user = User.parse(jsonString);
+					FinalBitmap.create(DisplayActivity.this).display(
+							((ImageView) findViewById(R.id.my_icon)),
+							user.avatar_large);
 
-					@Override
-					public void onWeiboException(WeiboException arg0) {
+					TextView myName = (TextView) findViewById(R.id.my_name);
+					myName.setText(user.screen_name);
 
-					}
+					TextView myFriends = (TextView) findViewById(R.id.my_friends);
+					myFriends.setText("关注：" + user.friends_count);
 
-				});
+					TextView myFans = (TextView) findViewById(R.id.my_fans);
+					myFans.setText("粉丝：" + user.followers_count);
+
+					TextView myStatus = (TextView) findViewById(R.id.my_status);
+					myStatus.setText("微博：" + user.statuses_count);
+
+				}
+
+				@Override
+				public void onWeiboException(WeiboException arg0) {
+
+				}
+
+			});
+		}
 	}
 
 	private void friends() {

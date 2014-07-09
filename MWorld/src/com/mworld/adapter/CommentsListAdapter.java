@@ -61,7 +61,8 @@ public class CommentsListAdapter extends BaseAdapter {
 
 		ViewHolder holder = null;
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.comment_list_item, null);
+			convertView = mInflater.inflate(R.layout.comment_list_item,
+					null);
 			holder = new ViewHolder();
 			holder.userAvatar = (ImageView) convertView
 					.findViewById(R.id.user_com_avatar);
@@ -78,14 +79,13 @@ public class CommentsListAdapter extends BaseAdapter {
 		final Comment comment = mCommentsList.get(position);
 		FinalBitmap.create(mContext).display(holder.userAvatar,
 				comment.user.avatar_large);
-		
+
 		holder.userAvatar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Log.i("adapter", "click");
-				Intent intent = new Intent(mContext,
-						DisplayActivity.class);
+				Intent intent = new Intent(mContext, DisplayActivity.class);
 				intent.putExtra("type", 3);
 				intent.putExtra("uid", String.valueOf(comment.user.id));
 				mContext.startActivity(intent);

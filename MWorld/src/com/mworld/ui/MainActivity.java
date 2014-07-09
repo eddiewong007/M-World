@@ -13,8 +13,17 @@ import com.mworld.adapter.TabsAdapter;
 import com.mworld.fragment.AtFragment;
 import com.mworld.fragment.CommentFragment;
 import com.mworld.fragment.HomeFragment;
+import com.mworld.utils.PreUtils;
+import com.mworld.weibo.api.UsersAPI;
+import com.mworld.weibo.entities.AccessToken;
+import com.mworld.weibo.entities.User;
+import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.RequestListener;
 
 public class MainActivity extends ActionBarActivity {
+
+	public static AccessToken sAccessToken;
+	public static User sUser;
 
 	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
@@ -51,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
 					"tab", 0));
 		}
 
+		obtainCurUser();
 	}
 
 	@Override
@@ -81,6 +91,24 @@ public class MainActivity extends ActionBarActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void obtainCurUser() {
+		sAccessToken = PreUtils.readAccessToken(this);
+		new UsersAPI(sAccessToken).show(Long.parseLong(sAccessToken.uid),
+				new RequestListener() {
+
+					@Override
+					public void onComplete(String jsonString) {
+						sUser = User.parse(jsonString);
+					}
+
+					@Override
+					public void onWeiboException(WeiboException arg0) {
+
+					}
+				});
+
 	}
 
 }

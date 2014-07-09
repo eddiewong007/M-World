@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_home, null);
+		View view = inflater.inflate(R.layout.fragment_home, container);
 		mList = (PullToRefreshListView) view.findViewById(R.id.home_timeline);
 		mAccessToken = PreUtils.readAccessToken(getActivity());
 		mStatusesAPI = new StatusesAPI(mAccessToken);

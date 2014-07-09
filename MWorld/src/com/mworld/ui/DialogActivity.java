@@ -1,55 +1,94 @@
 package com.mworld.ui;
 
+import com.mworld.weibo.api.UsersAPI;
+import com.mworld.weibo.entities.User;
+import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.RequestListener;
+
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+public class DialogActivity extends Activity {
 
+	@ViewInject(id = R.id.llayout01, click = "click")
+	private LinearLayout layout01;
+	@ViewInject(id = R.id.llayout02, click = "click")
+	private LinearLayout layout02;
+	@ViewInject(id = R.id.llayout03, click = "click")
+	private LinearLayout layout03;
+	@ViewInject(id = R.id.llayout04, click = "click")
+	private LinearLayout layout04;
+	@ViewInject(id = R.id.llayout05, click = "click")
+	private LinearLayout layout05;
 
+	@ViewInject(id = R.id.head_icon)
+	ImageView mHeadIcon;
+	@ViewInject(id = R.id.head_name)
+	TextView mHeadName;
 
-public class DialogActivity extends Activity implements OnClickListener
-{
-private LinearLayout layout01,layout02,layout03,layout04, layout05;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dialog);
-
-		initView();
+		FinalActivity.initInjectedView(this);
+		hasUser();
 	}
 
-	/**
-	 * 初始化组件
-	 */
-	private void initView(){
-		//得到布局组件对象并设置监听事件
-		layout01 = (LinearLayout)findViewById(R.id.llayout01);
-		layout02 = (LinearLayout)findViewById(R.id.llayout02);
-		layout03 = (LinearLayout)findViewById(R.id.llayout03);
-		layout04 = (LinearLayout)findViewById(R.id.llayout04);
-		layout05 = (LinearLayout)findViewById(R.id.llayout05);
-
-
-		layout01.setOnClickListener(this);
-		layout02.setOnClickListener(this);
-		layout03.setOnClickListener(this);
-		layout04.setOnClickListener(this);
-		layout05.setOnClickListener(this);
-
-	}
-	
 	@Override
-	public boolean onTouchEvent(MotionEvent event){
+	public boolean onTouchEvent(MotionEvent event) {
 		finish();
 		return true;
 	}
-	
-	@Override
-	public void onClick(View v) {
-		
+
+	public void click(View view) {
+		switch (view.getId()) {
+		case R.id.llayout05:
+			Intent intent = new Intent(this, DisplayActivity.class);
+			intent.putExtra("type", 3);
+			intent.putExtra("uid", MainActivity.sUser.id);
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+		finish();
+	}
+
+	private void hasUser() {
+		if (null != MainActivity.sUser) {
+			setHeadIcon();
+		} else {
+			new UsersAPI(MainActivity.sAccessToken).show(
+					Long.parseLong(MainActivity.sAccessToken.uid),
+					new RequestListener() {
+
+						@Override
+						public void onComplete(String jsonString) {
+							MainActivity.sUser = User.parse(jsonString);
+							setHeadIcon();
+						}
+
+						@Override
+						public void onWeiboException(WeiboException arg0) {
+
+						}
+					});
+		}
+	}
+
+	private void setHeadIcon() {
+		FinalBitmap.create(this).display(mHeadIcon,
+				MainActivity.sUser.avatar_large);
+		mHeadName.setText(MainActivity.sUser.screen_name);
 	}
 }
