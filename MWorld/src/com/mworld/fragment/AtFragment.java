@@ -8,19 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.ui.R;
 import com.mworld.utils.PreUtils;
-import com.mworld.weibo.api.StatusesAPI;
-import com.mworld.weibo.entities.AccessToken;
-import com.mworld.weibo.entities.Status;
-import com.mworld.weibo.entities.StatusesList;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
+import com.weibo.api.StatusesAPI;
+import com.weibo.entities.AccessToken;
+import com.weibo.entities.Status;
+import com.weibo.entities.StatusesList;
 
 public class AtFragment extends Fragment {
 
@@ -37,19 +39,25 @@ public class AtFragment extends Fragment {
 	private PullToRefreshListView mList;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_at, container, false);
-		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		mAccessToken = PreUtils.readAccessToken(getActivity());
 		mStatusesAPI = new StatusesAPI(mAccessToken);
 		mArrayList = new ArrayList<Status>();
 		mAdapter = new StatusesListAdapter(getActivity(), mArrayList);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_at, null, false);
+		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
+
 		mList.setAdapter(mAdapter);
-		mList.setOnRefreshListener(new OnRefreshListener() {
+		mList.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
-			public void onRefresh() {
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				mStatusesAPI
 						.mentions(since_id, 0, 10, 1,
 								StatusesAPI.AUTHOR_FILTER_ALL,

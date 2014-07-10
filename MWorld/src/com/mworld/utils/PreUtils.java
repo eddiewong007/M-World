@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.mworld.weibo.entities.AccessToken;
+import com.weibo.entities.AccessToken;
 
 /**
  * 该类用于保存AccessToken到sharepreference，并提供读取功能

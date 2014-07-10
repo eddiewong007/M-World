@@ -14,11 +14,11 @@ import com.mworld.fragment.AtFragment;
 import com.mworld.fragment.CommentFragment;
 import com.mworld.fragment.HomeFragment;
 import com.mworld.utils.PreUtils;
-import com.mworld.weibo.api.UsersAPI;
-import com.mworld.weibo.entities.AccessToken;
-import com.mworld.weibo.entities.User;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
+import com.weibo.api.UsersAPI;
+import com.weibo.entities.AccessToken;
+import com.weibo.entities.User;
 
 public class MainActivity extends ActionBarActivity {
 

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.mworld.utils.PreUtils;
-import com.mworld.weibo.entities.AccessToken;
+import com.weibo.entities.AccessToken;
 
 public class MworldActivity extends Activity {
 

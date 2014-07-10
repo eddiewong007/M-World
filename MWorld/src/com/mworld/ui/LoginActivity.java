@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mworld.utils.PreUtils;
-import com.mworld.weibo.api.Oauth2API;
-import com.mworld.weibo.entities.AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
+import com.weibo.api.Oauth2API;
+import com.weibo.entities.AccessToken;
 
 public class LoginActivity extends Activity {
 

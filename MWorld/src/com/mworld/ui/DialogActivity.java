@@ -1,9 +1,9 @@
 package com.mworld.ui;
 
-import com.mworld.weibo.api.UsersAPI;
-import com.mworld.weibo.entities.User;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
+import com.weibo.api.UsersAPI;
+import com.weibo.entities.User;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalBitmap;

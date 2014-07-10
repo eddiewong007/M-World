@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.mworld.ui.CommentsActivity;
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
-import com.mworld.weibo.entities.Status;
+import com.weibo.entities.Status;
 
 public class StatusesListAdapter extends BaseAdapter {
 

@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
-import com.mworld.weibo.entities.Comment;
+import com.weibo.entities.Comment;
 
 public class CommentsListAdapter extends BaseAdapter {
 

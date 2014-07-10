@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.mworld.adapter.CommentsListAdapter;
 import com.mworld.utils.PreUtils;
-import com.mworld.weibo.api.CommentsAPI;
-import com.mworld.weibo.api.StatusesAPI;
-import com.mworld.weibo.entities.CommentsList;
-import com.mworld.weibo.entities.Status;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
+import com.weibo.api.CommentsAPI;
+import com.weibo.api.StatusesAPI;
+import com.weibo.entities.CommentsList;
+import com.weibo.entities.Status;
 
 public class CommentsActivity extends Activity {
 
