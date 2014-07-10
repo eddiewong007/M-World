@@ -20,6 +20,17 @@ public class PreUtils {
 	private static final String IS_GUIDED = "is_guided";
 
 	/**
+	 * 清空sharepreference
+	 * 
+	 * @param context
+	 */
+	public static void clear(Context context) {
+		SharedPreferences pref = context.getSharedPreferences(
+				context.getPackageName() + "_preferences", 0);
+		pref.edit().clear().commit();
+	}
+
+	/**
 	 * 保存accesstoken到SharedPreferences
 	 * 
 	 * @param context
@@ -52,15 +63,11 @@ public class PreUtils {
 
 	}
 
-	/**
-	 * 清空sharepreference
-	 * 
-	 * @param context
-	 */
-	public static void clear(Context context) {
+	public static void logOut(Context context) {
 		SharedPreferences pref = context.getSharedPreferences(
 				context.getPackageName() + "_preferences", 0);
-		pref.edit().clear().commit();
+		pref.edit().putString(ACCESS_TOKEN, "").putString(EXPIRES_IN, "")
+				.putString(UID, "").commit();
 	}
 
 	/**

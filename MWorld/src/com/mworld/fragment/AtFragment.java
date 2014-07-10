@@ -1,9 +1,7 @@
 package com.mworld.fragment;
 
-import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,92 +10,58 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mworld.adapter.StatusesListAdapter;
+import com.mworld.handler.StatusLoadHandler;
+import com.mworld.handler.StatusRefreshHandler;
 import com.mworld.ui.R;
-import com.mworld.utils.PreUtils;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.weibo.api.StatusesAPI;
-import com.weibo.entities.AccessToken;
-import com.weibo.entities.Status;
-import com.weibo.entities.StatusesList;
 
-public class AtFragment extends Fragment {
+public class AtFragment extends BaseFragment {
 
-	private AccessToken mAccessToken;
-
-	private StatusesAPI mStatusesAPI;
-
-	private ArrayList<Status> mArrayList;
-
-	private StatusesListAdapter mAdapter;
-
-	private long since_id = 0;
-
-	private PullToRefreshListView mList;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mAccessToken = PreUtils.readAccessToken(getActivity());
-		mStatusesAPI = new StatusesAPI(mAccessToken);
-		mArrayList = new ArrayList<Status>();
-		mAdapter = new StatusesListAdapter(getActivity(), mArrayList);
-	}
-
+	@SuppressLint("InflateParams")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_at, null, false);
 		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
+		mStatusesAPI.mentions(since_id, 0, 20, page++,
+				StatusesAPI.AUTHOR_FILTER_ALL, StatusesAPI.SRC_FILTER_ALL,
+				StatusesAPI.TYPE_FILTER_ALL, false, new StatusRefreshHandler(
+						AtFragment.this));
+		return view;
+	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
 		mList.setAdapter(mAdapter);
 		mList.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				mStatusesAPI
-						.mentions(since_id, 0, 10, 1,
-								StatusesAPI.AUTHOR_FILTER_ALL,
-								StatusesAPI.SRC_FILTER_ALL,
-								StatusesAPI.TYPE_FILTER_ALL, false,
-								new StatusHandler());
+				Log.i("At", "refresh");
+				mStatusesAPI.mentions(since_id, 0, 20, 1,
+						StatusesAPI.AUTHOR_FILTER_ALL,
+						StatusesAPI.SRC_FILTER_ALL,
+						StatusesAPI.TYPE_FILTER_ALL, false,
+						new StatusRefreshHandler(AtFragment.this));
 			}
 		});
-		return view;
-	}
+		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
 
-	public class StatusHandler implements RequestListener {
-
-		@Override
-		public void onComplete(String jsonString) {
-			Log.i("--------------------------", "回调");
-
-			StatusesList statusList = new StatusesList();
-			try {
-				statusList = StatusesList.parse(jsonString);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (statusList.statusesList == null
-					|| statusList.statusesList.isEmpty()) {
-				Toast.makeText(getActivity(), "没有更新的微博", Toast.LENGTH_SHORT)
+			@Override
+			public void onLastItemVisible() {
+				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
 						.show();
-				mList.onRefreshComplete();
-				return;
+				mStatusesAPI.mentions(0, init_id, 20, page++,
+						StatusesAPI.AUTHOR_FILTER_ALL,
+						StatusesAPI.SRC_FILTER_ALL,
+						StatusesAPI.TYPE_FILTER_ALL, false,
+						new StatusLoadHandler(AtFragment.this));
 			}
-			since_id = statusList.statusesList.get(0).id;
-			mArrayList.addAll(0, statusList.statusesList);
-			mAdapter.notifyDataSetChanged();
-			mList.onRefreshComplete();
-		}
-
-		@Override
-		public void onWeiboException(WeiboException e) {
-			Log.e("-------------------", e.getMessage());
-		}
-
+		});
 	}
+
 }

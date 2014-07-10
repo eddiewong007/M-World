@@ -1,10 +1,10 @@
 package com.weibo.api;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 import android.text.TextUtils;
 
-import com.sina.weibo.sdk.net.AsyncWeiboRunner;
-import com.sina.weibo.sdk.net.RequestListener;
-import com.sina.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.utils.LogUtil;
 import com.weibo.entities.AccessToken;
 
@@ -52,39 +52,20 @@ public class BaseAPI {
 	 * @param listener
 	 *            请求后的回调接口
 	 */
-	protected void requestAsync(String url, WeiboParameters params,
-			String httpMethod, RequestListener listener) {
+	protected void requestAsync(String url, AjaxParams params,
+			String httpMethod, AjaxCallBack<String> callBack) {
 		if (null == mAccessToken || TextUtils.isEmpty(url) || null == params
-				|| TextUtils.isEmpty(httpMethod) || null == listener) {
+				|| TextUtils.isEmpty(httpMethod) || null == callBack) {
 			LogUtil.e(TAG, "Argument error!");
 			return;
 		}
 
 		params.put(KEY_ACCESS_TOKEN, mAccessToken.access_token);
-		AsyncWeiboRunner.requestAsync(url, params, httpMethod, listener);
-	}
-
-	/**
-	 * HTTP 同步请求。
-	 * 
-	 * @param url
-	 *            请求的地址
-	 * @param params
-	 *            请求的参数
-	 * @param httpMethod
-	 *            请求方法
-	 * 
-	 * @return 同步请求后，服务器返回的字符串。
-	 */
-	protected String requestSync(String url, WeiboParameters params,
-			String httpMethod) {
-		if (null == mAccessToken || TextUtils.isEmpty(url) || null == params
-				|| TextUtils.isEmpty(httpMethod)) {
-			LogUtil.e(TAG, "Argument error!");
-			return "";
+		FinalHttp fHttp = new FinalHttp();
+		if (httpMethod.equals(HTTPMETHOD_GET))
+			fHttp.get(url, params, callBack);
+		else if (httpMethod.equals(HTTPMETHOD_POST)) {
+			fHttp.post(url, params, callBack);
 		}
-
-		params.put(KEY_ACCESS_TOKEN, mAccessToken.access_token);
-		return AsyncWeiboRunner.request(url, params, httpMethod);
 	}
 }

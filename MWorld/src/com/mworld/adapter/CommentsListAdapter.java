@@ -61,7 +61,7 @@ public class CommentsListAdapter extends BaseAdapter {
 
 		ViewHolder holder = null;
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.comment_list_item,
+			convertView = mInflater.inflate(R.layout.list_item_comment,
 					null);
 			holder = new ViewHolder();
 			holder.userAvatar = (ImageView) convertView

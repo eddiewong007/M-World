@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#efefef"
-    android:padding="15dp" >
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp" >
 
     <RelativeLayout
         android:id="@+id/layout_message"
@@ -41,7 +43,7 @@
         <View
             android:id="@+id/divider_username"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:layout_below="@id/user_avatar"
             android:background="#efefef" />
 
@@ -52,7 +54,8 @@
             android:layout_below="@id/divider_username"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:autoLink="web|email|phone" />
+            android:autoLink="web|email|phone"
+            android:padding="4dp" />
 
         <LinearLayout
             android:id="@+id/layout_repost"
@@ -61,7 +64,8 @@
             android:layout_below="@id/text_status"
             android:layout_margin="7dp"
             android:background="#efefef"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:padding="4dp" >
 
             <TextView
                 android:id="@+id/text_repost"
@@ -84,7 +88,7 @@
         <View
             android:id="@+id/divider_count"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:layout_below="@id/layout_repost"
             android:background="#efefef" />
 
@@ -108,7 +112,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="1dp"
+                android:layout_width="2dp"
                 android:layout_height="match_parent"
                 android:background="#efefef" />
 

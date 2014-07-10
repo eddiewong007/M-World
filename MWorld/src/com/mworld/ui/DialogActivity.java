@@ -1,13 +1,9 @@
 package com.mworld.ui;
 
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
-import com.weibo.api.UsersAPI;
-import com.weibo.entities.User;
-
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.annotation.view.ViewInject;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +12,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mworld.utils.PreUtils;
+import com.weibo.api.Oauth2API;
+import com.weibo.api.UsersAPI;
+import com.weibo.entities.User;
 
 public class DialogActivity extends Activity {
 
@@ -51,13 +52,23 @@ public class DialogActivity extends Activity {
 
 	public void click(View view) {
 		switch (view.getId()) {
-		case R.id.llayout05:
+
+		case R.id.llayout01:
 			Intent intent = new Intent(this, DisplayActivity.class);
 			intent.putExtra("type", 3);
 			intent.putExtra("uid", MainActivity.sUser.id);
 			startActivity(intent);
 			break;
-
+		case R.id.llayout05:
+			Intent loginIntent = new Intent(this, LoginActivity.class);
+			startActivity(loginIntent);
+			PreUtils.logOut(this);
+			Oauth2API.revokeOauth2(MainActivity.sAccessToken,
+					new AjaxCallBack<String>() {
+					});
+			finish();
+			MainActivity.instance.finish();
+			break;
 		default:
 			break;
 		}
@@ -70,18 +81,21 @@ public class DialogActivity extends Activity {
 		} else {
 			new UsersAPI(MainActivity.sAccessToken).show(
 					Long.parseLong(MainActivity.sAccessToken.uid),
-					new RequestListener() {
+					new AjaxCallBack<String>() {
 
 						@Override
-						public void onComplete(String jsonString) {
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+						}
+
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
 							MainActivity.sUser = User.parse(jsonString);
 							setHeadIcon();
 						}
 
-						@Override
-						public void onWeiboException(WeiboException arg0) {
-
-						}
 					});
 		}
 	}

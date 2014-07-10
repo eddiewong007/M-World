@@ -62,7 +62,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
 		ViewHolder holder = null;
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.status_list_item, null);
+			convertView = mInflater.inflate(R.layout.list_item_status, null);
 			holder = new ViewHolder();
 			holder.userAvatar = (ImageView) convertView
 					.findViewById(R.id.user_avatar);

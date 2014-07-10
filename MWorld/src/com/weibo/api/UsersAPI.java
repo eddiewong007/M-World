@@ -1,9 +1,9 @@
 package com.weibo.api;
 
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 import android.util.SparseArray;
 
-import com.sina.weibo.sdk.net.RequestListener;
-import com.sina.weibo.sdk.net.WeiboParameters;
 import com.weibo.entities.AccessToken;
 
 /**
@@ -36,13 +36,13 @@ public class UsersAPI extends BaseAPI {
 	 * 
 	 * @param uid
 	 *            需要查询的用户ID
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void show(long uid, RequestListener listener) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("uid", uid);
-		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, listener);
+	public void show(long uid, AjaxCallBack<String> callBack) {
+		AjaxParams params = new AjaxParams();
+		params.put("uid", String.valueOf(uid));
+		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, callBack);
 	}
 
 	/**
@@ -50,13 +50,13 @@ public class UsersAPI extends BaseAPI {
 	 * 
 	 * @param screen_name
 	 *            需要查询的用户昵称
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void show(String screen_name, RequestListener listener) {
-		WeiboParameters params = new WeiboParameters();
+	public void show(String screen_name, AjaxCallBack<String> callBack) {
+		AjaxParams params = new AjaxParams();
 		params.put("screen_name", screen_name);
-		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, listener);
+		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, callBack);
 	}
 
 	/**
@@ -64,14 +64,14 @@ public class UsersAPI extends BaseAPI {
 	 * 
 	 * @param domain
 	 *            需要查询的个性化域名（请注意：是http://weibo.com/xxx后面的xxx部分）
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void domainShow(String domain, RequestListener listener) {
-		WeiboParameters params = new WeiboParameters();
+	public void domainShow(String domain, AjaxCallBack<String> callBack) {
+		AjaxParams params = new AjaxParams();
 		params.put("domain", domain);
 		requestAsync(sAPIList.get(READ_USER_BY_DOMAIN), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -79,60 +79,17 @@ public class UsersAPI extends BaseAPI {
 	 * 
 	 * @param uids
 	 *            需要获取数据的用户UID，多个之间用逗号分隔，最多不超过100个
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void counts(long[] uids, RequestListener listener) {
-		WeiboParameters params = buildCountsParams(uids);
+	public void counts(long[] uids, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildCountsParams(uids);
 		requestAsync(sAPIList.get(READ_USER_COUNT), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
-	/**
-	 * -----------------------------------------------------------------------
-	 * 请注意：以下方法匀均同步方法。如果开发者有自己的异步请求机制，请使用该函数。
-	 * -----------------------------------------------------------------------
-	 */
-
-	/**
-	 * @see #show(long, RequestListener)
-	 */
-	public String showSync(long uid) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("uid", uid);
-		return requestSync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #show(String, RequestListener)
-	 */
-	public String showSync(String screen_name) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("screen_name", screen_name);
-		return requestSync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #domainShow(String, RequestListener)
-	 */
-	public String domainShowSync(String domain) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("domain", domain);
-		return requestSync(sAPIList.get(READ_USER_BY_DOMAIN), params,
-				HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #counts(long[], RequestListener)
-	 */
-	public String countsSync(long[] uids) {
-		WeiboParameters params = buildCountsParams(uids);
-		return requestSync(sAPIList.get(READ_USER_COUNT), params,
-				HTTPMETHOD_GET);
-	}
-
-	private WeiboParameters buildCountsParams(long[] uids) {
-		WeiboParameters params = new WeiboParameters();
+	private AjaxParams buildCountsParams(long[] uids) {
+		AjaxParams params = new AjaxParams();
 		StringBuilder strb = new StringBuilder();
 		for (long cid : uids) {
 			strb.append(cid).append(",");

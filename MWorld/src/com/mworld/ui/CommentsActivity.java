@@ -1,6 +1,7 @@
 package com.mworld.ui;
 
 import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +14,6 @@ import android.widget.TextView;
 
 import com.mworld.adapter.CommentsListAdapter;
 import com.mworld.utils.PreUtils;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.weibo.api.CommentsAPI;
 import com.weibo.api.StatusesAPI;
 import com.weibo.entities.CommentsList;
@@ -36,15 +35,11 @@ public class CommentsActivity extends Activity {
 		StatusesAPI statusesAPI = new StatusesAPI(
 				PreUtils.readAccessToken(this));
 		statusesAPI.show(getIntent().getLongExtra("id", 0),
-				new RequestListener() {
+				new AjaxCallBack<String>() {
 
 					@Override
-					public void onWeiboException(WeiboException arg0) {
-
-					}
-
-					@Override
-					public void onComplete(String jsonString) {
+					public void onSuccess(String jsonString) {
+						super.onSuccess(jsonString);
 						Log.i("-------------回调", jsonString);
 						mStatus = Status.parse(jsonString);
 						ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
@@ -95,15 +90,11 @@ public class CommentsActivity extends Activity {
 		CommentsAPI commentsAPI = new CommentsAPI(
 				PreUtils.readAccessToken(this));
 		long id = getIntent().getLongExtra("id", 0);
-		commentsAPI.show(id, 0, 0, 10, 1, 0, new RequestListener() {
+		commentsAPI.show(id, 0, 0, 10, 1, 0, new AjaxCallBack<String>() {
 
 			@Override
-			public void onWeiboException(WeiboException arg0) {
-
-			}
-
-			@Override
-			public void onComplete(String jsonString) {
+			public void onSuccess(String jsonString) {
+				super.onSuccess(jsonString);
 				CommentsList commentsList = CommentsList.parse(jsonString);
 				if (0 == commentsList.commentList.size())
 					((TextView) findViewById(R.id.no_comment)).setText("没有评论");
@@ -113,6 +104,7 @@ public class CommentsActivity extends Activity {
 				((ListView) findViewById(R.id.comments_list))
 						.setAdapter(adapter);
 			}
+
 		});
 	}
 

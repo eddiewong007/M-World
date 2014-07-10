@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +20,6 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.utils.PreUtils;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.weibo.api.FriendshipsAPI;
 import com.weibo.api.UsersAPI;
 import com.weibo.entities.AccessToken;
@@ -123,10 +122,16 @@ public class DisplayActivity extends Activity {
 
 			});
 		} else {
-			mUsersAPI.show(uid, new RequestListener() {
+			mUsersAPI.show(uid, new AjaxCallBack<String>() {
 
 				@Override
-				public void onComplete(String jsonString) {
+				public void onFailure(Throwable t, int errorNo, String strMsg) {
+					super.onFailure(t, errorNo, strMsg);
+				}
+
+				@Override
+				public void onSuccess(String jsonString) {
+					super.onSuccess(jsonString);
 					User user = User.parse(jsonString);
 					FinalBitmap.create(DisplayActivity.this).display(
 							((ImageView) findViewById(R.id.my_icon)),
@@ -143,12 +148,6 @@ public class DisplayActivity extends Activity {
 
 					TextView myStatus = (TextView) findViewById(R.id.my_status);
 					myStatus.setText("微博：" + user.statuses_count);
-
-				}
-
-				@Override
-				public void onWeiboException(WeiboException arg0) {
-
 				}
 
 			});
@@ -167,10 +166,17 @@ public class DisplayActivity extends Activity {
 				false, new UserHandler());
 	}
 
-	public class UserHandler implements RequestListener {
+	public class UserHandler extends AjaxCallBack<String> {
 
 		@Override
-		public void onComplete(String jsonString) {
+		public void onFailure(Throwable t, int errorNo, String strMsg) {
+			super.onFailure(t, errorNo, strMsg);
+			Log.i("--------------------------", strMsg);
+		}
+
+		@Override
+		public void onSuccess(String jsonString) {
+			super.onSuccess(jsonString);
 			Log.i("--------------------------", "回调");
 			UsersList userList = new UsersList();
 			try {
@@ -195,7 +201,7 @@ public class DisplayActivity extends Activity {
 			String[] from = new String[] { "user_avatar", "user_name" };
 			int[] to = new int[] { R.id.icon, R.id.name };
 			SimpleAdapter adapter = new SimpleAdapter(DisplayActivity.this,
-					data, R.layout.user_list_item, from, to);
+					data, R.layout.list_item_user, from, to);
 			mList.setAdapter(adapter);
 			adapter.setViewBinder(new ViewBinder() {
 
@@ -228,11 +234,6 @@ public class DisplayActivity extends Activity {
 
 			});
 
-		}
-
-		@Override
-		public void onWeiboException(WeiboException e) {
-			Log.d("-------------------", e.getMessage());
 		}
 
 	}

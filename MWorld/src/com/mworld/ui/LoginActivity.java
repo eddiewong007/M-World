@@ -2,6 +2,7 @@ package com.mworld.ui;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mworld.utils.PreUtils;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.weibo.api.Oauth2API;
 import com.weibo.entities.AccessToken;
 
@@ -54,11 +53,11 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public class TokenHandler implements RequestListener {
+	public class TokenHandler extends AjaxCallBack<String> {
 
 		@Override
-		public void onComplete(String jsonString) {
-
+		public void onSuccess(String jsonString) {
+			super.onSuccess(jsonString);
 			AccessToken accessToken = AccessToken.parse(jsonString);
 			if (null == accessToken) {
 				Toast.makeText(LoginActivity.this, "授权失败，请重新授权！",
@@ -71,11 +70,11 @@ public class LoginActivity extends Activity {
 		}
 
 		@Override
-		public void onWeiboException(WeiboException e) {
-			Toast.makeText(LoginActivity.this, "授权失败，请重新授权！",
-					Toast.LENGTH_SHORT).show();
+		public void onFailure(Throwable t, int errorNo, String strMsg) {
+			super.onFailure(t, errorNo, strMsg);
+			Toast.makeText(LoginActivity.this, strMsg, Toast.LENGTH_SHORT)
+					.show();
 		}
-
 	}
 
 }

@@ -1,9 +1,9 @@
 package com.weibo.api;
 
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 import android.util.SparseArray;
 
-import com.sina.weibo.sdk.net.RequestListener;
-import com.sina.weibo.sdk.net.WeiboParameters;
 import com.weibo.entities.AccessToken;
 
 /**
@@ -85,17 +85,17 @@ public class CommentsAPI extends BaseAPI {
 	 *            {@link #AUTHOR_FILTER_ALL} <li>
 	 *            {@link #AUTHOR_FILTER_ATTENTIONS} <li>
 	 *            {@link #AUTHOR_FILTER_STRANGER}
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void show(long id, long since_id, long max_id, int count, int page,
-			int authorType, RequestListener listener) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("id", id);
-		params.put("filter_by_author", authorType);
+			int authorType, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
+				page);
+		params.put("id", String.valueOf(id));
+		params.put("filter_by_author", String.valueOf(authorType));
 		requestAsync(sAPIList.get(READ_API_SHOW), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -113,16 +113,16 @@ public class CommentsAPI extends BaseAPI {
 	 *            来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 <li>
 	 *            {@link #SRC_FILTER_ALL} <li>{@link #SRC_FILTER_WEIBO} <li>
 	 *            {@link #SRC_FILTER_WEIQUN}
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void byME(long since_id, long max_id, int count, int page,
-			int sourceType, RequestListener listener) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_source", sourceType);
+			int sourceType, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
+				page);
+		params.put("filter_by_source", String.valueOf(sourceType));
 		requestAsync(sAPIList.get(READ_API_BY_ME), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -145,17 +145,17 @@ public class CommentsAPI extends BaseAPI {
 	 *            来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 <li>
 	 *            {@link #SRC_FILTER_ALL} <li>{@link #SRC_FILTER_WEIBO} <li>
 	 *            {@link #SRC_FILTER_WEIQUN}
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void toME(long since_id, long max_id, int count, int page,
-			int authorType, int sourceType, RequestListener listener) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_author", authorType);
-		params.put("filter_by_source", sourceType);
+			int authorType, int sourceType, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
+				page);
+		params.put("filter_by_author", String.valueOf(authorType));
+		params.put("filter_by_source", String.valueOf(sourceType));
 		requestAsync(sAPIList.get(READ_API_TO_ME), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -171,16 +171,16 @@ public class CommentsAPI extends BaseAPI {
 	 *            返回结果的页码，默认为1。
 	 * @param trim_user
 	 *            返回值中user字段开关，false：返回完整user字段、true：user字段仅返回user_id，默认为false。
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void timeline(long since_id, long max_id, int count, int page,
-			boolean trim_user, RequestListener listener) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("trim_user", trim_user ? 1 : 0);
+			boolean trim_user, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
+				page);
+		params.put("trim_user", String.valueOf(trim_user ? 1 : 0));
 		requestAsync(sAPIList.get(READ_API_TIMELINE), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -203,17 +203,17 @@ public class CommentsAPI extends BaseAPI {
 	 *            来源筛选类型，0：全部，1：来自微博的评论，2：来自微群的评论，默认为0 <li>
 	 *            {@link #SRC_FILTER_ALL} <li> {@link #SRC_FILTER_WEIBO} <li>
 	 *            {@link #SRC_FILTER_WEIQUN}
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void mentions(long since_id, long max_id, int count, int page,
-			int authorType, int sourceType, RequestListener listener) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_author", authorType);
-		params.put("filter_by_source", sourceType);
+			int authorType, int sourceType, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
+				page);
+		params.put("filter_by_author", String.valueOf(authorType));
+		params.put("filter_by_source", String.valueOf(sourceType));
 		requestAsync(sAPIList.get(READ_API_MENTIONS), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -221,13 +221,13 @@ public class CommentsAPI extends BaseAPI {
 	 * 
 	 * @param cids
 	 *            需要查询的批量评论ID数组，最大50
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void showBatch(long[] cids, RequestListener listener) {
-		WeiboParameters params = buildShowOrDestoryBatchParams(cids);
+	public void showBatch(long[] cids, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildShowOrDestoryBatchParams(cids);
 		requestAsync(sAPIList.get(READ_API_SHOW_BATCH), params, HTTPMETHOD_GET,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -239,14 +239,14 @@ public class CommentsAPI extends BaseAPI {
 	 *            需要评论的微博ID。
 	 * @param comment_ori
 	 *            当评论转发微博时，是否评论给原微博
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void create(String comment, long id, boolean comment_ori,
-			RequestListener listener) {
-		WeiboParameters params = buildCreateParams(comment, id, comment_ori);
+			AjaxCallBack<String> callBack) {
+		AjaxParams params = buildCreateParams(comment, id, comment_ori);
 		requestAsync(sAPIList.get(WRITE_API_CREATE), params, HTTPMETHOD_POST,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -254,14 +254,14 @@ public class CommentsAPI extends BaseAPI {
 	 * 
 	 * @param cid
 	 *            要删除的评论ID，只能删除登录用户自己发布的评论。
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void destroy(long cid, RequestListener listener) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("cid", cid);
+	public void destroy(long cid, AjaxCallBack<String> callBack) {
+		AjaxParams params = new AjaxParams();
+		params.put("cid", String.valueOf(cid));
 		requestAsync(sAPIList.get(WRITE_API_DESTROY), params, HTTPMETHOD_POST,
-				listener);
+				callBack);
 	}
 
 	/**
@@ -269,13 +269,13 @@ public class CommentsAPI extends BaseAPI {
 	 * 
 	 * @param ids
 	 *            需要删除的评论ID数组，最多20个。
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
-	public void destroyBatch(long[] ids, RequestListener listener) {
-		WeiboParameters params = buildShowOrDestoryBatchParams(ids);
+	public void destroyBatch(long[] ids, AjaxCallBack<String> callBack) {
+		AjaxParams params = buildShowOrDestoryBatchParams(ids);
 		requestAsync(sAPIList.get(WRITE_API_SDESTROY_BATCH), params,
-				HTTPMETHOD_POST, listener);
+				HTTPMETHOD_POST, callBack);
 	}
 
 	/**
@@ -291,147 +291,33 @@ public class CommentsAPI extends BaseAPI {
 	 *            回复中是否自动加入“回复@用户名”，true：是、false：否，默认为false
 	 * @param comment_ori
 	 *            当评论转发微博时，是否评论给原微博，false：否、true：是，默认为false
-	 * @param listener
+	 * @param callBack
 	 *            异步请求回调接口
 	 */
 	public void reply(long cid, long id, String comment,
 			boolean without_mention, boolean comment_ori,
-			RequestListener listener) {
-		WeiboParameters params = buildReplyParams(cid, id, comment,
-				without_mention, comment_ori);
+			AjaxCallBack<String> callBack) {
+		AjaxParams params = buildReplyParams(cid, id, comment, without_mention,
+				comment_ori);
 		requestAsync(sAPIList.get(WRITE_API_REPLY), params, HTTPMETHOD_POST,
-				listener);
-	}
-
-	/**
-	 * -----------------------------------------------------------------------
-	 * 请注意：以下方法匀均同步方法。如果开发者有自己的异步请求机制，请使用该函数。
-	 * -----------------------------------------------------------------------
-	 */
-
-	/**
-	 * @see #show(long, long, long, int, int, int, RequestListener)
-	 */
-	public String showSync(long id, long since_id, long max_id, int count,
-			int page, int authorType) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("id", id);
-		params.put("filter_by_author", authorType);
-		return requestSync(sAPIList.get(READ_API_SHOW), params, HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #byME(long, long, int, int, int, RequestListener)
-	 */
-	public String byMESync(long since_id, long max_id, int count, int page,
-			int sourceType) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_source", sourceType);
-		return requestSync(sAPIList.get(READ_API_BY_ME), params, HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #toME(long, long, int, int, int, int, RequestListener)
-	 */
-	public String toMESync(long since_id, long max_id, int count, int page,
-			int authorType, int sourceType) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_author", authorType);
-		params.put("filter_by_source", sourceType);
-		return requestSync(sAPIList.get(READ_API_TO_ME), params, HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #timeline(long, long, int, int, boolean, RequestListener)
-	 */
-	public String timelineSync(long since_id, long max_id, int count, int page,
-			boolean trim_user) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("trim_user", trim_user ? 1 : 0);
-		return requestSync(sAPIList.get(READ_API_TIMELINE), params,
-				HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #mentions(long, long, int, int, int, int, RequestListener)
-	 */
-	public String mentionsSync(long since_id, long max_id, int count, int page,
-			int authorType, int sourceType) {
-		WeiboParameters params = buildTimeLineParamsBase(since_id, max_id,
-				count, page);
-		params.put("filter_by_author", authorType);
-		params.put("filter_by_source", sourceType);
-		return requestSync(sAPIList.get(READ_API_MENTIONS), params,
-				HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #showBatch(long[], RequestListener)
-	 */
-	public String showBatchSync(long[] cids) {
-		WeiboParameters params = buildShowOrDestoryBatchParams(cids);
-		return requestSync(sAPIList.get(READ_API_SHOW_BATCH), params,
-				HTTPMETHOD_GET);
-	}
-
-	/**
-	 * @see #create(String, long, boolean, RequestListener)
-	 */
-	public String createSync(String comment, long id, boolean comment_ori) {
-		WeiboParameters params = buildCreateParams(comment, id, comment_ori);
-		return requestSync(sAPIList.get(WRITE_API_CREATE), params,
-				HTTPMETHOD_POST);
-	}
-
-	/**
-	 * @see #destroyBatch(long[], RequestListener)
-	 */
-	public String destroySync(long cid) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("cid", cid);
-		return requestSync(sAPIList.get(WRITE_API_DESTROY), params,
-				HTTPMETHOD_POST);
-	}
-
-	/**
-	 * @see #destroyBatchSync(long[])
-	 */
-	public String destroyBatchSync(long[] ids) {
-		WeiboParameters params = buildShowOrDestoryBatchParams(ids);
-		return requestSync(sAPIList.get(WRITE_API_SDESTROY_BATCH), params,
-				HTTPMETHOD_POST);
-	}
-
-	/**
-	 * @see #reply(long, long, String, boolean, boolean, RequestListener)
-	 */
-	public String replySync(long cid, long id, String comment,
-			boolean without_mention, boolean comment_ori) {
-		WeiboParameters params = buildReplyParams(cid, id, comment,
-				without_mention, comment_ori);
-		return requestSync(sAPIList.get(WRITE_API_REPLY), params,
-				HTTPMETHOD_POST);
+				callBack);
 	}
 
 	/**
 	 * 组装TimeLines的参数
 	 */
-	private WeiboParameters buildTimeLineParamsBase(long since_id, long max_id,
+	private AjaxParams buildTimeLineParamsBase(long since_id, long max_id,
 			int count, int page) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("since_id", since_id);
-		params.put("max_id", max_id);
-		params.put("count", count);
-		params.put("page", page);
+		AjaxParams params = new AjaxParams();
+		params.put("since_id", String.valueOf(since_id));
+		params.put("max_id", String.valueOf(max_id));
+		params.put("count", String.valueOf(count));
+		params.put("page", String.valueOf(page));
 		return params;
 	}
 
-	private WeiboParameters buildShowOrDestoryBatchParams(long[] cids) {
-		WeiboParameters params = new WeiboParameters();
+	private AjaxParams buildShowOrDestoryBatchParams(long[] cids) {
+		AjaxParams params = new AjaxParams();
 		StringBuilder strb = new StringBuilder();
 		for (long cid : cids) {
 			strb.append(cid).append(",");
@@ -441,23 +327,23 @@ public class CommentsAPI extends BaseAPI {
 		return params;
 	}
 
-	private WeiboParameters buildCreateParams(String comment, long id,
+	private AjaxParams buildCreateParams(String comment, long id,
 			boolean comment_ori) {
-		WeiboParameters params = new WeiboParameters();
+		AjaxParams params = new AjaxParams();
 		params.put("comment", comment);
-		params.put("id", id);
-		params.put("comment_ori", comment_ori ? 1 : 0);
+		params.put("id", String.valueOf(id));
+		params.put("comment_ori", String.valueOf(comment_ori ? 1 : 0));
 		return params;
 	}
 
-	private WeiboParameters buildReplyParams(long cid, long id, String comment,
+	private AjaxParams buildReplyParams(long cid, long id, String comment,
 			boolean without_mention, boolean comment_ori) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("cid", cid);
-		params.put("id", id);
+		AjaxParams params = new AjaxParams();
+		params.put("cid", String.valueOf(cid));
+		params.put("id", String.valueOf(id));
 		params.put("comment", comment);
-		params.put("without_mention", without_mention ? 1 : 0);
-		params.put("comment_ori", comment_ori ? 1 : 0);
+		params.put("without_mention", String.valueOf(without_mention ? 1 : 0));
+		params.put("comment_ori", String.valueOf(comment_ori ? 1 : 0));
 		return params;
 	}
 }

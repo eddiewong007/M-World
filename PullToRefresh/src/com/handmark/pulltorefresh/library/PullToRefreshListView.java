@@ -65,7 +65,7 @@ public class PullToRefreshListView extends
 	}
 
 	@Override
-	protected void onRefreshing(final boolean doScroll) {
+	public void onRefreshing(final boolean doScroll) {
 		/**
 		 * If we're not showing the Refreshing view, or the list is empty, the
 		 * the header/footer views won't show so we use the normal method.
