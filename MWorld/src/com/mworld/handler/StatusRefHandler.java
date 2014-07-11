@@ -7,11 +7,11 @@ import android.widget.Toast;
 import com.mworld.fragment.BaseFragment;
 import com.weibo.entities.StatusesList;
 
-public class StatusLoadHandler extends AjaxCallBack<String> {
+public class StatusRefHandler extends AjaxCallBack<String> {
 
 	private BaseFragment mFragment;
 
-	public StatusLoadHandler(BaseFragment mFregment) {
+	public StatusRefHandler(BaseFragment mFregment) {
 		this.mFragment = mFregment;
 	}
 
@@ -27,18 +27,17 @@ public class StatusLoadHandler extends AjaxCallBack<String> {
 		}
 		if (statusList.statusesList == null
 				|| statusList.statusesList.isEmpty()) {
-			Toast.makeText(mFragment.getActivity(), "加载失败", Toast.LENGTH_SHORT)
-					.show();
-		} else {
-			mFragment.mArrayList.addAll(statusList.statusesList);
-			mFragment.mAdapter.notifyDataSetChanged();
-			Toast.makeText(mFragment.getActivity(),
-					"加载了" + statusList.statusesList.size() + "条微博",
+			Toast.makeText(mFragment.getActivity(), "没有更新的微博",
 					Toast.LENGTH_SHORT).show();
+		} else {
+			if (0 == mFragment.init_id)
+				mFragment.init_id = statusList.statusesList.get(0).id;
+			mFragment.since_id = statusList.statusesList.get(0).id;
+			mFragment.mArrayList.addAll(0, statusList.statusesList);
+			mFragment.mAdapter.notifyDataSetChanged();
 		}
 
 		mFragment.mList.onRefreshComplete();
-
 	}
 
 	@Override

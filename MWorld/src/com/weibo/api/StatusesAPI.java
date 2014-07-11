@@ -7,13 +7,9 @@ import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.SparseArray;
 
-import com.sina.weibo.sdk.net.AsyncWeiboRunner;
-import com.sina.weibo.sdk.net.RequestListener;
-import com.sina.weibo.sdk.net.WeiboParameters;
 import com.weibo.entities.AccessToken;
 
 /**
@@ -1026,21 +1022,6 @@ public class StatusesAPI extends BaseAPI {
 		params.put("rip", rip);
 		requestAsync(sAPIList.get(WRITE_API_UPLOAD), params, HTTPMETHOD_POST,
 				callBack);
-	}
-
-	public void upload(String status, int visible, String list_id, Bitmap pic,
-			float lat, float lon, String annotations, String rip,
-			RequestListener listener) {
-		WeiboParameters params = new WeiboParameters();
-		params.put("status", status);
-		params.put("visible", visible);
-		params.put("list_id", list_id);
-		params.put("pic", pic);
-		params.put("annotations", annotations);
-		params.put("rip", rip);
-		params.put(KEY_ACCESS_TOKEN, mAccessToken.access_token);
-		AsyncWeiboRunner.requestAsync(sAPIList.get(WRITE_API_UPLOAD), params,
-				HTTPMETHOD_POST, listener);
 	}
 
 	/**

@@ -9,8 +9,6 @@ import net.tsz.afinal.http.AjaxCallBack;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,8 +24,6 @@ import com.mworld.fragment.AtFragment;
 import com.mworld.fragment.CommentFragment;
 import com.mworld.fragment.HomeFragment;
 import com.mworld.utils.PreUtils;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.weibo.api.StatusesAPI;
 import com.weibo.api.UsersAPI;
 import com.weibo.entities.AccessToken;
@@ -134,25 +130,8 @@ public class MainActivity extends ActionBarActivity {
 
 			cursor.close();
 
-			Bitmap pic = BitmapFactory.decodeFile(picturePath);
-
 			new StatusesAPI(sAccessToken).upload("测试微博API中，忽略我", 0, "",
 					picturePath, 0.0F, 0.0F, "[]", getLocalIpAddress(),
-					// new RequestListener() {
-					//
-					// @Override
-					// public void onWeiboException(WeiboException arg0) {
-					// Log.i("-------------------",arg0.getMessage());
-					// }
-					//
-					// @Override
-					// public void onComplete(String arg0) {
-					// Log.i("-------------------", "发送图片成功");
-					// Toast.makeText(MainActivity.this, "发送图片成功",
-					// Toast.LENGTH_LONG).show();
-					//
-					// }
-					// });
 					new AjaxCallBack<String>() {
 
 						@Override
@@ -175,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
 						@Override
 						public void onLoading(long count, long current) {
 							super.onLoading(count, current);
-							
+
 							if (current % 10 == 0)
 								Toast.makeText(MainActivity.this,
 										count + "/" + current,

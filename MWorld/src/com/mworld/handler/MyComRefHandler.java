@@ -5,34 +5,36 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mworld.fragment.BaseFragment;
-import com.weibo.entities.StatusesList;
+import com.weibo.entities.CommentsList;
 
-public class StatusRefreshHandler extends AjaxCallBack<String> {
+public class MyComRefHandler extends AjaxCallBack<String> {
 
 	private BaseFragment mFragment;
 
-	public StatusRefreshHandler(BaseFragment mFregment) {
+	public MyComRefHandler(BaseFragment mFregment) {
 		this.mFragment = mFregment;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onSuccess(String jsonString) {
 		super.onSuccess(jsonString);
-		StatusesList statusList = new StatusesList();
+		CommentsList commentsList = new CommentsList();
+
 		try {
-			statusList = StatusesList.parse(jsonString);
+			commentsList = CommentsList.parse(jsonString);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (statusList.statusesList == null
-				|| statusList.statusesList.isEmpty()) {
-			Toast.makeText(mFragment.getActivity(), "没有更新的微博",
-					Toast.LENGTH_SHORT).show();
+		if (commentsList.commentsList == null
+				|| commentsList.commentsList.isEmpty()) {
+			Toast.makeText(mFragment.getActivity(), "没有更新", Toast.LENGTH_SHORT)
+					.show();
 		} else {
 			if (0 == mFragment.init_id)
-				mFragment.init_id = statusList.statusesList.get(0).id;
-			mFragment.since_id = statusList.statusesList.get(0).id;
-			mFragment.mArrayList.addAll(0, statusList.statusesList);
+				mFragment.init_id = commentsList.commentsList.get(0).id;
+			mFragment.since_id = commentsList.commentsList.get(0).id;
+			mFragment.mArrayList.addAll(0, commentsList.commentsList);
 			mFragment.mAdapter.notifyDataSetChanged();
 		}
 
@@ -44,5 +46,4 @@ public class StatusRefreshHandler extends AjaxCallBack<String> {
 		super.onFailure(t, errorNo, strMsg);
 		Log.e(mFragment.getClass().getName(), strMsg);
 	}
-
 }

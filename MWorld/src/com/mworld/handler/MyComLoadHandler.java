@@ -5,13 +5,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mworld.fragment.BaseFragment;
-import com.weibo.entities.StatusesList;
+import com.weibo.entities.CommentsList;
 
-public class StatusLoadHandler extends AjaxCallBack<String> {
-
+public class MyComLoadHandler extends AjaxCallBack<String> {
 	private BaseFragment mFragment;
 
-	public StatusLoadHandler(BaseFragment mFregment) {
+	public MyComLoadHandler(BaseFragment mFregment) {
 		this.mFragment = mFregment;
 	}
 
@@ -19,26 +18,24 @@ public class StatusLoadHandler extends AjaxCallBack<String> {
 	@Override
 	public void onSuccess(String jsonString) {
 		super.onSuccess(jsonString);
-		StatusesList statusList = new StatusesList();
+		CommentsList commentsList = new CommentsList();
 		try {
-			statusList = StatusesList.parse(jsonString);
+			commentsList = CommentsList.parse(jsonString);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (statusList.statusesList == null
-				|| statusList.statusesList.isEmpty()) {
+		if (commentsList.commentsList == null
+				|| commentsList.commentsList.isEmpty()) {
 			Toast.makeText(mFragment.getActivity(), "加载失败", Toast.LENGTH_SHORT)
 					.show();
 		} else {
-			mFragment.mArrayList.addAll(statusList.statusesList);
+			mFragment.mArrayList.addAll(commentsList.commentsList);
 			mFragment.mAdapter.notifyDataSetChanged();
 			Toast.makeText(mFragment.getActivity(),
-					"加载了" + statusList.statusesList.size() + "条微博",
+					"加载了" + commentsList.commentsList.size() + "条评论",
 					Toast.LENGTH_SHORT).show();
 		}
-
 		mFragment.mList.onRefreshComplete();
-
 	}
 
 	@Override
@@ -46,5 +43,4 @@ public class StatusLoadHandler extends AjaxCallBack<String> {
 		super.onFailure(t, errorNo, strMsg);
 		Log.e(mFragment.getClass().getName(), strMsg);
 	}
-
 }

@@ -3,6 +3,7 @@ package com.mworld.adapter;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -17,25 +18,16 @@ import android.widget.TextView;
 import com.mworld.ui.CommentsActivity;
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
+import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Status;
 
-public class StatusesListAdapter extends BaseAdapter {
+public class StatusListAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private LayoutInflater mInflater;
 	public ArrayList<Status> mStatusesList;
 
-	public StatusesListAdapter(Context context) {
-		super();
-		mContext = context;
-		mInflater = LayoutInflater.from(mContext);
-		mStatusesList = new ArrayList<Status>();
-		for (int i = 0; i < 3; i++) {
-			mStatusesList.add(new Status());
-		}
-	}
-
-	public StatusesListAdapter(Context context, ArrayList<Status> list) {
+	public StatusListAdapter(Context context, ArrayList<Status> list) {
 		super();
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
@@ -57,6 +49,7 @@ public class StatusesListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 
@@ -100,7 +93,8 @@ public class StatusesListAdapter extends BaseAdapter {
 			}
 		});
 		holder.userName.setText(status.user.screen_name);
-		holder.date.setText(status.created_at);
+
+		holder.date.setText(TimeUtils.parse(status.created_at));
 		holder.textStatus.setText(status.text);
 		if (null == status.retweeted_status) {
 			convertView.findViewById(R.id.layout_repost).setVisibility(

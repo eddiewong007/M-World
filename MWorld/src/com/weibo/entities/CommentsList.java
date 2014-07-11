@@ -17,7 +17,7 @@ import android.text.TextUtils;
  */
 public class CommentsList {
 	/** 评论列表 */
-	public ArrayList<Comment> commentList;
+	public ArrayList<Comment> commentsList;
 	public String previous_cursor;
 	public String next_cursor;
 	public int total_number;
@@ -36,11 +36,11 @@ public class CommentsList {
 			comments.total_number = jsonObject.getIntValue("total_number", 0);
 
 			JSONArray jsonArray = jsonObject.getJSONArray("comments");
-			comments.commentList = new ArrayList<Comment>();
+			comments.commentsList = new ArrayList<Comment>();
 			if (jsonArray != null && !jsonArray.isEmpty()) {
 				int size = jsonArray.size();
 				for (int ix = 0; ix < size; ix++) {
-					comments.commentList.add(Comment.parse(jsonArray
+					comments.commentsList.add(Comment.parse(jsonArray
 							.getJSONObject(ix)));
 				}
 			} else {

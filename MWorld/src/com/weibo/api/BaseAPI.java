@@ -4,8 +4,8 @@ import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.sina.weibo.sdk.utils.LogUtil;
 import com.weibo.entities.AccessToken;
 
 /**
@@ -56,7 +56,7 @@ public class BaseAPI {
 			String httpMethod, AjaxCallBack<String> callBack) {
 		if (null == mAccessToken || TextUtils.isEmpty(url) || null == params
 				|| TextUtils.isEmpty(httpMethod) || null == callBack) {
-			LogUtil.e(TAG, "Argument error!");
+			Log.e(TAG, "Argument error!");
 			return;
 		}
 

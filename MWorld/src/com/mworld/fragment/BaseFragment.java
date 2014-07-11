@@ -5,25 +5,25 @@ import java.util.ArrayList;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.widget.BaseAdapter;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mworld.adapter.StatusesListAdapter;
 import com.mworld.handler.StatusLoadHandler;
-import com.mworld.handler.StatusRefreshHandler;
+import com.mworld.handler.StatusRefHandler;
 import com.mworld.utils.PreUtils;
-import com.weibo.api.StatusesAPI;
+import com.weibo.api.BaseAPI;
 import com.weibo.entities.AccessToken;
-import com.weibo.entities.Status;
 
 public class BaseFragment extends Fragment {
 
 	protected AccessToken mAccessToken;
 
-	protected StatusesAPI mStatusesAPI;
+	protected BaseAPI mAPI;
 
-	public ArrayList<Status> mArrayList;
+	@SuppressWarnings("rawtypes")
+	public ArrayList mArrayList;
 
-	public StatusesListAdapter mAdapter;
+	public BaseAdapter mAdapter;
 
 	public long since_id = 0;
 
@@ -39,10 +39,7 @@ public class BaseFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mAccessToken = PreUtils.readAccessToken(getActivity());
-		mStatusesAPI = new StatusesAPI(mAccessToken);
-		mArrayList = new ArrayList<Status>();
-		mAdapter = new StatusesListAdapter(getActivity(), mArrayList);
-		refHandler = new StatusRefreshHandler(this);
+		refHandler = new StatusRefHandler(this);
 		loadHandler = new StatusLoadHandler(this);
 	}
 

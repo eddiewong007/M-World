@@ -3,6 +3,7 @@ package com.mworld.adapter;
 import java.util.ArrayList;
 
 import net.tsz.afinal.FinalBitmap;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -16,25 +17,16 @@ import android.widget.TextView;
 
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
+import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Comment;
 
-public class CommentsListAdapter extends BaseAdapter {
+public class MyComListAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private LayoutInflater mInflater;
 	public ArrayList<Comment> mCommentsList;
 
-	public CommentsListAdapter(Context context) {
-		super();
-		mContext = context;
-		mInflater = LayoutInflater.from(mContext);
-		mCommentsList = new ArrayList<Comment>();
-		for (int i = 0; i < 3; i++) {
-			mCommentsList.add(new Comment());
-		}
-	}
-
-	public CommentsListAdapter(Context context, ArrayList<Comment> list) {
+	public MyComListAdapter(Context context, ArrayList<Comment> list) {
 		super();
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
@@ -56,30 +48,32 @@ public class CommentsListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 
 		ViewHolder holder = null;
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.list_item_comment,
-					null);
+			convertView = mInflater.inflate(R.layout.list_item_status, null);
 			holder = new ViewHolder();
 			holder.userAvatar = (ImageView) convertView
-					.findViewById(R.id.user_com_avatar);
+					.findViewById(R.id.user_avatar);
 			holder.userName = (TextView) convertView
-					.findViewById(R.id.user_com_name);
-			holder.date = (TextView) convertView.findViewById(R.id.com_date);
-			holder.textComment = (TextView) convertView
-					.findViewById(R.id.text_comment);
+					.findViewById(R.id.user_name);
+			holder.date = (TextView) convertView.findViewById(R.id.date);
+			holder.textCom = (TextView) convertView
+					.findViewById(R.id.text_status);
+			holder.textStatus = (TextView) convertView
+					.findViewById(R.id.text_repost);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		final Comment comment = mCommentsList.get(position);
+
 		FinalBitmap.create(mContext).display(holder.userAvatar,
 				comment.user.avatar_large);
-
 		holder.userAvatar.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -92,8 +86,18 @@ public class CommentsListAdapter extends BaseAdapter {
 			}
 		});
 		holder.userName.setText(comment.user.screen_name);
-		holder.date.setText(comment.created_at);
-		holder.textComment.setText(comment.text);
+		holder.date.setText(TimeUtils.parse(comment.created_at));
+		holder.textCom.setText(comment.text);
+		if (null == comment.status) {
+			convertView.findViewById(R.id.layout_repost).setVisibility(
+					View.GONE);
+		} else if (null != comment.status.user) {
+			convertView.findViewById(R.id.layout_repost).setVisibility(
+					View.VISIBLE);
+			holder.textStatus.setText("评论 @" + comment.status.user.screen_name
+					+ "的微博:\n" + comment.status.text);
+		}
+
 		return convertView;
 	}
 
@@ -101,8 +105,8 @@ public class CommentsListAdapter extends BaseAdapter {
 		ImageView userAvatar;
 		TextView userName;
 		TextView date;
-		TextView textComment;
-
+		TextView textCom;
+		TextView textStatus;
 	}
 
 }

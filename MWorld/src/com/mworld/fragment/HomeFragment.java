@@ -1,5 +1,7 @@
 package com.mworld.fragment;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +15,23 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.mworld.adapter.StatusListAdapter;
 import com.mworld.handler.StatusLoadHandler;
-import com.mworld.handler.StatusRefreshHandler;
+import com.mworld.handler.StatusRefHandler;
 import com.mworld.ui.R;
+import com.weibo.api.StatusesAPI;
+import com.weibo.entities.Status;
 
 public class HomeFragment extends BaseFragment {
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mAPI = new StatusesAPI(mAccessToken);
+		mArrayList = new ArrayList<Status>();
+		mAdapter = new StatusListAdapter(getActivity(), mArrayList);
+	}
 
 	@SuppressLint("InflateParams")
 	@Override
@@ -25,22 +39,22 @@ public class HomeFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_home, null);
 		mList = (PullToRefreshListView) view.findViewById(R.id.home_timeline);
-		mStatusesAPI.friendsTimeline(since_id, 0, 20, 1, false, 0, false,
-				new StatusRefreshHandler(HomeFragment.this));
+		mList.setAdapter(mAdapter);
+		((StatusesAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false, 0,
+				false, new StatusRefHandler(this));
 		return view;
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		mList.setAdapter(mAdapter);
 		mList.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.i("Home", "refresh");
-				mStatusesAPI.friendsTimeline(since_id, 0, 20, 1, false, 0,
-						false, new StatusRefreshHandler(HomeFragment.this));
+				((StatusesAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false,
+						0, false, new StatusRefHandler(HomeFragment.this));
 			}
 		});
 		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
@@ -49,8 +63,9 @@ public class HomeFragment extends BaseFragment {
 			public void onLastItemVisible() {
 				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
 						.show();
-				mStatusesAPI.friendsTimeline(0, init_id, 20, page++, false, 0,
-						false, new StatusLoadHandler(HomeFragment.this));
+				((StatusesAPI) mAPI).friendsTimeline(0, init_id, 20, page++,
+						false, 0, false, new StatusLoadHandler(
+								HomeFragment.this));
 			}
 		});
 
