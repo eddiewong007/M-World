@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class AccessToken {
 
-	/** 用于调用access_token，接口获取授权后的access token */
+	/** 调用access_token接口获取授权后的access token */
 	public String access_token;
 	/** access_token的生命周期，单位是秒数 */
 	public String expires_in;

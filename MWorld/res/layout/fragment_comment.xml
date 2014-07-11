@@ -17,6 +17,7 @@
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
+        android:layoutAnimation="@anim/list_layout_anim"
         android:smoothScrollbar="true" />
 
 </LinearLayout>
