@@ -5,12 +5,14 @@
         android:duration="1000"
         android:fromXDelta="100%"
         android:fromYDelta="0"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:toXDelta="0"
         android:toYDelta="0" />
 
     <alpha
         android:duration="1000"
         android:fromAlpha="0"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:toAlpha="1" />
 
     <!--
@@ -19,7 +21,7 @@
         android:fromDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:toDegrees="360" />
+        android:toDegrees="360" />
     -->
 
 </set>

@@ -60,11 +60,11 @@ public class MyComListAdapter extends BaseAdapter {
 					.findViewById(R.id.user_avatar);
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.user_name);
-			holder.date = (TextView) convertView.findViewById(R.id.date);
+			holder.date = (TextView) convertView.findViewById(R.id.text_from);
 			holder.textCom = (TextView) convertView
 					.findViewById(R.id.text_status);
 			holder.textStatus = (TextView) convertView
-					.findViewById(R.id.text_repost);
+					.findViewById(R.id.retweet_text_status);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -89,10 +89,10 @@ public class MyComListAdapter extends BaseAdapter {
 		holder.date.setText(TimeUtils.parse(comment.created_at));
 		holder.textCom.setText(comment.text);
 		if (null == comment.status) {
-			convertView.findViewById(R.id.layout_repost).setVisibility(
+			convertView.findViewById(R.id.retweet_layout).setVisibility(
 					View.GONE);
 		} else if (null != comment.status.user) {
-			convertView.findViewById(R.id.layout_repost).setVisibility(
+			convertView.findViewById(R.id.retweet_layout).setVisibility(
 					View.VISIBLE);
 			holder.textStatus.setText("评论 @" + comment.status.user.screen_name
 					+ "的微博:\n" + comment.status.text);

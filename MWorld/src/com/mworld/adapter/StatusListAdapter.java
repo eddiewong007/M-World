@@ -2,23 +2,15 @@ package com.mworld.adapter;
 
 import java.util.ArrayList;
 
-import net.tsz.afinal.FinalBitmap;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.mworld.ui.CommentsActivity;
-import com.mworld.ui.DisplayActivity;
+import com.mworld.holder.StatusHolder;
 import com.mworld.ui.R;
-import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Status;
 
 public class StatusListAdapter extends BaseAdapter {
@@ -53,89 +45,18 @@ public class StatusListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-		ViewHolder holder = null;
+		StatusHolder holder = null;
 		if (null == convertView) {
 			convertView = mInflater.inflate(R.layout.list_item_status, null);
-			holder = new ViewHolder();
-			holder.userAvatar = (ImageView) convertView
-					.findViewById(R.id.user_avatar);
-			holder.userName = (TextView) convertView
-					.findViewById(R.id.user_name);
-			holder.date = (TextView) convertView.findViewById(R.id.date);
-			holder.textStatus = (TextView) convertView
-					.findViewById(R.id.text_status);
-			holder.textRepost = (TextView) convertView
-					.findViewById(R.id.text_repost);
-			holder.repostCount = (TextView) convertView
-					.findViewById(R.id.repost_count);
-			holder.retCount = (TextView) convertView
-					.findViewById(R.id.ret_count);
-			holder.comCount = (TextView) convertView
-					.findViewById(R.id.com_count);
+			holder = new StatusHolder(mContext, convertView);
 			convertView.setTag(holder);
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			holder = (StatusHolder) convertView.getTag();
 		}
 
 		final Status status = mStatusesList.get(position);
-
-		FinalBitmap.create(mContext).display(holder.userAvatar,
-				status.user.avatar_large);
-		holder.userAvatar.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Log.i("adapter", "click");
-				Intent intent = new Intent(mContext, DisplayActivity.class);
-				intent.putExtra("type", 3);
-				intent.putExtra("uid", String.valueOf(status.user.id));
-				mContext.startActivity(intent);
-			}
-		});
-		holder.userName.setText(status.user.screen_name);
-
-		holder.date.setText(TimeUtils.parse(status.created_at));
-		holder.textStatus.setText(status.text);
-		if (null == status.retweeted_status) {
-			convertView.findViewById(R.id.layout_repost).setVisibility(
-					View.GONE);
-		} else if (null != status.retweeted_status.user) {
-			convertView.findViewById(R.id.layout_repost).setVisibility(
-					View.VISIBLE);
-			holder.textRepost.setText("@"
-					+ status.retweeted_status.user.screen_name + ":\n"
-					+ status.retweeted_status.text);
-			holder.repostCount.setText("转发 "
-					+ status.retweeted_status.reposts_count + " 评论 "
-					+ status.retweeted_status.comments_count);
-		}
-		holder.retCount.setText(String.valueOf(status.reposts_count));
-		holder.comCount.setText(String.valueOf(status.comments_count));
-
-		convertView.findViewById(R.id.layout_message).setOnClickListener(
-				new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(mContext,
-								CommentsActivity.class);
-						intent.putExtra("id", status.id);
-						mContext.startActivity(intent);
-					}
-				});
-
+		holder.inflate(status);
 		return convertView;
-	}
-
-	private class ViewHolder {
-		ImageView userAvatar;
-		TextView userName;
-		TextView date;
-		TextView textStatus;
-		TextView textRepost;
-		TextView repostCount;
-		TextView retCount;
-		TextView comCount;
 	}
 
 }

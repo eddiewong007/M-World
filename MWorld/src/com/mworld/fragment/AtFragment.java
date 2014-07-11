@@ -37,7 +37,7 @@ public class AtFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_at, null, false);
+		View view = inflater.inflate(R.layout.fragment_at, null);
 		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
 		mList.setAdapter(mAdapter);
 		((StatusesAPI) mAPI).mentions(since_id, 0, 20, 1,

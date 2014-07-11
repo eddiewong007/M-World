@@ -37,7 +37,7 @@ public class CommentFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_comment, null, false);
+		View view = inflater.inflate(R.layout.fragment_comment, null);
 		mList = (PullToRefreshListView) view
 				.findViewById(R.id.comment_timeline);
 		mList.setAdapter(mAdapter);
