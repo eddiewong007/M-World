@@ -86,7 +86,7 @@ public class MyComListAdapter extends BaseAdapter {
 			}
 		});
 		holder.userName.setText(comment.user.screen_name);
-		holder.date.setText(TimeUtils.parse(comment.created_at));
+		holder.date.setText(TimeUtils.getTime(comment.created_at));
 		holder.textCom.setText(comment.text);
 		if (null == comment.status) {
 			convertView.findViewById(R.id.retweet_layout).setVisibility(

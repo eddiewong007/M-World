@@ -84,7 +84,7 @@ public class StatusComListAdapter extends BaseAdapter {
 			}
 		});
 		holder.userName.setText(comment.user.screen_name);
-		holder.date.setText(TimeUtils.parse(comment.created_at));
+		holder.date.setText(TimeUtils.getTime(comment.created_at));
 		holder.textComment.setText(comment.text);
 		return convertView;
 	}

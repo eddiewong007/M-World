@@ -377,6 +377,7 @@ public class SqlBuilder {
 		return kv;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static KeyValue manyToOne2KeyValue(ManyToOne many, Object entity) {
 		KeyValue kv = null;
 		String manycolumn = many.getColumn();

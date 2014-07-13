@@ -2,14 +2,11 @@ package com.mworld.fragment;
 
 import java.util.ArrayList;
 
-import net.tsz.afinal.http.AjaxCallBack;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.BaseAdapter;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mworld.handler.StatusLoadHandler;
-import com.mworld.handler.StatusRefHandler;
 import com.mworld.utils.PreUtils;
 import com.weibo.api.BaseAPI;
 import com.weibo.entities.AccessToken;
@@ -33,14 +30,13 @@ public class BaseFragment extends Fragment {
 
 	public PullToRefreshListView mList;
 
-	protected AjaxCallBack<String> refHandler, loadHandler;
+	public boolean isRefreshing, isLoading;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mAccessToken = PreUtils.readAccessToken(getActivity());
-		refHandler = new StatusRefHandler(this);
-		loadHandler = new StatusLoadHandler(this);
+
 	}
 
 }

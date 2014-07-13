@@ -61,11 +61,18 @@ public class HomeFragment extends BaseFragment {
 
 			@Override
 			public void onLastItemVisible() {
-				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
-						.show();
-				((StatusesAPI) mAPI).friendsTimeline(0, init_id, 20, page++,
-						false, 0, false, new StatusLoadHandler(
-								HomeFragment.this));
+				if (isLoading) {
+					Toast.makeText(getActivity(), "不要着急，正在加载",
+							Toast.LENGTH_SHORT).show();
+					mList.onRefreshComplete();
+				} else {
+					Toast.makeText(getActivity(), "加载中...", Toast.LENGTH_SHORT)
+							.show();
+					((StatusesAPI) mAPI).friendsTimeline(0, init_id, 20,
+							page++, false, 0, false, new StatusLoadHandler(
+									HomeFragment.this));
+					isLoading = true;
+				}
 			}
 		});
 

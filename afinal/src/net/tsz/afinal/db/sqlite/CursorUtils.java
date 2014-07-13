@@ -29,6 +29,7 @@ import android.database.Cursor;
 
 public class CursorUtils {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T getEntity(Cursor cursor, Class<T> clazz,FinalDb db){
 		try {
 			if(cursor!=null ){

@@ -376,8 +376,10 @@ public class FinalDb {
 	 * 删除所有数据表
 	 */
 	public void dropDb() {
-		Cursor cursor = db.rawQuery(
-				"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'", null);
+		Cursor cursor = db
+				.rawQuery(
+						"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'",
+						null);
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				db.execSQL("DROP TABLE " + cursor.getString(0));
@@ -472,6 +474,7 @@ public class FinalDb {
 	 * @param <T>
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> T loadManyToOne(DbModel dbModel, T entity, Class<T> clazz,
 			Class<?>... findClass) {
 		if (entity != null) {
@@ -502,7 +505,6 @@ public class FinalDb {
 						}
 						if (isFind) {
 
-							@SuppressWarnings("unchecked")
 							T manyEntity = (T) findById(
 									Integer.valueOf(id.toString()),
 									many.getManyClass());
@@ -581,6 +583,7 @@ public class FinalDb {
 	 * @param <T>
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> T loadOneToMany(T entity, Class<T> clazz, Class<?>... findClass) {
 		if (entity != null) {
 			try {
@@ -601,7 +604,7 @@ public class FinalDb {
 
 					if (isFind) {
 						List<?> list = findAllByWhere(one.getOneClass(),
-                                one.getColumn() + "=" + id);
+								one.getColumn() + "=" + id);
 						if (list != null) {
 							/* 如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据 */
 							if (one.getDataType() == OneToManyLazyLoader.class) {
@@ -881,11 +884,11 @@ public class FinalDb {
 		}
 
 		@Override
-        public void onCreate(SQLiteDatabase db) {
+		public void onCreate(SQLiteDatabase db) {
 		}
 
 		@Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			if (mDbUpdateListener != null) {
 				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
 			} else { // 清空所有的数据信息

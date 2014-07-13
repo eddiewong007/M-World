@@ -3,19 +3,29 @@ package com.mworld.holder;
 import net.tsz.afinal.FinalBitmap;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mworld.displayer.ClipDisplayer;
 import com.mworld.ui.CommentsActivity;
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
 import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Status;
 
+/**
+ * 
+ * @author YMM
+ * 
+ */
 public class StatusHolder {
+
+	private static final int maxHeight = 400;
 
 	private Context mContext;
 	public View layoutMessage;
@@ -41,6 +51,11 @@ public class StatusHolder {
 	public TextView textCmt;
 	public ImageView btnSd;
 
+	/**
+	 * 
+	 * @param context
+	 * @param view
+	 */
 	public StatusHolder(Context context, View view) {
 		mContext = context;
 		layoutMessage = view.findViewById(R.id.layout_message);
@@ -96,15 +111,30 @@ public class StatusHolder {
 		btnSd = (ImageView) view.findViewById(R.id.btn_sd);
 	}
 
+	/**
+	 * 
+	 * @param status
+	 */
 	public void inflate(final Status status) {
 		FinalBitmap fb = FinalBitmap.create(mContext);
+		fb.configDisplayer(new ClipDisplayer(maxHeight));
 		fb.display(userAvatar, status.user.avatar_large);
-		userName.setText(status.user.screen_name);
-		textFrom.setText(TimeUtils.parse(status.created_at) + status.source);
-		if (status.user.verified)
+		String screenName = status.user.screen_name;
+		if (!TextUtils.isEmpty(status.user.remark))
+			screenName += "(" + status.user.remark + ")";
+		userName.setText(screenName);
+		textFrom.setText(Html.fromHtml(status.source + "·"
+				+ TimeUtils.getTime(status.created_at)));
+		int verified_type = status.user.verified_type;
+		if (0 == verified_type) {
 			icImage.setVisibility(View.VISIBLE);
-		else
+			icImage.setImageResource(R.drawable.ic_verified);
+		} else if (1 < verified_type && verified_type < 10) {
+			icImage.setVisibility(View.VISIBLE);
+			icImage.setImageResource(R.drawable.ic_verified_blue);
+		} else {
 			icImage.setVisibility(View.GONE);
+		}
 		textStatus.setText(status.text);
 
 		if (null != status.pic_urls && status.pic_urls.size() > 1) {
@@ -124,7 +154,10 @@ public class StatusHolder {
 			thumbnailPic.setVisibility(View.VISIBLE);
 			icGif.setVisibility(View.GONE);
 			layoutMultiPic.setVisibility(View.GONE);
-			fb.display(thumbnailPic, status.thumbnail_pic);
+			if (null != status.bmiddle_pic)
+				fb.display(thumbnailPic, status.bmiddle_pic, maxHeight);
+			else
+				fb.display(thumbnailPic, status.thumbnail_pic, maxHeight);
 		} else {
 			layoutThumbnailPic.setVisibility(View.GONE);
 		}
@@ -154,8 +187,12 @@ public class StatusHolder {
 				retweetThumbnailPic.setVisibility(View.VISIBLE);
 				retweetIcGif.setVisibility(View.GONE);
 				retweetLayoutMultiPic.setVisibility(View.GONE);
-				fb.display(retweetThumbnailPic,
-						status.retweeted_status.thumbnail_pic);
+				if (null != status.retweeted_status.bmiddle_pic)
+					fb.display(retweetThumbnailPic,
+							status.retweeted_status.bmiddle_pic, maxHeight);
+				else
+					fb.display(retweetThumbnailPic,
+							status.retweeted_status.thumbnail_pic, maxHeight);
 			} else {
 				layoutRetweetThumbnailPic.setVisibility(View.GONE);
 			}
@@ -187,4 +224,5 @@ public class StatusHolder {
 			}
 		});
 	}
+
 }

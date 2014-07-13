@@ -22,14 +22,15 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_margin="8dp"
-            android:background="#efefef" />
+            android:background="#efefef"
+            android:contentDescription="@string/pic_desc" />
 
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="2dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/user_avatar"
             android:singleLine="true"
             android:textSize="15sp" />
@@ -42,7 +43,7 @@
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/user_avatar"
             android:singleLine="true"
-            android:textColor="#303030"
+            android:textColor="#505050"
             android:textSize="12sp" />
 
         <ImageView
@@ -52,6 +53,7 @@
             android:layout_alignBottom="@id/user_name"
             android:layout_alignTop="@id/user_name"
             android:layout_toRightOf="@id/user_name"
+            android:contentDescription="@string/pic_desc"
             android:src="@drawable/ic_verified" />
 
         <View
@@ -66,9 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider_username"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_margin="8dp"
             android:autoLink="all"
             android:textSize="14sp" />
 
@@ -83,13 +83,19 @@
                 android:id="@+id/thumbnail_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#efefef" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/pic_desc"
+                android:maxHeight="400dp"
+                android:maxWidth="200dp" />
 
             <ImageView
                 android:id="@+id/ic_gif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#efefef" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/pic_desc"
+                android:maxHeight="400dp"
+                android:maxWidth="200dp" />
 
             <RelativeLayout
                 android:id="@+id/layout_multi_pic"
@@ -101,7 +107,9 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="2dp"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -110,7 +118,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView1"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -119,7 +129,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView2"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -127,7 +139,9 @@
                     android:layout_height="70dp"
                     android:layout_below="@id/imageView1"
                     android:layout_marginBottom="2dp"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -137,7 +151,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView4"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -147,7 +163,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView5"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView7"
@@ -155,7 +173,9 @@
                     android:layout_height="70dp"
                     android:layout_below="@id/imageView4"
                     android:layout_marginBottom="2dp"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView8"
@@ -165,7 +185,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView7"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView9"
@@ -175,7 +197,9 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@id/imageView8"
-                    android:background="#efefef" />
+                    android:background="#efefef"
+                    android:contentDescription="@string/pic_desc"
+                    android:scaleType="centerCrop" />
             </RelativeLayout>
         </FrameLayout>
 
@@ -191,7 +215,8 @@
             <TextView
                 android:id="@+id/retweet_text_status"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:autoLink="all" />
 
             <FrameLayout
                 android:id="@+id/layout_retweet_thumbnail_pic"
@@ -206,13 +231,19 @@
                     android:id="@+id/retweet_thumbnail_pic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#efefef" />
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/pic_desc"
+                    android:maxHeight="400dp"
+                    android:maxWidth="200dp" />
 
                 <ImageView
                     android:id="@+id/retweet_ic_gif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#efefef" />
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/pic_desc"
+                    android:maxHeight="400dp"
+                    android:maxWidth="200dp" />
 
                 <RelativeLayout
                     android:id="@+id/retweet_layout_multi_pic"
@@ -224,7 +255,9 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_marginBottom="2dp"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView2"
@@ -233,7 +266,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView1"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView3"
@@ -242,7 +277,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView2"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView4"
@@ -250,7 +287,9 @@
                         android:layout_height="70dp"
                         android:layout_below="@id/retweet_imageView1"
                         android:layout_marginBottom="2dp"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView5"
@@ -260,7 +299,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView4"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView6"
@@ -270,7 +311,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView5"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView7"
@@ -278,7 +321,9 @@
                         android:layout_height="70dp"
                         android:layout_below="@id/retweet_imageView4"
                         android:layout_marginBottom="2dp"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView8"
@@ -288,7 +333,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView7"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/retweet_imageView9"
@@ -298,7 +345,9 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginLeft="2dp"
                         android:layout_toRightOf="@id/retweet_imageView8"
-                        android:background="#ffffff" />
+                        android:background="#ffffff"
+                        android:contentDescription="@string/pic_desc"
+                        android:scaleType="centerCrop" />
                 </RelativeLayout>
             </FrameLayout>
 
@@ -309,7 +358,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/layout_retweet_thumbnail_pic"
-                android:textColor="#303030"
+                android:layout_marginTop="8dp"
+                android:textColor="#505050"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -337,6 +387,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/pic_desc"
                     android:src="@drawable/timeline_btn_repost" />
 
                 <TextView
@@ -362,6 +413,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/pic_desc"
                     android:src="@drawable/timeline_btn_comment" />
 
                 <TextView
@@ -380,6 +432,7 @@
                 android:id="@+id/btn_sd"
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/pic_desc"
                 android:src="@drawable/timeline_btn_sd" />
         </LinearLayout>
     </RelativeLayout>

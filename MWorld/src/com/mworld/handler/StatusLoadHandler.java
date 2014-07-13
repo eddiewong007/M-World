@@ -38,7 +38,7 @@ public class StatusLoadHandler extends AjaxCallBack<String> {
 		}
 
 		mFragment.mList.onRefreshComplete();
-
+		mFragment.isLoading = false;
 	}
 
 	@Override

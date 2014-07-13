@@ -1,13 +1,10 @@
 package com.weibo.entities;
 
-
-
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-
 
 /**
  * 用户（user）对象数据结构
@@ -62,12 +59,15 @@ public class User {
 	public boolean geo_enabled;
 	/** 是否是微博认证用户，即加V用户，true：是，false：否 */
 	public boolean verified;
-	/** 暂未支持 */
+	/**
+	 * -1普通用户; 0名人, 1政府, 2企业, 3媒体, 4校园, 5网站, 6应用, 7团体（机构）, 8待审企业, 200初级达人,
+	 * 220中高级达人, 400已故V用户。 -1为普通用户，200和220为达人用户，0为黄V用户，其它即为蓝V用户
+	 */
 	public int verified_type;
 	/** 用户备注信息，只有在查询用户关系时才返回此字段 */
 	public String remark;
 	/** 用户的最近一条微博信息字段 详细 */
-	//public Status status;
+	public Status status;
 	/** 是否允许所有人对我的微博进行评论，true：是，false：否 */
 	public boolean allow_all_comment;
 	/** 用户头像地址（大图），180×180像素 */
@@ -84,64 +84,70 @@ public class User {
 	public int bi_followers_count;
 	/** 用户当前的语言版本，zh-cn：简体中文，zh-tw：繁体中文，en：英语 */
 	public String lang;
-	
+
 	public static User parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
-            return null;
-        }
-		
-        try {
-            return User.parse(JSON.parseObject(jsonString));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        
-        return null;
-    }
-    
-    public static User parse(JSONObject jsonObject) {
-    	if (null == jsonObject) {
-            return null;
-        }
-        
-        User user = new User();
-        user.id                 = jsonObject.getLongValue("id");
-        user.idstr              = jsonObject.getString("idstr", "");
-        user.screen_name        = jsonObject.getString("screen_name", "");
-        user.name               = jsonObject.getString("name", "");
-        user.province           = jsonObject.getIntValue("province", -1);
-        user.city               = jsonObject.getIntValue("city", -1);
-        user.location           = jsonObject.getString("location", "");
-        user.description        = jsonObject.getString("description", "");
-        user.url                = jsonObject.getString("url", "");
-        user.profile_image_url  = jsonObject.getString("profile_image_url", "");
-        user.profile_url        = jsonObject.getString("profile_url", "");
-        user.domain             = jsonObject.getString("domain", "");
-        user.weihao             = jsonObject.getString("weihao", "");
-        user.gender             = jsonObject.getString("gender", "");
-        user.followers_count    = jsonObject.getIntValue("followers_count", 0);
-        user.friends_count      = jsonObject.getIntValue("friends_count", 0);
-        user.statuses_count     = jsonObject.getIntValue("statuses_count", 0);
-        user.favourites_count   = jsonObject.getIntValue("favourites_count", 0);
-        user.created_at         = jsonObject.getString("created_at", "");
-        user.following          = jsonObject.getBooleanValue("following", false);
-        user.allow_all_act_msg  = jsonObject.getBooleanValue("allow_all_act_msg", false);
-        user.geo_enabled        = jsonObject.getBooleanValue("geo_enabled", false);
-        user.verified           = jsonObject.getBooleanValue("verified", false);
-        user.verified_type      = jsonObject.getIntValue("verified_type", -1);
-        user.remark             = jsonObject.getString("remark", "");
-       // user.status             = Status.parse(jsonObject.getJSONObject("status")); // XXX: NO Need ?
-        user.allow_all_comment  = jsonObject.getBooleanValue("allow_all_comment", true);
-        user.avatar_large       = jsonObject.getString("avatar_large", "");
-        user.avatar_hd          = jsonObject.getString("avatar_hd", "");
-        user.verified_reason    = jsonObject.getString("verified_reason", "");
-        user.follow_me          = jsonObject.getBooleanValue("follow_me", false);
-        user.online_status      = jsonObject.getIntValue("online_status", 0);
-        user.bi_followers_count = jsonObject.getIntValue("bi_followers_count", 0);
-        user.lang               = jsonObject.getString("lang", "");
-        
-        return user;
-    
+			return null;
+		}
+
+		try {
+			return User.parse(JSON.parseObject(jsonString));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static User parse(JSONObject jsonObject) {
+		if (null == jsonObject) {
+			return null;
+		}
+
+		User user = new User();
+		user.id = jsonObject.getLongValue("id");
+		user.idstr = jsonObject.getString("idstr", "");
+		user.screen_name = jsonObject.getString("screen_name", "");
+		user.name = jsonObject.getString("name", "");
+		user.province = jsonObject.getIntValue("province", -1);
+		user.city = jsonObject.getIntValue("city", -1);
+		user.location = jsonObject.getString("location", "");
+		user.description = jsonObject.getString("description", "");
+		user.url = jsonObject.getString("url", "");
+		user.profile_image_url = jsonObject.getString("profile_image_url", "");
+		user.profile_url = jsonObject.getString("profile_url", "");
+		user.domain = jsonObject.getString("domain", "");
+		user.weihao = jsonObject.getString("weihao", "");
+		user.gender = jsonObject.getString("gender", "");
+		user.followers_count = jsonObject.getIntValue("followers_count", 0);
+		user.friends_count = jsonObject.getIntValue("friends_count", 0);
+		user.statuses_count = jsonObject.getIntValue("statuses_count", 0);
+		user.favourites_count = jsonObject.getIntValue("favourites_count", 0);
+		user.created_at = jsonObject.getString("created_at", "");
+		user.following = jsonObject.getBooleanValue("following", false);
+		user.allow_all_act_msg = jsonObject.getBooleanValue(
+				"allow_all_act_msg", false);
+		user.geo_enabled = jsonObject.getBooleanValue("geo_enabled", false);
+		user.verified = jsonObject.getBooleanValue("verified", false);
+		user.verified_type = jsonObject.getIntValue("verified_type", -1);
+		user.remark = jsonObject.getString("remark", "");
+		user.status = Status.parse(jsonObject.getJSONObject("status")); // XXX:
+																		// NO
+																		// Need
+																		// ?
+		user.allow_all_comment = jsonObject.getBooleanValue(
+				"allow_all_comment", true);
+		user.avatar_large = jsonObject.getString("avatar_large", "");
+		user.avatar_hd = jsonObject.getString("avatar_hd", "");
+		user.verified_reason = jsonObject.getString("verified_reason", "");
+		user.follow_me = jsonObject.getBooleanValue("follow_me", false);
+		user.online_status = jsonObject.getIntValue("online_status", 0);
+		user.bi_followers_count = jsonObject.getIntValue("bi_followers_count",
+				0);
+		user.lang = jsonObject.getString("lang", "");
+
+		return user;
+
 	}
 
 }
