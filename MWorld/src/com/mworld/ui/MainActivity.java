@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -78,6 +79,18 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
+
+		// 设置Menu可见
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		MenuItem addItem = menu.findItem(R.id.action_add);
+		MenuItem moreItem = menu.findItem(R.id.action_more);
+		MenuItemCompat.setShowAsAction(searchItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		MenuItemCompat.setShowAsAction(addItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		MenuItemCompat.setShowAsAction(moreItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
