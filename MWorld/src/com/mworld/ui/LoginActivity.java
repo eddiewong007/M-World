@@ -27,19 +27,15 @@ public class LoginActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
-		FinalActivity.initInjectedView(this);
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
 		if (null != PreUtils.readAccessToken(this)) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
 		}
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		FinalActivity.initInjectedView(this);
 	}
 
 	public void login(View v) {

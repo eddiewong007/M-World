@@ -7,10 +7,11 @@ import android.widget.Toast;
 import com.mworld.fragment.BaseFragment;
 import com.weibo.entities.CommentsList;
 
-public class MyComLoadHandler extends AjaxCallBack<String> {
+public class MyCmtRefHandler extends AjaxCallBack<String> {
+
 	private BaseFragment mFragment;
 
-	public MyComLoadHandler(BaseFragment mFregment) {
+	public MyCmtRefHandler(BaseFragment mFregment) {
 		this.mFragment = mFregment;
 	}
 
@@ -19,6 +20,7 @@ public class MyComLoadHandler extends AjaxCallBack<String> {
 	public void onSuccess(String jsonString) {
 		super.onSuccess(jsonString);
 		CommentsList commentsList = new CommentsList();
+
 		try {
 			commentsList = CommentsList.parse(jsonString);
 		} catch (Exception e) {
@@ -26,15 +28,16 @@ public class MyComLoadHandler extends AjaxCallBack<String> {
 		}
 		if (commentsList.commentsList == null
 				|| commentsList.commentsList.isEmpty()) {
-			Toast.makeText(mFragment.getActivity(), "加载失败", Toast.LENGTH_SHORT)
+			Toast.makeText(mFragment.getActivity(), "没有更新", Toast.LENGTH_SHORT)
 					.show();
 		} else {
-			mFragment.mArrayList.addAll(commentsList.commentsList);
+			if (0 == mFragment.init_id)
+				mFragment.init_id = commentsList.commentsList.get(0).id;
+			mFragment.since_id = commentsList.commentsList.get(0).id;
+			mFragment.mArrayList.addAll(0, commentsList.commentsList);
 			mFragment.mAdapter.notifyDataSetChanged();
-			Toast.makeText(mFragment.getActivity(),
-					"加载了" + commentsList.commentsList.size() + "条评论",
-					Toast.LENGTH_SHORT).show();
 		}
+
 		mFragment.mList.onRefreshComplete();
 	}
 

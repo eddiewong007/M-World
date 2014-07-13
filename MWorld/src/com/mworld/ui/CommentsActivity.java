@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mworld.adapter.StatusComListAdapter;
+import com.mworld.adapter.StatusCmtListAdapter;
 import com.mworld.utils.PreUtils;
 import com.weibo.api.CommentsAPI;
 import com.weibo.api.StatusesAPI;
@@ -98,7 +98,7 @@ public class CommentsActivity extends Activity {
 				CommentsList commentsList = CommentsList.parse(jsonString);
 				if (0 == commentsList.commentsList.size())
 					((TextView) findViewById(R.id.no_comment)).setText("没有评论");
-				StatusComListAdapter adapter = new StatusComListAdapter(
+				StatusCmtListAdapter adapter = new StatusCmtListAdapter(
 						CommentsActivity.this, commentsList.commentsList);
 
 				((ListView) findViewById(R.id.comments_list))

@@ -15,9 +15,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mworld.adapter.MyComListAdapter;
-import com.mworld.handler.MyComLoadHandler;
-import com.mworld.handler.MyComRefHandler;
+import com.mworld.adapter.MyCmtListAdapter;
+import com.mworld.handler.MyCmtLoadHandler;
+import com.mworld.handler.MyCmtRefHandler;
 import com.mworld.ui.R;
 import com.weibo.api.CommentsAPI;
 import com.weibo.entities.Comment;
@@ -30,7 +30,7 @@ public class CommentFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 		mAPI = new CommentsAPI(mAccessToken);
 		mArrayList = new ArrayList<Comment>();
-		mAdapter = new MyComListAdapter(getActivity(), mArrayList);
+		mAdapter = new MyCmtListAdapter(getActivity(), mArrayList);
 	}
 
 	@SuppressLint("InflateParams")
@@ -42,7 +42,7 @@ public class CommentFragment extends BaseFragment {
 				.findViewById(R.id.comment_timeline);
 		mList.setAdapter(mAdapter);
 		((CommentsAPI) mAPI).timeline(since_id, 0, 20, 1, false,
-				new MyComRefHandler(this));
+				new MyCmtRefHandler(this));
 		return view;
 	}
 
@@ -56,7 +56,7 @@ public class CommentFragment extends BaseFragment {
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.i("At", "refresh");
 				((CommentsAPI) mAPI).timeline(since_id, 0, 20, 1, false,
-						new MyComRefHandler(CommentFragment.this));
+						new MyCmtRefHandler(CommentFragment.this));
 			}
 		});
 		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
@@ -66,7 +66,7 @@ public class CommentFragment extends BaseFragment {
 				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
 						.show();
 				((CommentsAPI) mAPI).timeline(0, init_id, 20, page++, false,
-						new MyComLoadHandler(CommentFragment.this));
+						new MyCmtLoadHandler(CommentFragment.this));
 			}
 		});
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -40,6 +41,17 @@ public class GuideViewActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+		if (null != PreUtils.readAccessToken(this)) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			finish();
+		} else if (PreUtils.isGuided(this)) {
+			start();
+		} else {
+			PreUtils.setGuided(this);
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guideview);
 		FinalActivity.initInjectedView(this);
@@ -47,19 +59,10 @@ public class GuideViewActivity extends Activity {
 		initView();
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		if (PreUtils.isGuided(this)) {
-			start();
-		} else {
-			PreUtils.setGuided(this);
-		}
-	}
-
 	/**
 	 * 初始化组件
 	 */
+	@SuppressLint("InflateParams")
 	private void initView() {
 
 		// 实例化ArrayList对象
