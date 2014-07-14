@@ -2,6 +2,7 @@ package com.mworld.handler;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.mworld.fragment.BaseFragment;
@@ -36,7 +37,8 @@ public class StatusRefHandler extends AjaxCallBack<String> {
 			mFragment.mArrayList.addAll(0, statusList.statusesList);
 			mFragment.mAdapter.notifyDataSetChanged();
 		}
-
+		if (null != mFragment.mProgressBar)
+			mFragment.mProgressBar.setVisibility(View.GONE);
 		mFragment.mList.onRefreshComplete();
 	}
 

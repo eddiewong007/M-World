@@ -11,7 +11,11 @@
 
     <RelativeLayout
         android:id="@+id/llayout01"
+<<<<<<< HEAD
         android:layout_width="match_parent"
+=======
+        android:layout_width="fill_parent"
+>>>>>>> origin/test-ymm
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
@@ -30,6 +34,7 @@
 
         <TextView
             android:id="@+id/head_name"
+<<<<<<< HEAD
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/head_icon"
@@ -42,6 +47,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+=======
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/head_icon"
+            android:layout_toRightOf="@id/head_icon"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+>>>>>>> origin/test-ymm
             android:layout_below="@id/head_name"
             android:layout_toRightOf="@id/head_icon"
             android:gravity="center"
@@ -59,7 +78,11 @@
 
     <LinearLayout
         android:id="@+id/llayout02"
+<<<<<<< HEAD
         android:layout_width="match_parent"
+=======
+        android:layout_width="fill_parent"
+>>>>>>> origin/test-ymm
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -79,7 +102,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:padding="8dp"
+<<<<<<< HEAD
             android:text="@string/function_list_collection"
+=======
+            android:text="@string/collections"
+>>>>>>> origin/test-ymm
             android:textColor="#fff"
             android:textSize="16sp" />
     </LinearLayout>
@@ -92,7 +119,11 @@
 
     <LinearLayout
         android:id="@+id/llayout03"
+<<<<<<< HEAD
         android:layout_width="match_parent"
+=======
+        android:layout_width="fill_parent"
+>>>>>>> origin/test-ymm
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -111,8 +142,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+<<<<<<< HEAD
             android:padding="8dp"
             android:text="@string/function_list_draft"
+=======
+            android:contentDescription="@string/pic_desc"
+            android:padding="8dp"
+            android:text="@string/draft"
+>>>>>>> origin/test-ymm
             android:textColor="#fff"
             android:textSize="16sp" />
     </LinearLayout>
@@ -125,7 +162,11 @@
 
     <LinearLayout
         android:id="@+id/llayout04"
+<<<<<<< HEAD
         android:layout_width="match_parent"
+=======
+        android:layout_width="fill_parent"
+>>>>>>> origin/test-ymm
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -145,7 +186,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:padding="8dp"
+<<<<<<< HEAD
             android:text="@string/function_list_settings"
+=======
+            android:text="@string/settings"
+>>>>>>> origin/test-ymm
             android:textColor="#fff"
             android:textSize="16sp" />
     </LinearLayout>
@@ -158,7 +203,11 @@
 
     <LinearLayout
         android:id="@+id/llayout05"
+<<<<<<< HEAD
         android:layout_width="match_parent"
+=======
+        android:layout_width="fill_parent"
+>>>>>>> origin/test-ymm
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="5dp"
@@ -180,7 +229,11 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:padding="8dp"
+<<<<<<< HEAD
             android:text="@string/function_list_exit"
+=======
+            android:text="@string/exit"
+>>>>>>> origin/test-ymm
             android:textColor="#fff"
             android:textSize="16sp" />
     </LinearLayout>
