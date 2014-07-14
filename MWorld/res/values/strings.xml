@@ -1,5 +1,11 @@
 <resources>
 
     <string name="app_name">M-World</string>
+    <string name="login_label_signin">Login</string>
+    <string name="login_status_logging_in">Login..</string>
+    <string name="login_username_hint">Email</string>
+    <string name="login_register_link">Have no account？ <a href="#" mce_href="#">Sign Up</a></string>
 
+    <string name="pic_desc">图片</string>
+    
 </resources>
