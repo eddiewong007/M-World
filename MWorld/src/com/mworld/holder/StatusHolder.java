@@ -1,17 +1,10 @@
 package com.mworld.holder;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.tsz.afinal.FinalBitmap;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +15,7 @@ import com.mworld.displayer.ClipDisplayer;
 import com.mworld.ui.CommentsActivity;
 import com.mworld.ui.DisplayActivity;
 import com.mworld.ui.R;
+import com.mworld.utils.StatusUtils;
 import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Status;
 
@@ -33,10 +27,6 @@ import com.weibo.entities.Status;
 public class StatusHolder {
 
 	private static final int maxHeight = 400;
-	public static final Pattern NAME_PATTERN = Pattern.compile(
-			"@([\\u4e00-\\u9fa5\\w\\-\\—]{2,30})", Pattern.CASE_INSENSITIVE);
-	public static final Pattern TOPIC_PATTERN = Pattern
-			.compile("#([^\\#|^\\@|.]+)#");
 
 	private Context mContext;
 	public View layoutMessage;
@@ -147,7 +137,8 @@ public class StatusHolder {
 			icImage.setVisibility(View.GONE);
 		}
 
-		textStatus.setText(convertToSpannableString(status.text));
+		textStatus.setText(StatusUtils.addEmotions(mContext,
+				StatusUtils.matchNameTopic(status.text)));
 
 		if (null != status.pic_urls && status.pic_urls.size() > 1) {
 			layoutThumbnailPic.setVisibility(View.VISIBLE);
@@ -177,9 +168,11 @@ public class StatusHolder {
 			retweetLayout.setVisibility(View.GONE);
 		} else if (null != status.retweeted_status.user) {
 			retweetLayout.setVisibility(View.VISIBLE);
-			retweetTextStatus.setText(convertToSpannableString("@"
-					+ status.retweeted_status.user.screen_name + ":"
-					+ status.retweeted_status.text));
+			retweetTextStatus.setText(StatusUtils.addEmotions(
+					mContext,
+					StatusUtils.matchNameTopic("@"
+							+ status.retweeted_status.user.screen_name + ":"
+							+ status.retweeted_status.text)));
 			if (null != status.retweeted_status.pic_urls
 					&& status.retweeted_status.pic_urls.size() > 1) {
 				layoutRetweetThumbnailPic.setVisibility(View.VISIBLE);
@@ -237,20 +230,4 @@ public class StatusHolder {
 		});
 	}
 
-	private SpannableStringBuilder convertToSpannableString(String text) {
-		SpannableStringBuilder style = new SpannableStringBuilder(text);
-		Matcher matcher = NAME_PATTERN.matcher(text);
-		while (matcher.find()) {
-			style.setSpan(new ForegroundColorSpan(Color.rgb(0x00, 0xbf, 0xff)),
-					matcher.start(), matcher.end(),
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		matcher = TOPIC_PATTERN.matcher(text);
-		while (matcher.find()) {
-			style.setSpan(new ForegroundColorSpan(Color.rgb(0x00, 0xbf, 0xff)),
-					matcher.start(), matcher.end(),
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		return style;
-	}
 }

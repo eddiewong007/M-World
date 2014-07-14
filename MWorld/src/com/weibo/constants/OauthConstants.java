@@ -34,4 +34,6 @@ public interface OauthConstants {
 
 	/** 请求的类型，填写authorization_code */
 	public static final String GRANT_TYPE = "authorization_code";
+	
+	
 }

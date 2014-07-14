@@ -27,8 +27,8 @@ public class StatusRefHandler extends AjaxCallBack<String> {
 		}
 		if (statusList.statusesList == null
 				|| statusList.statusesList.isEmpty()) {
-			Toast.makeText(mFragment.getActivity(), "没有更新",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(mFragment.getActivity(), "没有更新", Toast.LENGTH_SHORT)
+					.show();
 		} else {
 			if (0 == mFragment.init_id)
 				mFragment.init_id = statusList.statusesList.get(0).id;
