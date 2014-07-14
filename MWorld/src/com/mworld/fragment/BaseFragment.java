@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.utils.PreUtils;
@@ -29,6 +30,8 @@ public class BaseFragment extends Fragment {
 	protected int page = 2;
 
 	public PullToRefreshListView mList;
+	
+	public ProgressBar mProgressBar;
 
 	public boolean isRefreshing, isLoading;
 

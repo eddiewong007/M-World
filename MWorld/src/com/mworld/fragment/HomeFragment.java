@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -40,6 +41,9 @@ public class HomeFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_home, null);
 		mList = (PullToRefreshListView) view.findViewById(R.id.home_timeline);
 		mList.setAdapter(mAdapter);
+		mProgressBar = (ProgressBar) view.findViewById(R.id.loading);
+		mProgressBar.setVisibility(View.VISIBLE);
+		
 		((StatusesAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false, 0,
 				false, new StatusRefHandler(this));
 		return view;
