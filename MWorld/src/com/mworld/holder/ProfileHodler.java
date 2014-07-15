@@ -20,6 +20,8 @@ public class ProfileHodler {
 	public ProfileHodler(Context context, View view) {
 		mContext = context;
 		userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
+		view.findViewById(R.id.retweet_layout).setVisibility(View.GONE);
+		view.findViewById(R.id.layout_multi_pic).setVisibility(View.GONE);
 	}
 
 	public void inflate(User user) {

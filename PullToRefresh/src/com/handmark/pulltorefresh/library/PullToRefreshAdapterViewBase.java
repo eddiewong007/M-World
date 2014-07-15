@@ -101,8 +101,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 		return mShowIndicator;
 	}
 
-	public void onScroll(final AbsListView view, final int firstVisibleItem,
-			final int visibleItemCount, final int totalItemCount) {
+	public final void onScroll(final AbsListView view,
+			final int firstVisibleItem, final int visibleItemCount,
+			final int totalItemCount) {
 
 		if (DEBUG) {
 			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem
@@ -131,7 +132,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 		}
 	}
 
-	public void onScrollStateChanged(final AbsListView view, final int state) {
+	public final void onScrollStateChanged(final AbsListView view, final int state) {
 		/**
 		 * Check that the scrolling has stopped, and that the last item is
 		 * visible.

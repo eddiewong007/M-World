@@ -1,7 +1,7 @@
 package com.weibo.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
+
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -14,7 +14,12 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Visible implements Parcelable {
+public class Visible implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5945433753546847680L;
 
 	public static final int VISIBLE_NORMAL = 0;
 	public static final int VISIBLE_PRIVACY = 1;
@@ -55,29 +60,4 @@ public class Visible implements Parcelable {
 		return visible;
 	}
 
-	public Visible(Parcel in) {
-		type = in.readInt();
-		list_id = in.readInt();
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public static final Parcelable.Creator<Visible> CREATOR = new Parcelable.Creator<Visible>() {
-		public Visible createFromParcel(Parcel in) {
-			return new Visible(in);
-		}
-
-		public Visible[] newArray(int size) {
-			return new Visible[size];
-		}
-	};
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(type);
-		dest.writeInt(list_id);
-	}
 }

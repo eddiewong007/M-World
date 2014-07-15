@@ -65,18 +65,10 @@ public class CommentsActivity extends Activity {
 								.setText(mStatus.created_at);
 						((TextView) findViewById(R.id.text_status))
 								.setText(mStatus.text);
-						if (null != mStatus.retweeted_status) {
-							((TextView) findViewById(R.id.retweet_text_status))
-									.setText("@"
-											+ mStatus.retweeted_status.user.screen_name
-											+ ":"
-											+ mStatus.retweeted_status.text);
-							((TextView) findViewById(R.id.retweet_count))
-									.setText("转发 "
-											+ mStatus.retweeted_status.reposts_count
-											+ " 评论 "
-											+ mStatus.retweeted_status.comments_count);
-						}
+						findViewById(R.id.layout_multi_pic).setVisibility(
+								View.GONE);
+						findViewById(R.id.retweet_layout).setVisibility(
+								View.GONE);
 						((TextView) findViewById(R.id.text_ret)).setText(String
 								.valueOf(mStatus.reposts_count));
 						((TextView) findViewById(R.id.text_cmt)).setText(String

@@ -1,7 +1,7 @@
 package com.weibo.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
+
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -14,7 +14,13 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class User implements Parcelable {
+public class User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 959136040098298410L;
+
 	/** 用户UID */
 	public long id;
 	/** 字符串型的用户UID */
@@ -154,96 +160,6 @@ public class User implements Parcelable {
 
 		return user;
 
-	}
-
-	public User(Parcel in) {
-		id = in.readLong();
-		idstr = in.readString();
-		screen_name = in.readString();
-		name = in.readString();
-		province = in.readInt();
-		city = in.readInt();
-		location = in.readString();
-		description = in.readString();
-		url = in.readString();
-		profile_image_url = in.readString();
-		profile_url = in.readString();
-		domain = in.readString();
-		weihao = in.readString();
-		gender = in.readString();
-		followers_count = in.readInt();
-		friends_count = in.readInt();
-		statuses_count = in.readInt();
-		favourites_count = in.readInt();
-		created_at = in.readString();
-		following = in.readInt() == 1 ? true : false;
-		allow_all_act_msg = in.readInt() == 1 ? true : false;
-		geo_enabled = in.readInt() == 1 ? true : false;
-		verified = in.readInt() == 1 ? true : false;
-		verified_type = in.readInt();
-		remark = in.readString();
-		status = Status.CREATOR.createFromParcel(in);
-		allow_all_comment = in.readInt() == 1 ? true : false;
-		avatar_large = in.readString();
-		avatar_hd = in.readString();
-		verified_reason = in.readString();
-		follow_me = in.readInt() == 1 ? true : false;
-		online_status = in.readInt();
-		bi_followers_count = in.readInt();
-		lang = in.readString();
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-		public User createFromParcel(Parcel in) {
-			return new User(in);
-		}
-
-		public User[] newArray(int size) {
-			return new User[size];
-		}
-	};
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(id);
-		dest.writeString(idstr);
-		dest.writeString(screen_name);
-		dest.writeString(name);
-		dest.writeInt(province);
-		dest.writeInt(city);
-		dest.writeString(location);
-		dest.writeString(description);
-		dest.writeString(url);
-		dest.writeString(profile_image_url);
-		dest.writeString(profile_url);
-		dest.writeString(domain);
-		dest.writeString(weihao);
-		dest.writeString(gender);
-		dest.writeInt(followers_count);
-		dest.writeInt(friends_count);
-		dest.writeInt(statuses_count);
-		dest.writeInt(favourites_count);
-		dest.writeString(created_at);
-		dest.writeInt(following ? 1 : 0);
-		dest.writeInt(allow_all_act_msg ? 1 : 0);
-		dest.writeInt(geo_enabled ? 1 : 0);
-		dest.writeInt(verified ? 1 : 0);
-		dest.writeInt(verified_type);
-		dest.writeString(remark);
-		dest.writeParcelable(status, flags);
-		dest.writeInt(allow_all_comment ? 1 : 0);
-		dest.writeString(avatar_large);
-		dest.writeString(avatar_hd);
-		dest.writeString(verified_reason);
-		dest.writeInt(follow_me ? 1 : 0);
-		dest.writeInt(online_status);
-		dest.writeInt(bi_followers_count);
-		dest.writeString(lang);
 	}
 
 }

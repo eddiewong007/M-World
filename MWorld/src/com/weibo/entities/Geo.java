@@ -1,7 +1,7 @@
 package com.weibo.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
+
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -14,7 +14,12 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Geo implements Parcelable {
+public class Geo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5885669474617454511L;
+
 	/** 经度坐标 */
 	public String longitude;
 	/** 维度坐标 */
@@ -69,44 +74,4 @@ public class Geo implements Parcelable {
 		return geo;
 	}
 
-	public Geo(Parcel in) {
-		longitude = in.readString();
-		latitude = in.readString();
-		city = in.readString();
-		province = in.readString();
-		city_name = in.readString();
-		province_name = in.readString();
-		address = in.readString();
-		pinyin = in.readString();
-		more = in.readString();
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public static final Parcelable.Creator<Geo> CREATOR = new Parcelable.Creator<Geo>() {
-		public Geo createFromParcel(Parcel in) {
-			return new Geo(in);
-		}
-
-		public Geo[] newArray(int size) {
-			return new Geo[size];
-		}
-	};
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(longitude);
-		dest.writeString(latitude);
-		dest.writeString(city);
-		dest.writeString(province);
-		dest.writeString(city_name);
-		dest.writeString(province_name);
-		dest.writeString(address);
-		dest.writeString(pinyin);
-		dest.writeString(more);
-
-	}
 }
