@@ -42,6 +42,7 @@
         </activity>
         <activity android:name="CommentsActivity" >
         </activity>
+        <activity android:name="ProfileActivity"></activity>
     </application>
 
 </manifest>

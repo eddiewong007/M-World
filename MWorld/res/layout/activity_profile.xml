@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
+    <com.mworld.view.FixListView
         android:id="@+id/profile_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +16,6 @@
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:layoutAnimation="@anim/list_layout_anim"
         android:smoothScrollbar="true" />
 
 </LinearLayout>

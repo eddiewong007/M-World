@@ -1,5 +1,7 @@
 package com.weibo.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -12,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Visible {
+public class Visible implements Parcelable {
 
 	public static final int VISIBLE_NORMAL = 0;
 	public static final int VISIBLE_PRIVACY = 1;
@@ -23,6 +25,10 @@ public class Visible {
 	public int type;
 	/** 分组的组号 */
 	public int list_id;
+
+	public Visible() {
+
+	}
 
 	public static Visible parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
@@ -47,5 +53,31 @@ public class Visible {
 		visible.type = jsonObject.getIntValue("type");
 		visible.list_id = jsonObject.getIntValue("list_id");
 		return visible;
+	}
+
+	public Visible(Parcel in) {
+		type = in.readInt();
+		list_id = in.readInt();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Parcelable.Creator<Visible> CREATOR = new Parcelable.Creator<Visible>() {
+		public Visible createFromParcel(Parcel in) {
+			return new Visible(in);
+		}
+
+		public Visible[] newArray(int size) {
+			return new Visible[size];
+		}
+	};
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(type);
+		dest.writeInt(list_id);
 	}
 }

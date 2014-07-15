@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +43,14 @@ public class DialogActivity extends Activity {
 		setContentView(R.layout.activity_dialog);
 		FinalActivity.initInjectedView(this);
 		hasUser();
+
+		findViewById(R.id.llayout01).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				click(view);
+			}
+		});
 	}
 
 	@Override
@@ -51,12 +60,11 @@ public class DialogActivity extends Activity {
 	}
 
 	public void click(View view) {
-		switch (view.getId()) {
 
+		switch (view.getId()) {
 		case R.id.llayout01:
-			Intent intent = new Intent(this, DisplayActivity.class);
-			intent.putExtra("type", 3);
-			intent.putExtra("uid", MainActivity.sUser.id);
+			Intent intent = new Intent(this, ProfileActivity.class);
+			intent.putExtra("user", MainActivity.sUser);
 			startActivity(intent);
 			break;
 		case R.id.llayout05:
