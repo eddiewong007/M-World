@@ -3,6 +3,7 @@ package com.weibo.entities;
 import java.io.Serializable;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -15,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
  * 
  */
 public class Visible implements Serializable {
+	private static final String TAG = "Visible";
 
 	/**
 	 * 
@@ -31,10 +33,13 @@ public class Visible implements Serializable {
 	/** 分组的组号 */
 	public int list_id;
 
-	public Visible() {
-
-	}
-
+	/**
+	 * 将json字符串解析成Visible对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的Visible对象
+	 */
 	public static Visible parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
@@ -43,12 +48,19 @@ public class Visible implements Serializable {
 		try {
 			return Visible.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成Visible对象
+	 * 
+	 * @param jsonObject
+	 *            jsonString 待解析的JSONObject
+	 * @return 解析出来的Visible对象
+	 */
 	public static Visible parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;

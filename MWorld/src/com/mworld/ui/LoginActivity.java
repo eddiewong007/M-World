@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.mworld.utils.PreUtils;
+import com.mworld.utils.PrefUtils;
 import com.weibo.api.Oauth2API;
 import com.weibo.entities.AccessToken;
 
@@ -27,7 +27,7 @@ public class LoginActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		if (null != PreUtils.readAccessToken(this)) {
+		if (null != PrefUtils.readAccessToken(this)) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
 				Toast.makeText(LoginActivity.this, "授权失败，请重新授权！",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				PreUtils.keepAccessToken(LoginActivity.this, accessToken);
+				PrefUtils.keepAccessToken(LoginActivity.this, accessToken);
 				startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				finish();
 			}

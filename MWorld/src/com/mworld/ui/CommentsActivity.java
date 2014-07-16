@@ -1,21 +1,15 @@
 package com.mworld.ui;
 
-import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mworld.adapter.StatusCmtListAdapter;
-import com.mworld.utils.PreUtils;
+import com.mworld.holder.StatusHolder;
+import com.mworld.utils.PrefUtils;
 import com.weibo.api.CommentsAPI;
-import com.weibo.api.StatusesAPI;
 import com.weibo.entities.CommentsList;
 import com.weibo.entities.Status;
 
@@ -32,55 +26,14 @@ public class CommentsActivity extends Activity {
 	}
 
 	private void loadStatus() {
-		StatusesAPI statusesAPI = new StatusesAPI(
-				PreUtils.readAccessToken(this));
-		statusesAPI.show(getIntent().getLongExtra("id", 0),
-				new AjaxCallBack<String>() {
-
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						Log.i("-------------回调", jsonString);
-						mStatus = Status.parse(jsonString);
-						ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
-						FinalBitmap.create(CommentsActivity.this).display(
-								userAvatar, mStatus.user.avatar_large);
-						userAvatar.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								Log.i("adapter", "click");
-								Intent intent = new Intent(
-										CommentsActivity.this,
-										DisplayActivity.class);
-								intent.putExtra("type", 3);
-								intent.putExtra("uid",
-										String.valueOf(mStatus.user.id));
-								startActivity(intent);
-							}
-						});
-						((TextView) findViewById(R.id.user_name))
-								.setText(mStatus.user.screen_name);
-						((TextView) findViewById(R.id.text_from))
-								.setText(mStatus.created_at);
-						((TextView) findViewById(R.id.text_status))
-								.setText(mStatus.text);
-						findViewById(R.id.layout_multi_pic).setVisibility(
-								View.GONE);
-						findViewById(R.id.retweet_layout).setVisibility(
-								View.GONE);
-						((TextView) findViewById(R.id.text_ret)).setText(String
-								.valueOf(mStatus.reposts_count));
-						((TextView) findViewById(R.id.text_cmt)).setText(String
-								.valueOf(mStatus.comments_count));
-					}
-				});
-
+		mStatus = (Status) getIntent().getSerializableExtra("status");
+		StatusHolder holder = new StatusHolder(this, findViewById(R.id.status));
+		holder.inflate(mStatus);
 	}
 
 	private void loadComments() {
 		CommentsAPI commentsAPI = new CommentsAPI(
-				PreUtils.readAccessToken(this));
+				PrefUtils.readAccessToken(this));
 		long id = getIntent().getLongExtra("id", 0);
 		commentsAPI.show(id, 0, 0, 10, 1, 0, new AjaxCallBack<String>() {
 

@@ -1,5 +1,8 @@
 package com.weibo.entities;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +14,8 @@ import com.alibaba.fastjson.JSONObject;
  * 
  */
 public class Comment {
+	private static final String TAG = "Comment";
+
 	/** 评论创建时间 */
 	public String created_at;
 	/** 评论的 ID */
@@ -30,16 +35,34 @@ public class Comment {
 	/** 评论来源评论，当本评论属于对另一评论的回复时返回此字段 */
 	public Comment reply_comment;
 
+	/**
+	 * 将json字符串解析成Comment对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的Comment对象
+	 */
 	public static Comment parse(String jsonString) {
+		if (TextUtils.isEmpty(jsonString)) {
+			return null;
+		}
+
 		try {
 			return Comment.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成Comment对象
+	 * 
+	 * @param jsonObject
+	 *            待解析的JSONObject
+	 * @return 解析出来的Comment对象
+	 */
 	public static Comment parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;

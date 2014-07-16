@@ -16,10 +16,10 @@ import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 
 import com.mworld.adapter.ProfileAdapter;
 import com.mworld.holder.ProfTabHolder;
-import com.mworld.view.FixListView;
 import com.weibo.api.StatusesAPI;
 import com.weibo.entities.StatusesList;
 import com.weibo.entities.User;
@@ -33,7 +33,7 @@ public class ProfileActivity extends Activity {
 	@SuppressWarnings("rawtypes")
 	private ArrayList mArrayList = new ArrayList();
 
-	private FixListView mList;
+	private ListView mList;
 
 	private View header;
 
@@ -63,7 +63,7 @@ public class ProfileActivity extends Activity {
 			}
 		});
 		new ProfTabHolder(header).inflate(mUser);
-		mList = (FixListView) findViewById(R.id.profile_timeline);
+		mList = (ListView) findViewById(R.id.profile_timeline);
 		mList.setOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -86,15 +86,16 @@ public class ProfileActivity extends Activity {
 		mArrayList.add(mUser);
 		mArrayList.add(mUser);
 		StatusesAPI statusesAPI = new StatusesAPI(MainActivity.sAccessToken);
-		statusesAPI.userTimeline(Long.parseLong(MainActivity.sAccessToken.uid),
-				0, 0, 20, 1, false, 0, false, new AjaxCallBack<String>() {
+		statusesAPI.userTimeline(mUser.id, 0, 0, 20, 1, false, 0, false,
+				new AjaxCallBack<String>() {
 
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
 						StatusesList statusesList = StatusesList
 								.parse(jsonString);
-						mArrayList.addAll(statusesList.statusesList);
+						if (statusesList.statusesList != null)
+							mArrayList.addAll(statusesList.statusesList);
 						adapter.notifyDataSetChanged();
 					}
 

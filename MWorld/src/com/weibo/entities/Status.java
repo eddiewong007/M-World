@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -17,12 +18,13 @@ import com.alibaba.fastjson.JSONObject;
  * 
  */
 public class Status implements Serializable {
+	private static final String TAG = "Status";
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7116211368994968887L;
-	
+
 	/** 微博创建时间 */
 	public String created_at;
 	/** 微博ID */
@@ -73,10 +75,13 @@ public class Status implements Serializable {
 	/** 微博流内的推广微博ID */
 	public String ad;
 
-	public Status() {
-
-	}
-
+	/**
+	 * 将json字符串解析成Status对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的Status对象
+	 */
 	public static Status parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
@@ -85,12 +90,19 @@ public class Status implements Serializable {
 		try {
 			return Status.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成Status对象
+	 * 
+	 * @param jsonObject
+	 *            待解析的JSONObject
+	 * @return 解析出来的Status对象
+	 */
 	public static Status parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;
@@ -105,15 +117,12 @@ public class Status implements Serializable {
 		status.source = jsonObject.getString("source");
 		status.favorited = jsonObject.getBooleanValue("favorited", false);
 		status.truncated = jsonObject.getBooleanValue("truncated", false);
-
-		// Have NOT supported
 		status.in_reply_to_status_id = jsonObject
-				.getString("in_reply_to_status_id");
+				.getString("in_reply_to_status_id"); // 暂未支持
 		status.in_reply_to_user_id = jsonObject
-				.getString("in_reply_to_user_id");
+				.getString("in_reply_to_user_id"); // 暂未支持
 		status.in_reply_to_screen_name = jsonObject
-				.getString("in_reply_to_screen_name");
-
+				.getString("in_reply_to_screen_name"); // 暂未支持
 		status.thumbnail_pic = jsonObject.getString("thumbnail_pic");
 		status.bmiddle_pic = jsonObject.getString("bmiddle_pic");
 		status.original_pic = jsonObject.getString("original_pic");
@@ -124,7 +133,7 @@ public class Status implements Serializable {
 		status.reposts_count = jsonObject.getIntValue("reposts_count");
 		status.comments_count = jsonObject.getIntValue("comments_count");
 		status.attitudes_count = jsonObject.getIntValue("attitudes_count");
-		status.mlevel = jsonObject.getIntValue("mlevel"); // Have NOT supported
+		status.mlevel = jsonObject.getIntValue("mlevel"); // 暂未支持
 		status.visible = Visible.parse(jsonObject.getJSONObject("visible"));
 
 		JSONArray picUrlsArray = jsonObject.getJSONArray("pic_urls");

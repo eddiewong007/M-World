@@ -2,15 +2,13 @@ package com.weibo.api;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
-import android.util.SparseArray;
 
 import com.weibo.entities.AccessToken;
 
 /**
- * 此类封装了评论的接口。 详情请参考<a href="http://t.cn/8F3geol">评论接口</a>
+ * 此类封装了评论的接口
  * 
  * @author MengMeng
- * @since 2014-03-03
  */
 public class CommentsAPI extends BaseAPI {
 
@@ -24,38 +22,7 @@ public class CommentsAPI extends BaseAPI {
 	public static final int SRC_FILTER_WEIBO = 1;
 	public static final int SRC_FILTER_WEIQUN = 2;
 
-	/**
-	 * API 类型。 命名规则： <li>读取接口：READ_API_XXX <li>写入接口：WRITE_API_XXX
-	 * 请注意：该类中的接口仅做为演示使用，并没有包含所有关于微博的接口，第三方开发者可以 根据需要来填充该类，可参考legacy包下
-	 * {@link com.sina.weibo.sdk.openapi.legacy.CommentsAPI}
-	 */
-	private static final int READ_API_TO_ME = 0;
-	private static final int READ_API_BY_ME = 1;
-	private static final int READ_API_SHOW = 2;
-	private static final int READ_API_TIMELINE = 3;
-	private static final int READ_API_MENTIONS = 4;
-	private static final int READ_API_SHOW_BATCH = 5;
-	private static final int WRITE_API_CREATE = 6;
-	private static final int WRITE_API_DESTROY = 7;
-	private static final int WRITE_API_SDESTROY_BATCH = 8;
-	private static final int WRITE_API_REPLY = 9;
-
 	private static final String API_BASE_URL = API_SERVER + "/comments";
-
-	private static final SparseArray<String> sAPIList = new SparseArray<String>();
-	static {
-		sAPIList.put(READ_API_TO_ME, API_BASE_URL + "/to_me.json");
-		sAPIList.put(READ_API_BY_ME, API_BASE_URL + "/by_me.json");
-		sAPIList.put(READ_API_SHOW, API_BASE_URL + "/show.json");
-		sAPIList.put(READ_API_TIMELINE, API_BASE_URL + "/timeline.json");
-		sAPIList.put(READ_API_MENTIONS, API_BASE_URL + "/mentions.json");
-		sAPIList.put(READ_API_SHOW_BATCH, API_BASE_URL + "/show_batch.json");
-		sAPIList.put(WRITE_API_CREATE, API_BASE_URL + "/create.json");
-		sAPIList.put(WRITE_API_DESTROY, API_BASE_URL + "/destroy.json");
-		sAPIList.put(WRITE_API_SDESTROY_BATCH, API_BASE_URL
-				+ "/sdestroy_batch.json");
-		sAPIList.put(WRITE_API_REPLY, API_BASE_URL + "/reply.json");
-	}
 
 	/**
 	 * 构造函数，使用各个 API 接口提供的服务前必须先获取 Token。
@@ -94,7 +61,7 @@ public class CommentsAPI extends BaseAPI {
 				page);
 		params.put("id", String.valueOf(id));
 		params.put("filter_by_author", String.valueOf(authorType));
-		requestAsync(sAPIList.get(READ_API_SHOW), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/show.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -121,7 +88,7 @@ public class CommentsAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
 				page);
 		params.put("filter_by_source", String.valueOf(sourceType));
-		requestAsync(sAPIList.get(READ_API_BY_ME), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/by_me.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -154,7 +121,7 @@ public class CommentsAPI extends BaseAPI {
 				page);
 		params.put("filter_by_author", String.valueOf(authorType));
 		params.put("filter_by_source", String.valueOf(sourceType));
-		requestAsync(sAPIList.get(READ_API_TO_ME), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/to_me.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -179,7 +146,7 @@ public class CommentsAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineParamsBase(since_id, max_id, count,
 				page);
 		params.put("trim_user", String.valueOf(trim_user ? 1 : 0));
-		requestAsync(sAPIList.get(READ_API_TIMELINE), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/timeline.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -212,7 +179,7 @@ public class CommentsAPI extends BaseAPI {
 				page);
 		params.put("filter_by_author", String.valueOf(authorType));
 		params.put("filter_by_source", String.valueOf(sourceType));
-		requestAsync(sAPIList.get(READ_API_MENTIONS), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/mentions.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -226,7 +193,7 @@ public class CommentsAPI extends BaseAPI {
 	 */
 	public void showBatch(long[] cids, AjaxCallBack<String> callBack) {
 		AjaxParams params = buildShowOrDestoryBatchParams(cids);
-		requestAsync(sAPIList.get(READ_API_SHOW_BATCH), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/show_batch.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -245,7 +212,7 @@ public class CommentsAPI extends BaseAPI {
 	public void create(String comment, long id, boolean comment_ori,
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildCreateParams(comment, id, comment_ori);
-		requestAsync(sAPIList.get(WRITE_API_CREATE), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/create.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -260,7 +227,7 @@ public class CommentsAPI extends BaseAPI {
 	public void destroy(long cid, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("cid", String.valueOf(cid));
-		requestAsync(sAPIList.get(WRITE_API_DESTROY), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/destroy.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -274,7 +241,7 @@ public class CommentsAPI extends BaseAPI {
 	 */
 	public void destroyBatch(long[] ids, AjaxCallBack<String> callBack) {
 		AjaxParams params = buildShowOrDestoryBatchParams(ids);
-		requestAsync(sAPIList.get(WRITE_API_SDESTROY_BATCH), params,
+		requestAsync(API_BASE_URL + "/sdestroy_batch.json", params,
 				HTTPMETHOD_POST, callBack);
 	}
 
@@ -299,7 +266,7 @@ public class CommentsAPI extends BaseAPI {
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildReplyParams(cid, id, comment, without_mention,
 				comment_ori);
-		requestAsync(sAPIList.get(WRITE_API_REPLY), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/reply.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 

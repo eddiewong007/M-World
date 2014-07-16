@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -13,9 +12,9 @@ import android.widget.TextView;
 
 import com.mworld.displayer.ClipDisplayer;
 import com.mworld.ui.CommentsActivity;
-import com.mworld.ui.DisplayActivity;
+import com.mworld.ui.ProfileActivity;
 import com.mworld.ui.R;
-import com.mworld.utils.StatusUtils;
+import com.mworld.utils.StatusBuilder;
 import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Status;
 
@@ -137,8 +136,8 @@ public class StatusHolder {
 			icImage.setVisibility(View.GONE);
 		}
 
-		textStatus.setText(StatusUtils.addEmotions(mContext,
-				StatusUtils.matchNameTopic(status.text)));
+		textStatus.setText(new StatusBuilder(mContext, status.text).matchName()
+				.matchTopic().matchEmotions().build());
 
 		if (null != status.pic_urls && status.pic_urls.size() > 1) {
 			layoutThumbnailPic.setVisibility(View.VISIBLE);
@@ -168,11 +167,10 @@ public class StatusHolder {
 			retweetLayout.setVisibility(View.GONE);
 		} else if (null != status.retweeted_status.user) {
 			retweetLayout.setVisibility(View.VISIBLE);
-			retweetTextStatus.setText(StatusUtils.addEmotions(
-					mContext,
-					StatusUtils.matchNameTopic("@"
-							+ status.retweeted_status.user.screen_name + ":"
-							+ status.retweeted_status.text)));
+			retweetTextStatus.setText(new StatusBuilder(mContext, "@"
+					+ status.retweeted_status.user.screen_name + ":"
+					+ status.retweeted_status.text).matchName().matchTopic()
+					.matchEmotions().build());
 			if (null != status.retweeted_status.pic_urls
 					&& status.retweeted_status.pic_urls.size() > 1) {
 				layoutRetweetThumbnailPic.setVisibility(View.VISIBLE);
@@ -211,10 +209,8 @@ public class StatusHolder {
 
 			@Override
 			public void onClick(View v) {
-				Log.i("adapter", "click");
-				Intent intent = new Intent(mContext, DisplayActivity.class);
-				intent.putExtra("type", 3);
-				intent.putExtra("uid", String.valueOf(status.user.id));
+				Intent intent = new Intent(mContext, ProfileActivity.class);
+				intent.putExtra("user", status.user);
 				mContext.startActivity(intent);
 			}
 		});
@@ -224,10 +220,9 @@ public class StatusHolder {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, CommentsActivity.class);
-				intent.putExtra("id", status.id);
+				intent.putExtra("status", status);
 				mContext.startActivity(intent);
 			}
 		});
 	}
-
 }

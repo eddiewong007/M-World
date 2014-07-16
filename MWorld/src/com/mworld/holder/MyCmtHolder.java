@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mworld.ui.CommentsActivity;
-import com.mworld.ui.DisplayActivity;
+import com.mworld.ui.ProfileActivity;
 import com.mworld.ui.R;
 import com.mworld.utils.TimeUtils;
 import com.weibo.entities.Comment;
@@ -103,9 +103,8 @@ public class MyCmtHolder {
 			@Override
 			public void onClick(View v) {
 				Log.i("adapter", "click");
-				Intent intent = new Intent(mContext, DisplayActivity.class);
-				intent.putExtra("type", 3);
-				intent.putExtra("uid", String.valueOf(comment.user.id));
+				Intent intent = new Intent(mContext, ProfileActivity.class);
+				intent.putExtra("user", comment.user);
 				mContext.startActivity(intent);
 			}
 		});
@@ -115,7 +114,7 @@ public class MyCmtHolder {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, CommentsActivity.class);
-				intent.putExtra("id", comment.status.id);
+				intent.putExtra("status", comment.status);
 				mContext.startActivity(intent);
 			}
 		});

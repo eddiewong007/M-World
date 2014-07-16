@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class EmotionUtils {
+	private static final String TAG = "EmotionUtils";
+
 	private static final String[] text = { "[爱你]", "[抱抱]", "[悲伤]", "[鄙视]",
 			"[闭嘴]", "[馋嘴]", "[吃惊]", "[打哈欠]", "[鼓掌]", "[哈哈]", "[害羞]", "[汗]",
 			"[呵呵]", "[黑线]", "[哼]", "[可爱]", "[可怜]", "[挖鼻屎]", "[泪]", "[酷]",
@@ -29,14 +32,22 @@ public class EmotionUtils {
 		}
 	}
 
+	/**
+	 * 通过表情名称获取表情的Bitmap图像
+	 * 
+	 * @param context
+	 *            上下文对象
+	 * @param key
+	 *            表情的名称
+	 * @return 表情的Bitmap图像
+	 */
 	public static Bitmap getEmotion(Context context, String key) {
 		String fileName = "default_emotions_package/" + MAP.get(key);
-
-		AssetManager am = context.getAssets();
 		try {
+			AssetManager am = context.getAssets();
 			return BitmapFactory.decodeStream(am.open(fileName));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 		return null;
 	}

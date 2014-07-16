@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mworld.utils.PreUtils;
+import com.mworld.utils.PrefUtils;
 import com.weibo.api.Oauth2API;
 import com.weibo.api.UsersAPI;
 import com.weibo.entities.User;
@@ -70,7 +70,7 @@ public class DialogActivity extends Activity {
 		case R.id.llayout05:
 			Intent loginIntent = new Intent(this, LoginActivity.class);
 			startActivity(loginIntent);
-			PreUtils.logOut(this);
+			PrefUtils.logOut(this);
 			Oauth2API.revokeOauth2(MainActivity.sAccessToken,
 					new AjaxCallBack<String>() {
 					});
