@@ -3,12 +3,18 @@ package com.mworld.ui;
 import java.util.ArrayList;
 
 import net.tsz.afinal.http.AjaxCallBack;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 import com.mworld.adapter.ProfileAdapter;
@@ -36,6 +42,16 @@ public class ProfileActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
+
+		// ActionBar and Tabs
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+
+		// 设置ActionBar的背景
+		actionBar.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.actionbar_gradient_bg));
+		actionBar.setDisplayUseLogoEnabled(true);
+
 		mUser = (User) getIntent().getSerializableExtra("user");
 		header = findViewById(R.id.header);
 		header.setOnTouchListener(new OnTouchListener() {
@@ -86,6 +102,51 @@ public class ProfileActivity extends Activity {
 
 		adapter = new ProfileAdapter(this, mArrayList);
 		mList.setAdapter(adapter);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+
+		// 设置Menu可见
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		MenuItem addItem = menu.findItem(R.id.action_add);
+		MenuItem moreItem = menu.findItem(R.id.action_more);
+		MenuItemCompat.setShowAsAction(searchItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		MenuItemCompat.setShowAsAction(addItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		MenuItemCompat.setShowAsAction(moreItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_search:
+			Toast.makeText(this, "I am search", Toast.LENGTH_LONG).show();
+			break;
+		case R.id.action_add:
+			Intent i = new Intent(
+					Intent.ACTION_PICK,
+					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			startActivityForResult(i, 1);
+			break;
+		case R.id.action_more:
+			Toast.makeText(this, "I am more", Toast.LENGTH_LONG).show();
+			startActivity(new Intent(ProfileActivity.this, DialogActivity.class));
+
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

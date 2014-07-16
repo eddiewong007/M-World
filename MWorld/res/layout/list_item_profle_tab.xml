@@ -6,6 +6,8 @@
     android:layout_gravity="center_horizontal"
     android:background="#3AAAE1"
     android:baselineAligned="false"
+    android:paddingTop="5dp"
+    android:paddingBottom="4dp"
     android:orientation="horizontal" >
 
     <RelativeLayout
@@ -17,9 +19,9 @@
         android:background="@drawable/profile_roundconer_relativelayout"
         android:orientation="horizontal"
         android:paddingBottom="3dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="6dp" >
 
         <ImageView
             android:id="@+id/profile_numberofweibo"
@@ -52,9 +54,9 @@
         android:layout_weight="1.0"
         android:orientation="horizontal"
         android:paddingBottom="3dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="6dp" >
 
         <ImageView
             android:id="@+id/profile_numberoffollowers"
@@ -86,9 +88,9 @@
         android:layout_weight="1.0"
         android:orientation="horizontal"
         android:paddingBottom="3dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="6dp" >
 
         <ImageView
             android:id="@+id/profile_numberoffollowings"

@@ -24,11 +24,7 @@
         <activity
             android:name="GuideViewActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
         </activity>
         <activity
             android:name="DialogActivity"
@@ -42,7 +38,17 @@
         </activity>
         <activity android:name="CommentsActivity" >
         </activity>
-        <activity android:name="ProfileActivity"></activity>
+        <activity android:name="ProfileActivity" >
+        </activity>
+        <activity android:name="WriteActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
