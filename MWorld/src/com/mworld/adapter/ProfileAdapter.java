@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.mworld.holder.ProfileHodler;
+import com.mworld.holder.ProfInfoHodler;
+import com.mworld.holder.ProfTabHolder;
+import com.mworld.holder.StatusHolder;
 import com.mworld.ui.R;
 import com.weibo.entities.Status;
 import com.weibo.entities.User;
@@ -72,29 +74,31 @@ public class ProfileAdapter extends BaseAdapter {
 	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ProfileHodler holder = null;
+		ProfInfoHodler iHolder = null;
+		ProfTabHolder tHolder = null;
+		StatusHolder sHolder = null;
 		int type = getItemViewType(position);
 		if (null == convertView) {
 			switch (type) {
 			case PROFILE_TYPE:
-				convertView = mInflater
-						.inflate(R.layout.list_item_status, null);
-				holder = new ProfileHodler(mContext, convertView);
-				convertView.setTag(holder);
+				convertView = mInflater.inflate(
+						R.layout.list_item_profile_info, null);
+				iHolder = new ProfInfoHodler(mContext, convertView);
+				convertView.setTag(iHolder);
 				break;
 			case TAB_TYPE:
-				convertView = mInflater
-						.inflate(R.layout.list_item_status, null);
-				holder = new ProfileHodler(mContext, convertView);
-				convertView.setTag(holder);
+				convertView = mInflater.inflate(R.layout.list_item_profle_tab,
+						null);
+				tHolder = new ProfTabHolder(convertView);
+				convertView.setTag(tHolder);
 				break;
 			case STATUS_TYPE:
-				break;
-			case USER_TYPE:
 				convertView = mInflater
 						.inflate(R.layout.list_item_status, null);
-				holder = new ProfileHodler(mContext, convertView);
-				convertView.setTag(holder);
+				sHolder = new StatusHolder(mContext, convertView);
+				convertView.setTag(sHolder);
+				break;
+			case USER_TYPE:
 				break;
 			default:
 				break;
@@ -103,15 +107,15 @@ public class ProfileAdapter extends BaseAdapter {
 		} else {
 			switch (type) {
 			case PROFILE_TYPE:
-				holder = (ProfileHodler) convertView.getTag();
+				iHolder = (ProfInfoHodler) convertView.getTag();
 				break;
 			case TAB_TYPE:
-				holder = (ProfileHodler) convertView.getTag();
+				tHolder = (ProfTabHolder) convertView.getTag();
 				break;
 			case STATUS_TYPE:
+				sHolder = (StatusHolder) convertView.getTag();
 				break;
 			case USER_TYPE:
-				holder = (ProfileHodler) convertView.getTag();
 				break;
 			default:
 				break;
@@ -121,15 +125,16 @@ public class ProfileAdapter extends BaseAdapter {
 
 		switch (type) {
 		case PROFILE_TYPE:
-			holder.inflate((User) mArrayList.get(position));
+			iHolder.inflate((User) mArrayList.get(position));
 			break;
 		case TAB_TYPE:
-			holder.inflate((User) mArrayList.get(position));
+			tHolder.inflate((User) mArrayList.get(position));
 			break;
 		case USER_TYPE:
-			holder.inflate((User) mArrayList.get(position));
+
 			break;
 		case STATUS_TYPE:
+			sHolder.inflate((Status) mArrayList.get(position));
 			break;
 		default:
 			break;
