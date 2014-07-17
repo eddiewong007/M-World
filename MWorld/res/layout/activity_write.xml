@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@drawable/write_head_bar_gradient_bg"
+            android:background="#3AAAE1"
             android:orientation="horizontal" >
 
             <RelativeLayout
@@ -25,18 +25,16 @@
                 android:layout_marginTop="6dp"
                 android:layout_weight="3.0" >
 
-                    
-                
-                    <de.hdodenhof.circleimageview.CircleImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/write_user_avatar"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
+                    android:layout_marginLeft="5dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/head_icon"
-                    android:layout_marginLeft="5dp"
                     app:border_color="#fff"
-                    app:border_width="0.5dp" />                
+                    app:border_width="0.5dp" />
 
                 <TextView
                     android:id="@+id/write_user_name"
@@ -47,8 +45,37 @@
                     android:layout_toRightOf="@id/write_user_avatar"
                     android:text="悠森可图马曲"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="18dp"
                     android:textStyle="bold" >
+                </TextView>
+
+                <Button
+                    android:id="@+id/write_send_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/write_send_btn_bg"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="6dp"
+                    android:text="发送"
+                    android:textColor="#fff"
+                    android:textSize="18sp" >
+                </Button>
+
+                <TextView
+                    android:id="@+id/write_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/write_send_btn"
+                    android:text="×140"
+                    android:textColor="#fff"
+                    android:textSize="16sp" >
                 </TextView>
             </RelativeLayout>
         </LinearLayout>
@@ -58,15 +85,59 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#123456"
-            android:gravity="center"
-            android:orientation="horizontal" >
+            android:background="#EDEDED"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:text="提交" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <Button
+                    android:id="@+id/write_emotion_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="6dp"
+                    android:background="@drawable/ic_emotion" />
+
+                <Button
+                    android:id="@+id/write_at_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/write_emotion_btn"
+                    android:background="@drawable/ic_at" />
+
+                <Button
+                    android:id="@+id/write_picture_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/write_at_btn"
+                    android:background="@drawable/ic_picture" />
+
+                <Button
+                    android:id="@+id/write_hash_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/write_picture_btn"
+                    android:background="@drawable/ic_hash" />
+            </RelativeLayout>
         </LinearLayout>
         <!-- 下面部分是中间主体部分，我特意用LinearLayout包裹起来，表示这里面可以填充其他任何组合的控件 -->
 
@@ -76,20 +147,22 @@
             android:layout_height="fill_parent"
             android:layout_above="@id/bottom_linear"
             android:layout_below="@id/write_head_bar"
-            android:background="#ffffff"
-            android:gravity="center" >
-            
+            android:background="#EDEDED"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp" >
+
             <EditText
                 android:id="@+id/edit"
-                android:padding="20dp"
-                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:background="@null"
+                android:background="#fff"
                 android:gravity="top"
+                android:hint="有什么新鲜事？"
                 android:lineSpacingMultiplier="1.2"
-                android:hint="有什么新鲜事？" />
-
+                android:padding="16dp"
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
 

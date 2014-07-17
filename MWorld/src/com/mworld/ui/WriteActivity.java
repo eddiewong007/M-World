@@ -23,7 +23,7 @@ public class WriteActivity extends Activity implements View.OnClickListener {
           
         mScrollView = (ScrollView) findViewById(R.id.scroll);  
         mEdit = (EditText) findViewById(R.id.edit);  
-        mButton = (Button) findViewById(R.id.button);  
+        mButton = (Button) findViewById(R.id.write_emotion_btn);  
           
         mEdit.setOnClickListener(this);  
     }  
