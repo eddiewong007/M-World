@@ -4,17 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
 public class WriteActivity extends Activity implements View.OnClickListener {
 
-	// private static final String TAG = "Scroll";
+	private static final String TAG = "Scroll";
 	private EditText mEdit;
-	// private Button mButton;
+	private Button mButton;
 	private ScrollView mScrollView;
 	private Handler mHandler = new Handler();
 
+	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +24,7 @@ public class WriteActivity extends Activity implements View.OnClickListener {
 
 		mScrollView = (ScrollView) findViewById(R.id.scroll);
 		mEdit = (EditText) findViewById(R.id.edit);
-		// mButton = (Button) findViewById(R.id.button);
+		mButton = (Button) findViewById(R.id.write_emotion_btn);
 
 		mEdit.setOnClickListener(this);
 	}
