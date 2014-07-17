@@ -2,6 +2,8 @@ package com.mworld.ui;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,34 +16,48 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
-import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mworld.adapter.ProfileAdapter;
 import com.mworld.holder.ProfTabHolder;
+import com.weibo.api.FriendshipsAPI;
 import com.weibo.api.StatusesAPI;
 import com.weibo.entities.StatusesList;
 import com.weibo.entities.User;
+import com.weibo.entities.UsersList;
 
 public class ProfileActivity extends Activity {
 
-	private User mUser;
+	public User mUser;
 
-	private ProfileAdapter adapter;
+	public ProfileAdapter adapter;
+
+	private StatusesAPI mStatusesAPI;
+
+	private FriendshipsAPI mFriendshipsAPI;
 
 	@SuppressWarnings("rawtypes")
-	private ArrayList mArrayList = new ArrayList();
+	public ArrayList mArrayList = new ArrayList();
 
+	@ViewInject(id = R.id.profile_timeline)
 	private ListView mList;
-
+	@ViewInject(id = R.id.header)
 	private View header;
+	@ViewInject(id = R.id.statuses_tab, click = "click")
+	private View statusesTab;
+	@ViewInject(id = R.id.friends_tab, click = "click")
+	private View friendsTab;
+	@ViewInject(id = R.id.followers_tab, click = "click")
+	private View followersTab;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
+		FinalActivity.initInjectedView(this);
 
 		// ActionBar and Tabs
 		ActionBar actionBar = getActionBar();
@@ -53,7 +69,7 @@ public class ProfileActivity extends Activity {
 		actionBar.setDisplayUseLogoEnabled(true);
 
 		mUser = (User) getIntent().getSerializableExtra("user");
-		header = findViewById(R.id.header);
+		new ProfTabHolder(this, header).inflate(mUser);
 		header.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -62,31 +78,12 @@ public class ProfileActivity extends Activity {
 				return true;
 			}
 		});
-		new ProfTabHolder(header).inflate(mUser);
-		mList = (ListView) findViewById(R.id.profile_timeline);
-		mList.setOnScrollListener(new OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-
-				if (firstVisibleItem == 0) {
-					header.setVisibility(View.GONE);
-				} else {
-					header.setVisibility(View.VISIBLE);
-				}
-			}
-		});
 
 		mArrayList.add(mUser);
 		mArrayList.add(mUser);
-		StatusesAPI statusesAPI = new StatusesAPI(MainActivity.sAccessToken);
-		statusesAPI.userTimeline(mUser.id, 0, 0, 20, 1, false, 0, false,
+		mStatusesAPI = new StatusesAPI(MainActivity.sAccessToken);
+		mFriendshipsAPI = new FriendshipsAPI(MainActivity.sAccessToken);
+		mStatusesAPI.userTimeline(mUser.id, 0, 0, 20, 1, false, 0, false,
 				new AjaxCallBack<String>() {
 
 					@Override
@@ -103,8 +100,122 @@ public class ProfileActivity extends Activity {
 
 		adapter = new ProfileAdapter(this, mArrayList);
 		mList.setAdapter(adapter);
+		mList.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+
+				if (firstVisibleItem + visibleItemCount == totalItemCount) {
+
+				}
+
+				if (firstVisibleItem == 0) {
+					header.setVisibility(View.GONE);
+				} else {
+					header.setVisibility(View.VISIBLE);
+				}
+			}
+		});
 	}
-	
+
+	public int currentTab = 0;
+	public int friendsCur = 0;
+	public int followerCur = 0;
+
+	public void click(View view) {
+		switch (view.getId()) {
+		case R.id.statuses_tab:
+			if (currentTab != 0) {
+				for (int i = mArrayList.size() - 1; i > 1; i--)
+					mArrayList.remove(i);
+				mStatusesAPI.userTimeline(mUser.id, 0, 0, 20, 1, false, 0,
+						false, new AjaxCallBack<String>() {
+
+							@SuppressWarnings("unchecked")
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								if (currentTab != 0)
+									return;
+								StatusesList statusesList = StatusesList
+										.parse(jsonString);
+								if (statusesList.statusesList != null)
+									mArrayList
+											.addAll(statusesList.statusesList);
+								adapter.notifyDataSetChanged();
+							}
+
+						});
+				friendsCur = 0;
+				followerCur = 0;
+				currentTab = 0;
+			}
+			break;
+		case R.id.friends_tab:
+			if (currentTab != 1) {
+				for (int i = mArrayList.size() - 1; i > 1; i--)
+					mArrayList.remove(i);
+				mFriendshipsAPI.friends(mUser.id, 20, friendsCur, true,
+						new AjaxCallBack<String>() {
+
+							@SuppressWarnings("unchecked")
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								if (currentTab != 1)
+									return;
+								UsersList usersList = UsersList
+										.parse(jsonString);
+								if (usersList.usersList != null) {
+									friendsCur = usersList.next_cursor;
+									mArrayList.addAll(usersList.usersList);
+								}
+								adapter.notifyDataSetChanged();
+							}
+
+						});
+				followerCur = 0;
+				currentTab = 1;
+			}
+			break;
+		case R.id.followers_tab:
+			if (currentTab != 2) {
+				for (int i = mArrayList.size() - 1; i > 1; i--)
+					mArrayList.remove(i);
+				mFriendshipsAPI.followers(mUser.id, 20, followerCur, true,
+						new AjaxCallBack<String>() {
+
+							@SuppressWarnings("unchecked")
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								if (currentTab != 1)
+									return;
+								UsersList usersList = UsersList
+										.parse(jsonString);
+								if (usersList.usersList != null) {
+									followerCur = usersList.next_cursor;
+									mArrayList.addAll(usersList.usersList);
+								}
+								adapter.notifyDataSetChanged();
+							}
+
+						});
+				friendsCur = 0;
+				currentTab = 2;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);

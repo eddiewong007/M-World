@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import com.mworld.holder.ProfInfoHodler;
 import com.mworld.holder.ProfTabHolder;
 import com.mworld.holder.StatusHolder;
+import com.mworld.holder.UserHolder;
 import com.mworld.ui.R;
 import com.weibo.entities.Status;
 import com.weibo.entities.User;
@@ -77,6 +78,7 @@ public class ProfileAdapter extends BaseAdapter {
 		ProfInfoHodler iHolder = null;
 		ProfTabHolder tHolder = null;
 		StatusHolder sHolder = null;
+		UserHolder uHolder = null;
 		int type = getItemViewType(position);
 		if (null == convertView) {
 			switch (type) {
@@ -89,7 +91,7 @@ public class ProfileAdapter extends BaseAdapter {
 			case TAB_TYPE:
 				convertView = mInflater.inflate(R.layout.list_item_profle_tab,
 						null);
-				tHolder = new ProfTabHolder(convertView);
+				tHolder = new ProfTabHolder(mContext,convertView);
 				convertView.setTag(tHolder);
 				break;
 			case STATUS_TYPE:
@@ -99,6 +101,9 @@ public class ProfileAdapter extends BaseAdapter {
 				convertView.setTag(sHolder);
 				break;
 			case USER_TYPE:
+				convertView = mInflater.inflate(R.layout.list_item_user, null);
+				uHolder = new UserHolder(mContext, convertView);
+				convertView.setTag(uHolder);
 				break;
 			default:
 				break;
@@ -116,6 +121,7 @@ public class ProfileAdapter extends BaseAdapter {
 				sHolder = (StatusHolder) convertView.getTag();
 				break;
 			case USER_TYPE:
+				uHolder = (UserHolder) convertView.getTag();
 				break;
 			default:
 				break;
@@ -130,11 +136,11 @@ public class ProfileAdapter extends BaseAdapter {
 		case TAB_TYPE:
 			tHolder.inflate((User) mArrayList.get(position));
 			break;
-		case USER_TYPE:
-
-			break;
 		case STATUS_TYPE:
 			sHolder.inflate((Status) mArrayList.get(position));
+			break;
+		case USER_TYPE:
+			uHolder.inflate((User) mArrayList.get(position));
 			break;
 		default:
 			break;

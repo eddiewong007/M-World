@@ -6,20 +6,21 @@
     android:fillViewport="true" >
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <LinearLayout
             android:id="@+id/write_head_bar"
-            android:layout_width="fill_parent"
+            android:baselineAligned="false"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@drawable/write_head_bar_gradient_bg"
             android:orientation="horizontal" >
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="6dp"
@@ -55,7 +56,7 @@
 
         <LinearLayout
             android:id="@+id/bottom_linear"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="#123456"
@@ -65,15 +66,15 @@
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:text="提交" />
         </LinearLayout>
         <!-- 下面部分是中间主体部分，我特意用LinearLayout包裹起来，表示这里面可以填充其他任何组合的控件 -->
 
         <LinearLayout
             android:id="@+id/center_linear"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@id/bottom_linear"
             android:layout_below="@id/write_head_bar"
             android:background="#ffffff"
@@ -84,7 +85,7 @@
                 android:padding="20dp"
                 android:textSize="18sp"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="top"
                 android:lineSpacingMultiplier="1.2"

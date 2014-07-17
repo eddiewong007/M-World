@@ -6,11 +6,12 @@
     android:layout_gravity="center_horizontal"
     android:background="#3AAAE1"
     android:baselineAligned="false"
-    android:paddingTop="5dp"
+    android:orientation="horizontal"
     android:paddingBottom="4dp"
-    android:orientation="horizontal" >
+    android:paddingTop="5dp" >
 
     <RelativeLayout
+        android:id="@+id/statuses_tab"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -28,6 +29,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginRight="5dp"
+            android:contentDescription="@string/pic_desc"
             android:src="@drawable/ic_profile_weibo" >
         </ImageView>
 
@@ -38,7 +40,6 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_toRightOf="@id/profile_numberofweibo"
-            android:text="127"
             android:textColor="#fff"
             android:textSize="14sp"
             android:textStyle="bold" >
@@ -46,6 +47,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/friends_tab"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -63,6 +65,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginRight="5dp"
+            android:contentDescription="@string/pic_desc"
             android:src="@drawable/ic_profile_followers" >
         </ImageView>
 
@@ -73,7 +76,6 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_toRightOf="@id/profile_numberoffollowers"
-            android:text="1012"
             android:textColor="#fff"
             android:textSize="14sp"
             android:textStyle="bold" >
@@ -81,6 +83,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/followers_tab"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -97,6 +100,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginRight="5dp"
+            android:contentDescription="@string/pic_desc"
             android:src="@drawable/ic_profile_heart" >
         </ImageView>
 
@@ -107,7 +111,6 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_toRightOf="@id/profile_numberoffollowings"
-            android:text="256"
             android:textColor="#fff"
             android:textSize="14sp"
             android:textStyle="bold" >

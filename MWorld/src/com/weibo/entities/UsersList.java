@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 public class UsersList {
 	private static final String TAG = "UserList";
 
-	/** 微博列表 */
+	/** 好友列表 */
 	public ArrayList<User> usersList;
 	/** 上一页返回结果的游标， */
 	public int previous_cursor;
