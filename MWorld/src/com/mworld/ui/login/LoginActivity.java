@@ -1,5 +1,7 @@
 package com.mworld.ui.login;
 
+import java.util.List;
+
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalDb;
 import net.tsz.afinal.annotation.view.ViewInject;
@@ -42,6 +44,8 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 
 	private static boolean oauthing = false;
 
+	private WebView mWebView;
+
 	@ViewInject(id = R.id.username)
 	private EditText username;
 	@ViewInject(id = R.id.passworld)
@@ -65,11 +69,11 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 			Toast.makeText(LoginActivity.this, "请输入用户名/密码", Toast.LENGTH_SHORT)
 					.show();
 		}
-		WebView webView = new WebView(this);
-		webView.setWebViewClient(new WeiboWebViewClient(name, pass));
-		webView.setWebChromeClient(new WeiboWebChromeClient());
-		webView.loadUrl(Oauth2API.fetchAuthorizeUrl());
-		WebSettings webSettings = webView.getSettings();
+		mWebView = new WebView(this);
+		mWebView.setWebViewClient(new WeiboWebViewClient(name, pass));
+		mWebView.setWebChromeClient(new WeiboWebChromeClient());
+		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl());
+		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSupportZoom(true);
 		webSettings.setBuiltInZoomControls(true);
@@ -165,17 +169,17 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 
 		@Override
 		public void onSuccess(String jsonString) {
-			if (!oauthing)
-				return;
 			super.onSuccess(jsonString);
-			Intent intent = new Intent();
+			if (!oauthing) {
+				handleOauthFailure();
+				return;
+			}
 			Account account = Account.parse(jsonString);
 			if (account == null || TextUtils.isEmpty(account.getUid())) {
 				handleOauthFailure();
-				Log.i(TAG, "access token为空");
 				return;
 			}
-			setResult(RESULT_OK, intent);
+			setResult(RESULT_OK, new Intent());
 			new UserAPI(account.getAccessToken()).show(Long.parseLong(account
 					.getUid()), new AccountHandler(account));
 
@@ -200,12 +204,20 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 
 		@Override
 		public void onSuccess(String jsonString) {
-			if (!oauthing)
-				return;
 			super.onSuccess(jsonString);
-			mAccount.setJsonUserInfo(jsonString);
+			if (!oauthing) {
+				handleOauthFailure();
+				return;
+			}
 			FinalDb fd = FinalDb.create(GlobalContext.getInstance(), true);
-			fd.save(mAccount);
+			List<Account> accounts = fd.findAllByWhere(Account.class, "uid=\'"
+					+ mAccount.getUid() + "\'");
+			mAccount.setJsonUserInfo(jsonString);
+			if (accounts.isEmpty()) {
+				fd.save(mAccount);
+			} else {
+				fd.update(mAccount, "uid=" + mAccount.getUid());
+			}
 			finish();
 		}
 
@@ -224,7 +236,7 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 		finish();
 	}
 
-	private static class ProgressFragment extends DialogFragment {
+	private class ProgressFragment extends DialogFragment {
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -240,12 +252,13 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 		@Override
 		public void onCancel(DialogInterface dialog) {
 			oauthing = false;
+			LoginActivity.this.finish();
 			super.onCancel(dialog);
 		}
 
 	};
 
-	public static class SinaWeiboErrorDialog extends DialogFragment {
+	public class SinaWeiboErrorDialog extends DialogFragment {
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {

@@ -38,7 +38,6 @@ import com.mworld.support.utils.ThemeUtility;
 import com.mworld.support.utils.Utility;
 import com.mworld.ui.main.MainTimelineActivity;
 import com.mworld.weibo.entities.Account;
-import com.mworld.weibo.entities.User;
 
 public class AccountActivity extends Activity implements
 		LoaderManager.LoaderCallbacks<List<Account>> {
@@ -329,10 +328,6 @@ public class AccountActivity extends Activity implements
 		public List<Account> loadInBackground() {
 			FinalDb fd = FinalDb.create(GlobalContext.getInstance(), true);
 			List<Account> list = fd.findAll(Account.class);
-			for (Account item : list) {
-				User user = User.parse(item.getJsonUserInfo());
-				item.setUserInfo(user);
-			}
 			return list;
 		}
 
@@ -346,10 +341,6 @@ public class AccountActivity extends Activity implements
 			fd.deleteById(Account.class, id);
 		}
 		accountList = fd.findAll(Account.class);
-		for (Account item : accountList) {
-			User user = User.parse(item.getJsonUserInfo());
-			item.setUserInfo(user);
-		}
 		refresh();
 	}
 

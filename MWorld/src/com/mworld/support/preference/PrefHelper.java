@@ -42,4 +42,8 @@ public class PrefHelper {
 		return editor;
 	}
 
+	public static void setEditor(Context paramContext, String paramString, int i) {
+		getEditorObject(paramContext).putInt(paramString, i).commit();
+	}
+
 }

@@ -1,8 +1,8 @@
 package com.mworld.support.preference;
 
-import com.mworld.support.utils.GlobalContext;
-
 import android.content.Context;
+
+import com.mworld.support.utils.GlobalContext;
 
 public class PrefUtility {
 
@@ -23,6 +23,10 @@ public class PrefUtility {
 
 	public static String getDefaultAccountId() {
 		return PrefHelper.getSharedPreferences(getContext(), "id", "");
+	}
+
+	public static void setDefaultAccountId(int id) {
+		PrefHelper.setEditor(getContext(), "id", id);
 	}
 
 }

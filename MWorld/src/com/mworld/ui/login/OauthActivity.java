@@ -1,5 +1,7 @@
 package com.mworld.ui.login;
 
+import java.util.List;
+
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalDb;
 import net.tsz.afinal.annotation.view.ViewInject;
@@ -178,14 +180,15 @@ public class OauthActivity extends FragmentActivity {
 
 		@Override
 		public void onSuccess(String jsonString) {
-			if (!oauthing)
+			if (!oauthing) {
+				handleOauthFailure();
 				return;
+			}
 			super.onSuccess(jsonString);
 			Intent intent = new Intent();
 			Account account = Account.parse(jsonString);
 			if (account == null || TextUtils.isEmpty(account.getUid())) {
 				handleOauthFailure();
-				Log.i(TAG, "access token为空");
 				return;
 			}
 			setResult(RESULT_OK, intent);
@@ -213,12 +216,20 @@ public class OauthActivity extends FragmentActivity {
 
 		@Override
 		public void onSuccess(String jsonString) {
-			if (!oauthing)
-				return;
 			super.onSuccess(jsonString);
-			mAccount.setJsonUserInfo(jsonString);
+			if (!oauthing) {
+				handleOauthFailure();
+				return;
+			}
 			FinalDb fd = FinalDb.create(GlobalContext.getInstance(), true);
-			fd.save(mAccount);
+			List<Account> accounts = fd.findAllByWhere(Account.class, "uid=\'"
+					+ mAccount.getUid() + "\'");
+			mAccount.setJsonUserInfo(jsonString);
+			if (accounts.isEmpty()) {
+				fd.save(mAccount);
+			} else {
+				fd.update(mAccount, "uid=" + mAccount.getUid());
+			}
 			finish();
 		}
 
@@ -258,7 +269,7 @@ public class OauthActivity extends FragmentActivity {
 		}
 	}
 
-	private static class ProgressFragment extends DialogFragment {
+	private class ProgressFragment extends DialogFragment {
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -274,12 +285,13 @@ public class OauthActivity extends FragmentActivity {
 		@Override
 		public void onCancel(DialogInterface dialog) {
 			oauthing = false;
+			OauthActivity.this.finish();
 			super.onCancel(dialog);
 		}
 
 	};
 
-	public static class SinaWeiboErrorDialog extends DialogFragment {
+	public class SinaWeiboErrorDialog extends DialogFragment {
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {

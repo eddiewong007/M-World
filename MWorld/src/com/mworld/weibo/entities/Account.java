@@ -18,7 +18,7 @@ public class Account implements Parcelable {
 	private String accessToken;
 	private long expiresIn;
 	private String jsonUserInfo;
-	private User userInfo;
+	private User userInfo = null;
 
 	public int getId() {
 		return id;
@@ -61,6 +61,8 @@ public class Account implements Parcelable {
 	}
 
 	public User getUserInfo() {
+		if (userInfo == null)
+			userInfo = User.parse(jsonUserInfo);
 		return userInfo;
 	}
 
