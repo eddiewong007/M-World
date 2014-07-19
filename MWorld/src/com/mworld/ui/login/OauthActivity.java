@@ -138,15 +138,11 @@ public class OauthActivity extends FragmentActivity {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
 			if (url.startsWith(Oauth2API.REDIRECT_URL)) {
-
 				handleRedirectUrl(view, url);
 				view.stopLoading();
-				return;
 			}
 			super.onPageStarted(view, url, favicon);
-
 		}
 
 		@Override
