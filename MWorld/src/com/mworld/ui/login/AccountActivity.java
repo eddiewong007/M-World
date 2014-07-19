@@ -242,6 +242,7 @@ public class AccountActivity extends Activity implements
 			defaultBG = getResources().getColor(android.R.color.transparent);
 			checkedBG = ThemeUtility.getColor(AccountActivity.this,
 					R.attr.listview_checked_color);
+			checkedBG = getResources().getColor(android.R.color.holo_blue_dark);
 
 		}
 
