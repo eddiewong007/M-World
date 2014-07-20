@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- actionbar action mode menu -->
+    <attr name="add" format="reference" />
+    <attr name="refresh" format="reference" />
+    <attr name="remove" format="reference" />
+    <attr name="listview_checked_color" format="reference" />
+
+</resources>
