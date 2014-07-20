@@ -1,0 +1,31 @@
+<resources>
+
+    <string name="app_name">M-World</string>
+    <string name="content_description"></string>
+    <string name="add_account">添加</string>
+    <string name="web_login">网页授权</string>
+    <string name="official_app_login">官方客户端授权</string>
+    <string name="direct_login">直接登陆</string>
+    <string name="oauth">授权</string>
+    <string name="refresh">刷新</string>
+    <string name="you_cancel_login">你取消了授权</string>
+    <string name="oauthing">授权中</string>
+    <string name="oauth_failed">授权失败</string>
+    <string name="sina_server_error">检测到你跳转到错误页面,请尝试换更网络</string>
+    <string name="ok">确定</string>
+    <string name="account_management">帐号管理</string>
+    <string name="delete">删除</string>
+    <string name="username">邮箱/手机号</string>
+    <string name="password">密码</string>
+    <string name="login">登陆</string>
+    <string name="login_register_link">没有账号？ <a href="#" mce_href="#">注册</a></string>
+
+    <string name="actionbar_menu_title_search">search</string>
+    <string name="actionbar_menu_title_add">add</string>
+    <string name="actionbar_menu_title_more">more</string>
+    <string name="function_list_collection">收 藏</string>
+    <string name="function_list_draft">草稿箱</string>
+    <string name="function_list_settings">设 置</string>
+    <string name="function_list_exit">logout</string>
+    
+</resources>
