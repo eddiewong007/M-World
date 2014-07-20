@@ -16,6 +16,7 @@ import com.mworld.support.utils.TimeUtils;
 import com.mworld.ui.adapter.ClipDisplayer;
 import com.mworld.ui.main.CommentActivity;
 import com.mworld.ui.main.ProfileActivity;
+import com.mworld.ui.main.WriteActivity;
 import com.mworld.weibo.entities.Status;
 
 /**
@@ -47,7 +48,9 @@ public class StatusHolder {
 	public View retweetLayoutMultiPic;
 	public ImageView[] retweetImageView = new ImageView[9];
 	public TextView retweetCount;
+	public View layoutRet;
 	public TextView textRet;
+	public View layoutCmt;
 	public TextView textCmt;
 	public ImageView btnSd;
 
@@ -106,7 +109,9 @@ public class StatusHolder {
 		retweetImageView[8] = (ImageView) view
 				.findViewById(R.id.retweet_imageView9);
 		retweetCount = (TextView) view.findViewById(R.id.retweet_count);
+		layoutRet = view.findViewById(R.id.layout_ret);
 		textRet = (TextView) view.findViewById(R.id.text_ret);
+		layoutCmt = view.findViewById(R.id.layout_cmt);
 		textCmt = (TextView) view.findViewById(R.id.text_cmt);
 		btnSd = (ImageView) view.findViewById(R.id.btn_sd);
 	}
@@ -220,6 +225,28 @@ public class StatusHolder {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, CommentActivity.class);
+				intent.putExtra("status", status);
+				mContext.startActivity(intent);
+			}
+		});
+
+		layoutRet.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(mContext, WriteActivity.class);
+				intent.putExtra("title", "转发");
+				intent.putExtra("status", status);
+				mContext.startActivity(intent);
+			}
+		});
+
+		layoutCmt.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(mContext, WriteActivity.class);
+				intent.putExtra("title", "评论");
 				intent.putExtra("status", status);
 				mContext.startActivity(intent);
 			}

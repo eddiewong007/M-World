@@ -27,7 +27,7 @@ public class CommentActivity extends Activity {
 	}
 
 	private void loadStatus() {
-		mStatus = (Status) getIntent().getSerializableExtra("status");
+		mStatus = (Status) getIntent().getParcelableExtra("status");
 		StatusHolder holder = new StatusHolder(this, findViewById(R.id.status));
 		holder.inflate(mStatus);
 	}

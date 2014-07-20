@@ -133,17 +133,5 @@ public class TimeUtils {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		return calendar.getTimeInMillis();
-
-		// try {
-		// String[] tokens = timeStr.split(" ");
-		// StringBuilder sBuilder = new StringBuilder();
-		// int m = MONTH.indexOf(tokens[1]) / 3;
-		// String month = m < 10 ? "0" + m : "" + m;
-		// sBuilder.append(tokens[5]).append(".").append(month).append(".")
-		// .append(tokens[2]).append(" ").append(tokens[3]);
-		// return sBuilder.toString();
-		// } catch (NumberFormatException e) {
-		// e.printStackTrace();
-		// }
 	}
 }

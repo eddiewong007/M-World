@@ -78,9 +78,6 @@ public class Utility {
 		return services.size() > 0;
 	}
 
-	/**
-	 * Parse a URL query and fragment parameters into a key-value bundle.
-	 */
 	public static Bundle parseUrl(String url) {
 		url = url.replace("weiboconnect", "http");
 		try {

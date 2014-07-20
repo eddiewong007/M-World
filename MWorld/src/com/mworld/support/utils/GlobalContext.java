@@ -17,6 +17,8 @@ public class GlobalContext extends Application {
 
 	private Object mGroup = null;
 
+	private int currentTab = 0;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -58,6 +60,14 @@ public class GlobalContext extends Application {
 
 	public void setGroup(Object group) {
 		mGroup = group;
+	}
+
+	public int getCurTab() {
+		return currentTab;
+	}
+
+	public void setCurTab(int tab) {
+		currentTab = tab;
 	}
 
 }

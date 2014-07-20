@@ -1,7 +1,7 @@
 package com.mworld.weibo.entities;
 
-import java.io.Serializable;
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,13 +15,8 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Geo implements Serializable {
+public class Geo implements Parcelable {
 	private static final String TAG = "Geo";
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5885669474617454511L;
 
 	/** 经度坐标 */
 	public String longitude;
@@ -41,6 +36,10 @@ public class Geo implements Serializable {
 	public String pinyin;
 	/** 更多信息，不是所有情况都会返回该字段 */
 	public String more;
+
+	public Geo() {
+
+	}
 
 	/**
 	 * 将json字符串解析成Geo对象
@@ -85,6 +84,47 @@ public class Geo implements Serializable {
 		geo.pinyin = jsonObject.getString("pinyin");
 		geo.more = jsonObject.getString("more");
 		return geo;
+	}
+
+	public Geo(Parcel in) {
+		longitude = in.readString();
+		latitude = in.readString();
+		city = in.readString();
+		province = in.readString();
+		city_name = in.readString();
+		province_name = in.readString();
+		address = in.readString();
+		pinyin = in.readString();
+		more = in.readString();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Parcelable.Creator<Geo> CREATOR = new Parcelable.Creator<Geo>() {
+		public Geo createFromParcel(Parcel in) {
+			return new Geo(in);
+		}
+
+		public Geo[] newArray(int size) {
+			return new Geo[size];
+		}
+	};
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(longitude);
+		dest.writeString(latitude);
+		dest.writeString(city);
+		dest.writeString(province);
+		dest.writeString(city_name);
+		dest.writeString(province_name);
+		dest.writeString(address);
+		dest.writeString(pinyin);
+		dest.writeString(more);
+
 	}
 
 }
