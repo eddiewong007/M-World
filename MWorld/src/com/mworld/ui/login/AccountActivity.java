@@ -36,7 +36,7 @@ import com.mworld.support.preference.PrefUtility;
 import com.mworld.support.utils.GlobalContext;
 import com.mworld.support.utils.ThemeUtility;
 import com.mworld.support.utils.Utility;
-import com.mworld.ui.main.MainTimelineActivity;
+import com.mworld.ui.main.MainActivity;
 import com.mworld.weibo.entities.Account;
 
 public class AccountActivity extends Activity implements
@@ -51,7 +51,7 @@ public class AccountActivity extends Activity implements
 	@ViewInject(id = R.id.listView)
 	private ListView listView;
 
-	private AccountAdapter listAdapter = null;
+	private AccountAdapter listAdapter;
 
 	private List<Account> accountList = new ArrayList<Account>();
 
@@ -95,16 +95,13 @@ public class AccountActivity extends Activity implements
 
 	private void jumpToMainTimeLineActivity() {
 
-		String id = PrefUtility.getDefaultAccountId();
-
-		if (!TextUtils.isEmpty(id)) {
-			Account account = FinalDb.create(GlobalContext.getInstance(), true)
-					.findById(id, Account.class);
-			if (account != null) {
-				Intent start = MainTimelineActivity.newIntent(account);
-				startActivity(start);
-				finish();
-			}
+		int id = PrefUtility.getDefaultAccountId();
+		Account account = FinalDb.create(GlobalContext.getInstance(), true)
+				.findById(id, Account.class);
+		if (account != null) {
+			Intent intent = MainActivity.newIntent(account);
+			startActivity(intent);
+			finish();
 		}
 
 	}
@@ -185,7 +182,7 @@ public class AccountActivity extends Activity implements
 		public void onItemClick(AdapterView<?> adapterView, View view, int i,
 				long l) {
 
-			Intent intent = MainTimelineActivity.newIntent(accountList.get(i));
+			Intent intent = MainActivity.newIntent(accountList.get(i));
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			finish();
@@ -241,8 +238,6 @@ public class AccountActivity extends Activity implements
 			defaultBG = getResources().getColor(android.R.color.transparent);
 			checkedBG = ThemeUtility.getColor(AccountActivity.this,
 					R.attr.listview_checked_color);
-			checkedBG = getResources().getColor(android.R.color.holo_blue_dark);
-
 		}
 
 		@Override

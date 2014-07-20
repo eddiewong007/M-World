@@ -9,41 +9,41 @@ public class PrefHelper {
 	private static SharedPreferences.Editor editor = null;
 	private static SharedPreferences sharedPreferences = null;
 
-	public static Boolean getSharedPreferences(Context paramContext,
-			String paramString, Boolean paramBoolean) {
-		return getSharedPreferencesObject(paramContext).getBoolean(paramString,
-				paramBoolean);
+	public static boolean getBoolean(Context context, String key, boolean value) {
+		return getSharedPreferencesObject(context).getBoolean(key, value);
 	}
 
-	public static String getSharedPreferences(Context paramContext,
-			String paramString1, String paramString2) {
-		return getSharedPreferencesObject(paramContext).getString(paramString1,
-				paramString2);
+	public static void putBoolean(Context context, String key, boolean value) {
+		getEditorObject(context).putBoolean(key, value).commit();
 	}
 
-	private static SharedPreferences getSharedPreferencesObject(
-			Context paramContext) {
+	public static int getInt(Context context, String key, int value) {
+		return getSharedPreferencesObject(context).getInt(key, value);
+	}
+
+	public static void putInt(Context context, String key, int value) {
+		getEditorObject(context).putInt(key, value).commit();
+	}
+
+	public static String getString(Context context, String key, String value) {
+		return getSharedPreferencesObject(context).getString(key, value);
+	}
+
+	public static void putString(Context context, String key, String value) {
+		getEditorObject(context).putString(key, value).commit();
+	}
+
+	private static SharedPreferences getSharedPreferencesObject(Context context) {
 		if (sharedPreferences == null)
 			sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(paramContext);
+					.getDefaultSharedPreferences(context);
 		return sharedPreferences;
 	}
 
-	public static void setEditor(Context paramContext, String paramString,
-			Boolean paramBoolean) {
-		getEditorObject(paramContext).putBoolean(paramString, paramBoolean)
-				.commit();
-	}
-
-	private static SharedPreferences.Editor getEditorObject(Context paramContext) {
+	private static SharedPreferences.Editor getEditorObject(Context context) {
 		if (editor == null)
-			editor = PreferenceManager
-					.getDefaultSharedPreferences(paramContext).edit();
+			editor = getSharedPreferencesObject(context).edit();
 		return editor;
-	}
-
-	public static void setEditor(Context paramContext, String paramString, int i) {
-		getEditorObject(paramContext).putInt(paramString, i).commit();
 	}
 
 }

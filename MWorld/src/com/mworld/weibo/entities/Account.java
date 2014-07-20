@@ -112,9 +112,11 @@ public class Account implements Parcelable {
 	}
 
 	private Account(Parcel in) {
+		id = in.readInt();
 		uid = in.readString();
 		accessToken = in.readString();
 		expiresIn = in.readLong();
+		jsonUserInfo = in.readString();
 		userInfo = in.readParcelable(User.class.getClassLoader());
 	}
 
@@ -125,9 +127,11 @@ public class Account implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
 		dest.writeString(uid);
 		dest.writeString(accessToken);
 		dest.writeLong(expiresIn);
+		dest.writeString(jsonUserInfo);
 		dest.writeParcelable(userInfo, flags);
 	}
 

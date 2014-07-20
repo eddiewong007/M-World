@@ -1,11 +1,8 @@
 package com.mworld.support.utils;
 
-import java.util.List;
-
 import net.tsz.afinal.FinalDb;
 import android.app.Activity;
 import android.app.Application;
-import android.text.TextUtils;
 
 import com.mworld.support.preference.PrefUtility;
 import com.mworld.weibo.entities.Account;
@@ -16,7 +13,9 @@ public class GlobalContext extends Application {
 
 	private Activity activity = null;
 
-	private Account mAccount;
+	private Account mAccount = null;
+
+	private Object mGroup = null;
 
 	@Override
 	public void onCreate() {
@@ -38,16 +37,9 @@ public class GlobalContext extends Application {
 
 	public Account getAccount() {
 		if (mAccount == null) {
-			String id = PrefUtility.getDefaultAccountId();
-			FinalDb fd = FinalDb.create(globalContext);
-			if (!TextUtils.isEmpty(id)) {
-				mAccount = fd.findById(id, Account.class);
-			} else {
-				List<Account> accountList = fd.findAll(Account.class);
-				if (accountList != null && accountList.size() > 0) {
-					mAccount = accountList.get(0);
-				}
-			}
+			int id = PrefUtility.getDefaultAccountId();
+			FinalDb fd = FinalDb.create(getInstance());
+			mAccount = fd.findById(id, Account.class);
 		}
 		return mAccount;
 	}
@@ -58,6 +50,14 @@ public class GlobalContext extends Application {
 
 	public String getCurrentAccountName() {
 		return getAccount().getUserInfo().getScreenName();
+	}
+
+	public Object getGroup() {
+		return mGroup;
+	}
+
+	public void setGroup(Object group) {
+		mGroup = group;
 	}
 
 }

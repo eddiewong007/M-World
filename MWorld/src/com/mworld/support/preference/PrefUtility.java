@@ -13,20 +13,19 @@ public class PrefUtility {
 	}
 
 	public static boolean firstStart() {
-		boolean value = PrefHelper.getSharedPreferences(getContext(),
-				FIRSTSTART, true);
+		boolean value = PrefHelper.getBoolean(getContext(), FIRSTSTART, true);
 		if (value) {
-			PrefHelper.setEditor(getContext(), FIRSTSTART, false);
+			PrefHelper.putBoolean(getContext(), FIRSTSTART, false);
 		}
 		return value;
 	}
 
-	public static String getDefaultAccountId() {
-		return PrefHelper.getSharedPreferences(getContext(), "id", "");
+	public static int getDefaultAccountId() {
+		return PrefHelper.getInt(getContext(), "id", 0);
 	}
 
 	public static void setDefaultAccountId(int id) {
-		PrefHelper.setEditor(getContext(), "id", id);
+		PrefHelper.putInt(getContext(), "id", id);
 	}
 
 }

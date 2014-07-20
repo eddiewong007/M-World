@@ -18,7 +18,9 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 
 import com.mworld.weibo.entities.Account;
 
@@ -49,13 +51,13 @@ public class Utility {
 			}
 			strResult = strResult.toUpperCase(Locale.ENGLISH);
 			// debug
-			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(
-					Locale.ENGLISH).equals(strResult)) {
+			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(Locale.ENGLISH)
+					.equals(strResult)) {
 				return true;
 			}
 			// relaease
-			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(
-					Locale.ENGLISH).equals(strResult)) {
+			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(Locale.ENGLISH)
+					.equals(strResult)) {
 				return true;
 			}
 			Log.e(TAG, strResult);
@@ -110,8 +112,20 @@ public class Utility {
 	}
 
 	public static boolean isTokenValid(Account account) {
-        return !TextUtils.isEmpty(account.getAccessToken())
-                && (account.getExpiresIn() == 0
-                || (System.currentTimeMillis()) < account.getExpiresIn());
-    }
+		return !TextUtils.isEmpty(account.getAccessToken())
+				&& (account.getExpiresIn() == 0 || (System.currentTimeMillis()) < account
+						.getExpiresIn());
+	}
+
+	public static int getScreenWidth() {
+		Activity activity = GlobalContext.getInstance().getActivity();
+		if (activity != null) {
+			Display display = activity.getWindowManager().getDefaultDisplay();
+			DisplayMetrics metrics = new DisplayMetrics();
+			display.getMetrics(metrics);
+			return metrics.widthPixels;
+		}
+
+		return 480;
+	}
 }

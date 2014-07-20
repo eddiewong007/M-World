@@ -8,7 +8,7 @@
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
     </style>
 
-    <style name="PrivateThemeHoloLightOnlyForInherit" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="PrivateThemeHoloLightOnlyForInherit" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@color/host_background</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
@@ -20,7 +20,7 @@
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_custom_blue_inverse_holo</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item>
+        <item name="android:backgroundStacked">@drawable/actionbar_gradient_bg</item>
         <item name="android:titleTextStyle">@style/ActionBar.Title.Text</item>
         <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item>
     </style>
