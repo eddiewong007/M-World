@@ -2,6 +2,8 @@ package com.mworld.ui.fragment;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Comment;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,34 +19,54 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
-import com.mworld.ui.adapter.StatusListAdapter;
-import com.mworld.ui.handler.StatusLoadHandler;
-import com.mworld.ui.handler.StatusRefHandler;
-import com.mworld.weibo.api.StatusAPI;
-import com.mworld.weibo.entities.Status;
+import com.mworld.ui.adapter.MyCmtListAdapter;
+import com.mworld.ui.handler.MyCmtLoadHandler;
+import com.mworld.ui.handler.MyCmtRefHandler;
+import com.mworld.weibo.api.CommentAPI;
+import com.mworld.weibo.entities.Account;
+import com.mworld.weibo.entities.User;
 
-public class AtFragment extends BaseFragment {
+public class CommentsFragment extends BaseFragment {
+
+	private Account mAccount;
+
+	private User mUser;
+
+	private String mToken;
+
+	public static CommentsFragment newInstance(Account account, User user,
+			String token) {
+		CommentsFragment fragment = new CommentsFragment(account, user, token);
+		fragment.setArguments(new Bundle());
+		return fragment;
+	}
+
+	public CommentsFragment(Account account, User user, String token) {
+		mAccount = account;
+		mUser = user;
+		mToken = token;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAPI = new StatusAPI(GlobalContext.getInstance().getAccount()
+		mAPI = new CommentAPI(GlobalContext.getInstance().getAccount()
 				.getAccessToken());
-		mArrayList = new ArrayList<Status>();
-		mAdapter = new StatusListAdapter(getActivity(), mArrayList);
+		mArrayList = new ArrayList<Comment>();
+		mAdapter = new MyCmtListAdapter(getActivity(), mArrayList);
 	}
 
 	@SuppressLint("InflateParams")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_at, null);
-		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
+		View view = inflater.inflate(R.layout.fragment_comment, null);
+		mList = (PullToRefreshListView) view
+				.findViewById(R.id.comment_timeline);
 		mList.setAdapter(mAdapter);
-		((StatusAPI) mAPI).mentions(since_id, 0, 20, 1,
-				StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
-				StatusAPI.TYPE_FILTER_ALL, false, new StatusRefHandler(this));
+		((CommentAPI) mAPI).timeline(since_id, 0, 20, 1, false,
+				new MyCmtRefHandler(this));
 		return view;
 	}
 
@@ -57,10 +79,8 @@ public class AtFragment extends BaseFragment {
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.i("At", "refresh");
-				((StatusAPI) mAPI).mentions(since_id, 0, 20, 1,
-						StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
-						StatusAPI.TYPE_FILTER_ALL, false, new StatusRefHandler(
-								AtFragment.this));
+				((CommentAPI) mAPI).timeline(since_id, 0, 20, 1, false,
+						new MyCmtRefHandler(CommentsFragment.this));
 			}
 		});
 		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
@@ -69,12 +89,9 @@ public class AtFragment extends BaseFragment {
 			public void onLastItemVisible() {
 				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
 						.show();
-				((StatusAPI) mAPI).mentions(0, init_id, 20, page++,
-						StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
-						StatusAPI.TYPE_FILTER_ALL, false,
-						new StatusLoadHandler(AtFragment.this));
+				((CommentAPI) mAPI).timeline(0, init_id, 20, page++, false,
+						new MyCmtLoadHandler(CommentsFragment.this));
 			}
 		});
 	}
-
 }

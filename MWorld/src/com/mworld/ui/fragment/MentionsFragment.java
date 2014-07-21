@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -22,9 +21,30 @@ import com.mworld.ui.adapter.StatusListAdapter;
 import com.mworld.ui.handler.StatusLoadHandler;
 import com.mworld.ui.handler.StatusRefHandler;
 import com.mworld.weibo.api.StatusAPI;
+import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.entities.Status;
+import com.mworld.weibo.entities.User;
 
-public class HomeFragment extends BaseFragment {
+public class MentionsFragment extends BaseFragment {
+
+	private Account mAccount;
+
+	private User mUser;
+
+	private String mToken;
+
+	public static MentionsFragment newInstance(Account account, User user,
+			String token) {
+		MentionsFragment fragment = new MentionsFragment(account, user, token);
+		fragment.setArguments(new Bundle());
+		return fragment;
+	}
+
+	public MentionsFragment(Account account, User user, String token) {
+		mAccount = account;
+		mUser = user;
+		mToken = token;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -40,48 +60,42 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_home, null);
-		mList = (PullToRefreshListView) view.findViewById(R.id.home_timeline);
+		View view = inflater.inflate(R.layout.fragment_at, null);
+		mList = (PullToRefreshListView) view.findViewById(R.id.at_timeline);
 		mList.setAdapter(mAdapter);
-		mProgressBar = (ProgressBar) view.findViewById(R.id.loading);
-		mProgressBar.setVisibility(View.VISIBLE);
-
-		((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false, 0, false,
-				new StatusRefHandler(this));
+		((StatusAPI) mAPI).mentions(since_id, 0, 20, 1,
+				StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
+				StatusAPI.TYPE_FILTER_ALL, false, new StatusRefHandler(this));
 		return view;
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+
 		mList.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.i("Home", "refresh");
-				((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false,
-						0, false, new StatusRefHandler(HomeFragment.this));
+				Log.i("At", "refresh");
+				((StatusAPI) mAPI).mentions(since_id, 0, 20, 1,
+						StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
+						StatusAPI.TYPE_FILTER_ALL, false, new StatusRefHandler(
+								MentionsFragment.this));
 			}
 		});
 		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
 
 			@Override
 			public void onLastItemVisible() {
-				if (isLoading) {
-					Toast.makeText(getActivity(), "不要着急，正在加载",
-							Toast.LENGTH_SHORT).show();
-					mList.onRefreshComplete();
-				} else {
-					Toast.makeText(getActivity(), "加载中...", Toast.LENGTH_SHORT)
-							.show();
-					((StatusAPI) mAPI).friendsTimeline(0, init_id, 20, page++,
-							false, 0, false, new StatusLoadHandler(
-									HomeFragment.this));
-					isLoading = true;
-				}
+				Toast.makeText(getActivity(), "正在加载微博", Toast.LENGTH_SHORT)
+						.show();
+				((StatusAPI) mAPI).mentions(0, init_id, 20, page++,
+						StatusAPI.AUTHOR_FILTER_ALL, StatusAPI.SRC_FILTER_ALL,
+						StatusAPI.TYPE_FILTER_ALL, false,
+						new StatusLoadHandler(MentionsFragment.this));
 			}
 		});
-
 	}
 
 }
