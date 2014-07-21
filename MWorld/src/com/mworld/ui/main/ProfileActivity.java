@@ -14,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
@@ -56,6 +57,7 @@ public class ProfileActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		mUser = (User) getIntent().getParcelableExtra("user");
+		GlobalContext.getInstance().setCurTab(0);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profileactivity_layout);
@@ -104,21 +106,16 @@ public class ProfileActivity extends Activity {
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					if (view.getLastVisiblePosition() == view.getCount() - 1) {
+						performLoad(GlobalContext.getInstance().getCurTab());
+					}
+				}
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-
-				int lastItem = firstVisibleItem + visibleItemCount;
-				if (lastItem == totalItemCount && firstVisibleItem != 0) {
-					View lastItemView = (View) mList.getChildAt(mList
-							.getChildCount() - 1);
-					if (mList.getBottom() == lastItemView.getBottom()) {
-						performLoad(GlobalContext.getInstance().getCurTab());
-					}
-				}
 
 				if (firstVisibleItem == 0) {
 					header.setVisibility(View.GONE);
@@ -134,6 +131,8 @@ public class ProfileActivity extends Activity {
 
 	public void performLoad(int tab) {
 		tabHolder.inflate(mUser);
+		Toast.makeText(ProfileActivity.this, "正在加载...", Toast.LENGTH_SHORT)
+				.show();
 		switch (tab) {
 		case 0:
 			mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
@@ -164,6 +163,9 @@ public class ProfileActivity extends Activity {
 							super.onSuccess(jsonString);
 							if (GlobalContext.getInstance().getCurTab() != 1)
 								return;
+							Toast.makeText(ProfileActivity.this,
+									"加载成功，由于新浪的接口返回数据有问题，只能显示部分好友。",
+									Toast.LENGTH_SHORT).show();
 							UserList usersList = UserList.parse(jsonString);
 							if (usersList.users != null) {
 								friendsCur = usersList.next_cursor;

@@ -56,7 +56,7 @@ public class Utility {
 				return true;
 			}
 			// relaease
-			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(Locale.ENGLISH)
+			if ("F641BB3EF2B1E56CA3788482D9E67A7".toUpperCase(Locale.ENGLISH)
 					.equals(strResult)) {
 				return true;
 			}

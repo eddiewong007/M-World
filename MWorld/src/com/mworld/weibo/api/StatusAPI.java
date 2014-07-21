@@ -823,10 +823,10 @@ public class StatusAPI extends BaseAPI {
 			float lon, String annotations, String rip,
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildUpdateParams(status, lat, lon);
-		params.put("visible", String.valueOf(visible));
-		params.put("list_id", list_id);
-		params.put("annotations", annotations);
-		params.put("rip", rip);
+//		params.put("visible", String.valueOf(visible));
+//		params.put("list_id", list_id);
+//		params.put("annotations", annotations);
+//		params.put("rip", rip);
 		requestAsync(API_BASE_URL + "/update.json", params, HTTPMETHOD_POST,
 				callBack);
 	}

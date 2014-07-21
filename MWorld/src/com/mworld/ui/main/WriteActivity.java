@@ -173,6 +173,7 @@ public class WriteActivity extends Activity {
 			mPicPath = null;
 			mPicButton.setImageBitmap(BitmapFactory.decodeResource(
 					getResources(), R.drawable.ic_picture));
+
 		}
 	}
 
@@ -205,7 +206,6 @@ public class WriteActivity extends Activity {
 						}
 
 					});
-			return;
 		} else if (writeType == 2) {
 			mStatusAPI.repost(mStatus.id, text, 0, getLocalIpAddress(),
 					new AjaxCallBack<String>() {
@@ -226,9 +226,7 @@ public class WriteActivity extends Activity {
 						}
 
 					});
-			return;
-		}
-		if (mPicPath == null) {
+		} else if (mPicPath == null) {
 			mStatusAPI.update(text, 0, "", 0.0F, 0.0F, "[]",
 					getLocalIpAddress(), new AjaxCallBack<String>() {
 
