@@ -49,8 +49,10 @@ public class SsoHandler implements OauthConstants {
 	private static String ssoPackageName = "com.sina.weibo";
 	private static String ssoActivityName = "com.sina.weibo.MainTabActivity";
 
-	private String[] authPermissions = { "friendships_groups_read",
-			"friendships_groups_write" };
+	private String[] authPermissions = { "email", "direct_messages_read",
+			"direct_messages_write", "friendships_groups_read",
+			"friendships_groups_write", "statuses_to_me_read",
+			"follow_app_official_microblog", "invitation_write" };
 
 	public SsoHandler(Activity activity) {
 		mAuthActivity = activity;

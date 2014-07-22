@@ -8,6 +8,7 @@ import net.tsz.afinal.http.AjaxCallBack;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -27,6 +28,8 @@ import com.mworld.weibo.entities.User;
 import com.mworld.weibo.entities.UserList;
 
 public class ProfileActivity extends Activity {
+
+	
 
 	public User mUser;
 
@@ -240,6 +243,12 @@ public class ProfileActivity extends Activity {
 			break;
 		}
 
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		finish();
+		return super.onOptionsItemSelected(item);
 	}
 
 }

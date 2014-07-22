@@ -38,7 +38,7 @@ public class Oauth2API implements OauthConstants {
 	 */
 	public static String fetchAuthorizeUrl() {
 		return API_SERVER + "/authorize" + "?client_id=" + APP_KEY
-				+ "&redirect_uri=" + REDIRECT_URL
+				+ "&redirect_uri=" + REDIRECT_URL + "&scope=" + SCOPE
 				+ "&response_type=code&display=mobile";
 	}
 

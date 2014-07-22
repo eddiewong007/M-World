@@ -116,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_weight="0"
         android:drawableLeft="@drawable/ic_menu_logout"
-        android:text="注销" />
+        android:text="切换账号" />
 
     <Button
         android:id="@+id/btn_setting"

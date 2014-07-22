@@ -1,6 +1,8 @@
 package com.mworld.ui.fragment;
 
 import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.http.AjaxCallBack;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,15 +11,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
+import com.mworld.ui.login.AccountActivity;
 import com.mworld.ui.main.MainActivity;
+import com.mworld.ui.main.ProfileActivity;
 import com.mworld.weibo.entities.User;
+import com.mworld.weibo.oauth.Oauth2API;
 
 public class LeftMenuFragment extends Fragment {
 
@@ -37,7 +42,7 @@ public class LeftMenuFragment extends Fragment {
 
 		holder = new Holder();
 
-		holder.avatar = (Spinner) view.findViewById(R.id.avatar);
+		holder.avatar = (ImageView) view.findViewById(R.id.avatar);
 		holder.nickname = (TextView) view.findViewById(R.id.nickname);
 
 		holder.home = (LinearLayout) view.findViewById(R.id.btn_home);
@@ -65,6 +70,7 @@ public class LeftMenuFragment extends Fragment {
 		User user = GlobalContext.getInstance().getAccount().getUserInfo();
 		FinalBitmap.create(getActivity()).display(holder.avatar,
 				user.getAvatarLarge());
+		holder.avatar.setOnClickListener(onClickListener);
 		holder.nickname.setText(user.getScreenName());
 		holder.home.setOnClickListener(onClickListener);
 		holder.mention.setOnClickListener(onClickListener);
@@ -81,6 +87,12 @@ public class LeftMenuFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			switch (view.getId()) {
+			case R.id.avatar:
+				Intent intent = new Intent(getActivity(), ProfileActivity.class);
+				intent.putExtra("user", GlobalContext.getInstance()
+						.getAccount().getUserInfo());
+				startActivity(intent);
+				break;
 			case R.id.btn_home:
 				((MainActivity) getActivity()).switchFragment(0);
 				break;
@@ -90,6 +102,13 @@ public class LeftMenuFragment extends Fragment {
 			case R.id.btn_comment:
 				((MainActivity) getActivity()).switchFragment(2);
 				break;
+			case R.id.btn_logout:
+				startActivity(AccountActivity.newIntent());
+				Oauth2API.revokeOauth2(GlobalContext.getInstance().getAccount()
+						.getAccessToken(), new AjaxCallBack<String>() {
+				});
+				getActivity().finish();
+				break;
 			}
 
 		}
@@ -97,7 +116,7 @@ public class LeftMenuFragment extends Fragment {
 
 	private class Holder {
 
-		Spinner avatar;
+		ImageView avatar;
 
 		TextView nickname;
 

@@ -15,6 +15,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.mworld.R;
 import com.mworld.support.preference.PrefUtility;
 import com.mworld.support.utils.GlobalContext;
+import com.mworld.ui.adapter.GroupListNavAdapter;
 import com.mworld.ui.adapter.TabsAdapter;
 import com.mworld.ui.fragment.CommentsFragment;
 import com.mworld.ui.fragment.FriendsFragment;
@@ -23,7 +24,8 @@ import com.mworld.ui.fragment.MentionsFragment;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.entities.User;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements
+		ActionBar.OnNavigationListener {
 
 	private Account mAccount;
 
@@ -42,6 +44,8 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public static Intent newIntent(Account account) {
+		GlobalContext.getInstance().setAccount(account);
+		GlobalContext.getInstance().updateGroupInfo();
 		Intent intent = newIntent();
 		intent.putExtra("account_extra", account);
 		return intent;
@@ -88,8 +92,7 @@ public class MainActivity extends FragmentActivity {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.menu_frame, getMenuFragment()).commit();
 
-			getSupportFragmentManager().beginTransaction()
-					.show(getFriendsFragment()).commit();
+			switchFragment(0);
 		}
 
 		// bindUserInterfaces(savedInstanceState);
@@ -101,8 +104,8 @@ public class MainActivity extends FragmentActivity {
 		Fragment mentions = getMentionsFragment();
 		Fragment comments = getCommentsFragment();
 
-		Fragment fav = getFavFragment();
-		Fragment myself = getMyProfileFragment();
+		// Fragment fav = getFavFragment();
+		// Fragment myself = getMyProfileFragment();
 
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
 				.beginTransaction();
@@ -148,18 +151,32 @@ public class MainActivity extends FragmentActivity {
 				.beginTransaction();
 		switch (which) {
 		case 0:
+			getActionBar().setLogo(R.drawable.ic_menu_home);
+			getActionBar().setDisplayShowTitleEnabled(false);
+			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//			getActionBar().setListNavigationCallbacks(
+//					new GroupListNavAdapter(this, new String[0]), this);
+			GlobalContext.getInstance().setActivityGroup(this, this);
 			fragmentTransaction.show(getFriendsFragment());
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
 			fragmentTransaction.commit();
 			break;
 		case 1:
+			getActionBar().setLogo(R.drawable.repost_light);
+			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar()
+					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragmentTransaction.hide(getFriendsFragment());
 			fragmentTransaction.show(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
 			fragmentTransaction.commit();
 			break;
 		case 2:
+			getActionBar().setLogo(R.drawable.comment_light);
+			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar()
+					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragmentTransaction.hide(getFriendsFragment());
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.show(getCommentsFragment());
@@ -170,13 +187,13 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	private Fragment getMyProfileFragment() {
-		return null;
-	}
-
-	private Fragment getFavFragment() {
-		return null;
-	}
+	// private Fragment getMyProfileFragment() {
+	// return null;
+	// }
+	//
+	// private Fragment getFavFragment() {
+	// return null;
+	// }
 
 	private Fragment getCommentsFragment() {
 		CommentsFragment fragment = ((CommentsFragment) getSupportFragmentManager()
@@ -285,6 +302,21 @@ public class MainActivity extends FragmentActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (menu.isMenuShowing()) {
+			menu.showContent();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int which, long itemId) {
+		((FriendsFragment) getFriendsFragment()).switchGroup(which);
+		return false;
 	}
 
 }

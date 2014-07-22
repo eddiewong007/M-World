@@ -2,6 +2,7 @@ package com.mworld.ui.fragment;
 
 import java.util.ArrayList;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,8 @@ import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.User;
 
 public class FriendsFragment extends BaseFragment {
+	
+	private int curGroup;
 
 	private Account mAccount;
 
@@ -103,6 +106,10 @@ public class FriendsFragment extends BaseFragment {
 			}
 		});
 
+	}
+
+	public void switchGroup(int which) {
+		
 	}
 
 }
