@@ -1,5 +1,7 @@
 package com.mworld.weibo.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,7 +15,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Comment {
+public class Comment implements Parcelable {
 	private static final String TAG = "Comment";
 
 	/** 评论创建时间 */
@@ -82,5 +84,49 @@ public class Comment {
 
 		return comment;
 	}
+
+	public Comment() {
+
+	}
+
+	public Comment(Parcel in) {
+		created_at = in.readString();
+		id = in.readLong();
+		text = in.readString();
+		source = in.readString();
+		user = in.readParcelable(User.class.getClassLoader());
+		mid = in.readString();
+		idstr = in.readString();
+		status = in.readParcelable(Status.class.getClassLoader());
+		reply_comment = in.readParcelable(Comment.class.getClassLoader());
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(created_at);
+		dest.writeLong(id);
+		dest.writeString(text);
+		dest.writeString(source);
+		dest.writeParcelable(user, flags);
+		dest.writeString(mid);
+		dest.writeString(idstr);
+		dest.writeParcelable(status, flags);
+		dest.writeParcelable(reply_comment, flags);
+	}
+
+	public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+		public Comment createFromParcel(Parcel in) {
+			return new Comment(in);
+		}
+
+		public Comment[] newArray(int size) {
+			return new Comment[size];
+		}
+	};
 
 }

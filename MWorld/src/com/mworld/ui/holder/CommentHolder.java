@@ -84,8 +84,8 @@ public class CommentHolder {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, WriteActivity.class);
-				intent.putExtra("title", "评论");
-				intent.putExtra("status", comment.status);
+				intent.putExtra("title", "回复");
+				intent.putExtra("comment", comment);
 				mContext.startActivity(intent);
 			}
 		});

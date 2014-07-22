@@ -1,26 +1,27 @@
 package com.mworld.ui.main;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.mworld.R;
 import com.mworld.support.preference.PrefUtility;
 import com.mworld.support.utils.GlobalContext;
-import com.mworld.ui.adapter.GroupListNavAdapter;
-import com.mworld.ui.adapter.TabsAdapter;
 import com.mworld.ui.fragment.CommentsFragment;
 import com.mworld.ui.fragment.FriendsFragment;
 import com.mworld.ui.fragment.LeftMenuFragment;
 import com.mworld.ui.fragment.MentionsFragment;
+import com.mworld.ui.fragment.MyFavFragment;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.entities.User;
 
@@ -32,10 +33,6 @@ public class MainActivity extends FragmentActivity implements
 	private User mUser;
 
 	private String mToken;
-
-	private ViewPager mViewPager;
-
-	private TabsAdapter mTabsAdapter;
 
 	private SlidingMenu menu;
 
@@ -51,6 +48,7 @@ public class MainActivity extends FragmentActivity implements
 		return intent;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,7 +74,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.content_frame);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle(mUser.getScreenName());
-
+		
 		// set the Above View
 		if (savedInstanceState == null) {
 			initFragment();
@@ -104,7 +102,7 @@ public class MainActivity extends FragmentActivity implements
 		Fragment mentions = getMentionsFragment();
 		Fragment comments = getCommentsFragment();
 
-		// Fragment fav = getFavFragment();
+		Fragment fav = getFavFragment();
 		// Fragment myself = getMyProfileFragment();
 
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
@@ -127,12 +125,12 @@ public class MainActivity extends FragmentActivity implements
 
 		}
 
-		// if (!fav.isAdded()) {
-		// fragmentTransaction.add(R.id.menu_right_fl, fav,
-		// MyFavListFragment.class.getName());
-		// fragmentTransaction.hide(fav);
-		// }
-		//
+		if (!fav.isAdded()) {
+			fragmentTransaction.add(R.id.content_frame, fav,
+					MyFavFragment.class.getName());
+			fragmentTransaction.hide(fav);
+		}
+
 		// if (!myself.isAdded()) {
 		// fragmentTransaction.add(R.id.menu_right_fl, myself,
 		// UserInfoFragment.class.getName());
@@ -154,32 +152,47 @@ public class MainActivity extends FragmentActivity implements
 			getActionBar().setLogo(R.drawable.ic_menu_home);
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//			getActionBar().setListNavigationCallbacks(
-//					new GroupListNavAdapter(this, new String[0]), this);
 			GlobalContext.getInstance().setActivityGroup(this, this);
 			fragmentTransaction.show(getFriendsFragment());
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
+			fragmentTransaction.hide(getFavFragment());
 			fragmentTransaction.commit();
 			break;
 		case 1:
 			getActionBar().setLogo(R.drawable.repost_light);
 			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setTitle("提及");
 			getActionBar()
 					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragmentTransaction.hide(getFriendsFragment());
 			fragmentTransaction.show(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
+			fragmentTransaction.hide(getFavFragment());
 			fragmentTransaction.commit();
 			break;
 		case 2:
 			getActionBar().setLogo(R.drawable.comment_light);
 			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setTitle("评论");
 			getActionBar()
 					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			fragmentTransaction.hide(getFriendsFragment());
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.show(getCommentsFragment());
+			fragmentTransaction.hide(getFavFragment());
+			fragmentTransaction.commit();
+			break;
+		case 3:
+			getActionBar().setLogo(R.drawable.ic_menu_fav);
+			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setTitle("收藏");
+			getActionBar()
+					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			fragmentTransaction.hide(getFriendsFragment());
+			fragmentTransaction.hide(getMentionsFragment());
+			fragmentTransaction.hide(getCommentsFragment());
+			fragmentTransaction.show(getFavFragment());
 			fragmentTransaction.commit();
 			break;
 		default:
@@ -190,10 +203,16 @@ public class MainActivity extends FragmentActivity implements
 	// private Fragment getMyProfileFragment() {
 	// return null;
 	// }
-	//
-	// private Fragment getFavFragment() {
-	// return null;
-	// }
+
+	private Fragment getFavFragment() {
+
+		MyFavFragment fragment = ((MyFavFragment) getSupportFragmentManager()
+				.findFragmentByTag(MyFavFragment.class.getName()));
+		if (fragment == null) {
+			fragment = MyFavFragment.newInstance(mAccount, mUser, mToken);
+		}
+		return fragment;
+	}
 
 	private Fragment getCommentsFragment() {
 		CommentsFragment fragment = ((CommentsFragment) getSupportFragmentManager()
@@ -229,35 +248,6 @@ public class MainActivity extends FragmentActivity implements
 			fragment = LeftMenuFragment.newInstance();
 		}
 		return fragment;
-	}
-
-	private void bindUserInterfaces(Bundle savedInstanceState) {
-		mViewPager = new ViewPager(this);
-		mViewPager.setId(R.id.vPager);
-		setContentView(mViewPager);
-
-		// ActionBar and Tabs
-		ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mAccount.getUserInfo().getScreenName());
-
-		// 设置ActionBar的背景
-		actionBar.setDisplayUseLogoEnabled(true);
-
-		mTabsAdapter = new TabsAdapter(getSupportFragmentManager(), this,
-				mViewPager);
-		mTabsAdapter.addTab(actionBar.newTab().setText("Home"),
-				FriendsFragment.class, null);
-		mTabsAdapter.addTab(actionBar.newTab().setText("At"),
-				MentionsFragment.class, null);
-		mTabsAdapter.addTab(actionBar.newTab().setText("Comment"),
-				CommentsFragment.class, null);
-
-		if (savedInstanceState != null) {
-			actionBar.setSelectedNavigationItem(savedInstanceState.getInt(
-					"tab", 0));
-		}
 	}
 
 	@Override
@@ -304,10 +294,23 @@ public class MainActivity extends FragmentActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	private boolean secondExit = false;
+
 	@Override
 	public void onBackPressed() {
 		if (menu.isMenuShowing()) {
 			menu.showContent();
+		} else if (!secondExit) {
+			secondExit = true;
+			Toast.makeText(this, "再按一次退出M-World", Toast.LENGTH_SHORT).show();
+			new Handler().postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					secondExit = false;
+				}
+			}, 3000);
+
 		} else {
 			super.onBackPressed();
 		}

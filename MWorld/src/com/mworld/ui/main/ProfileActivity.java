@@ -2,11 +2,11 @@ package com.mworld.ui.main;
 
 import java.util.ArrayList;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,13 +23,14 @@ import com.mworld.ui.adapter.ProfileAdapter;
 import com.mworld.ui.holder.ProfTabHolder;
 import com.mworld.weibo.api.FriendshipsAPI;
 import com.mworld.weibo.api.StatusAPI;
+import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.StatusList;
 import com.mworld.weibo.entities.User;
 import com.mworld.weibo.entities.UserList;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends SwipeBackActivity {
 
-	
+	public boolean isLoginUser = false;
 
 	public User mUser;
 
@@ -61,7 +62,8 @@ public class ProfileActivity extends Activity {
 
 		mUser = (User) getIntent().getParcelableExtra("user");
 		GlobalContext.getInstance().setCurTab(0);
-
+		isLoginUser = GlobalContext.getInstance().getAccount().getUserInfo()
+				.equals(mUser);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profileactivity_layout);
 		FinalActivity.initInjectedView(this);
@@ -89,20 +91,48 @@ public class ProfileActivity extends Activity {
 				.getAccessToken();
 		mStatusAPI = new StatusAPI(accessToken);
 		mFriendshipsAPI = new FriendshipsAPI(accessToken);
-		mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
-				page++, false, 0, false, new AjaxCallBack<String>() {
+		if (isLoginUser) {
+			mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
+					page++, false, 0, false, new AjaxCallBack<String>() {
 
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						StatusList statusesList = StatusList.parse(jsonString);
-						if (statusesList.statuses != null)
-							mArrayList.addAll(statusesList.statuses);
-						adapter.notifyDataSetChanged();
-					}
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+							StatusList statusesList = StatusList
+									.parse(jsonString);
+							if (statusesList.statuses != null)
+								mArrayList.addAll(statusesList.statuses);
+							adapter.notifyDataSetChanged();
+						}
 
-				});
+					});
+		} else {
+			mStatusAPI.friendsTimeline(0, 0, 50, page++, false, 0, false,
+					new AjaxCallBack<String>() {
 
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+							if (GlobalContext.getInstance().getCurTab() != 0)
+								return;
+							StatusList statusesList = StatusList
+									.parse(jsonString);
+							if (statusesList.statuses != null) {
+								for (int index = 0; index < statusesList.statuses
+										.size(); index++) {
+									Status status = statusesList.statuses
+											.get(index);
+									if (!status.user.equals(mUser)) {
+										statusesList.statuses.remove(index--);
+									}
+								}
+								mArrayList.addAll(statusesList.statuses);
+							}
+							adapter.notifyDataSetChanged();
+						}
+
+					});
+		}
 		adapter = new ProfileAdapter(this, mArrayList);
 		mList.setAdapter(adapter);
 		mList.setOnScrollListener(new OnScrollListener() {
@@ -138,23 +168,54 @@ public class ProfileActivity extends Activity {
 				.show();
 		switch (tab) {
 		case 0:
-			mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
-					page++, false, 0, false, new AjaxCallBack<String>() {
+			if (isLoginUser) {
+				mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0,
+						20, page++, false, 0, false,
+						new AjaxCallBack<String>() {
 
-						@SuppressWarnings("unchecked")
-						@Override
-						public void onSuccess(String jsonString) {
-							super.onSuccess(jsonString);
-							if (GlobalContext.getInstance().getCurTab() != 0)
-								return;
-							StatusList statusesList = StatusList
-									.parse(jsonString);
-							if (statusesList.statuses != null)
-								mArrayList.addAll(statusesList.statuses);
-							adapter.notifyDataSetChanged();
-						}
+							@SuppressWarnings("unchecked")
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								if (GlobalContext.getInstance().getCurTab() != 0)
+									return;
+								StatusList statusesList = StatusList
+										.parse(jsonString);
+								if (statusesList.statuses != null)
+									mArrayList.addAll(statusesList.statuses);
+								adapter.notifyDataSetChanged();
+							}
 
-					});
+						});
+			} else {
+				mStatusAPI.friendsTimeline(0, 0, 50, page++, false, 0, false,
+						new AjaxCallBack<String>() {
+
+							@SuppressWarnings("unchecked")
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								if (GlobalContext.getInstance().getCurTab() != 0)
+									return;
+								StatusList statusesList = StatusList
+										.parse(jsonString);
+								if (statusesList.statuses != null) {
+									for (int index = 0; index < statusesList.statuses
+											.size(); index++) {
+										Status status = statusesList.statuses
+												.get(index);
+										if (!status.user.equals(mUser)) {
+											statusesList.statuses
+													.remove(index--);
+										}
+									}
+									mArrayList.addAll(statusesList.statuses);
+								}
+								adapter.notifyDataSetChanged();
+							}
+
+						});
+			}
 			break;
 		case 1:
 			mFriendshipsAPI.friends(Long.parseLong(mUser.getId()), 20,
@@ -220,6 +281,11 @@ public class ProfileActivity extends Activity {
 			}
 			break;
 		case R.id.friends_tab:
+			if (!isLoginUser) {
+				Toast.makeText(this, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			if (GlobalContext.getInstance().getCurTab() != 1) {
 				GlobalContext.getInstance().setCurTab(1);
 				for (int i = mArrayList.size() - 1; i > 1; i--)
@@ -230,6 +296,11 @@ public class ProfileActivity extends Activity {
 			}
 			break;
 		case R.id.followers_tab:
+			if (!isLoginUser) {
+				Toast.makeText(this, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			if (GlobalContext.getInstance().getCurTab() != 2) {
 				GlobalContext.getInstance().setCurTab(2);
 				for (int i = mArrayList.size() - 1; i > 1; i--)
@@ -244,7 +315,7 @@ public class ProfileActivity extends Activity {
 		}
 
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		finish();

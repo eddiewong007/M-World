@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="15dp"
             android:background="#efefef"
@@ -54,7 +54,7 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_from"
@@ -93,7 +93,7 @@
             android:paddingRight="10dp"
             android:paddingTop="15dp"
             android:textColor="#000000"
-            android:textSize="17sp" >
+            android:textSize="15sp" >
         </TextView>
     </RelativeLayout>
 

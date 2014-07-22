@@ -2,7 +2,6 @@ package com.mworld.ui.fragment;
 
 import java.util.ArrayList;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +17,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.R;
-import com.mworld.support.utils.GlobalContext;
 import com.mworld.ui.adapter.StatusListAdapter;
 import com.mworld.ui.handler.StatusLoadHandler;
 import com.mworld.ui.handler.StatusRefHandler;
@@ -28,11 +26,14 @@ import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.User;
 
 public class FriendsFragment extends BaseFragment {
-	
+
+	@SuppressWarnings("unused")
 	private int curGroup;
 
+	@SuppressWarnings("unused")
 	private Account mAccount;
 
+	@SuppressWarnings("unused")
 	private User mUser;
 
 	private String mToken;
@@ -54,8 +55,7 @@ public class FriendsFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAPI = new StatusAPI(GlobalContext.getInstance().getAccount()
-				.getAccessToken());
+		mAPI = new StatusAPI(mToken);
 		mArrayList = new ArrayList<Status>();
 		mAdapter = new StatusListAdapter(getActivity(), mArrayList);
 	}
@@ -109,7 +109,7 @@ public class FriendsFragment extends BaseFragment {
 	}
 
 	public void switchGroup(int which) {
-		
+
 	}
 
 }

@@ -18,7 +18,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mworld.R;
-import com.mworld.support.utils.GlobalContext;
 import com.mworld.ui.adapter.MyCmtListAdapter;
 import com.mworld.ui.handler.MyCmtLoadHandler;
 import com.mworld.ui.handler.MyCmtRefHandler;
@@ -28,8 +27,10 @@ import com.mworld.weibo.entities.User;
 
 public class CommentsFragment extends BaseFragment {
 
+	@SuppressWarnings("unused")
 	private Account mAccount;
 
+	@SuppressWarnings("unused")
 	private User mUser;
 
 	private String mToken;
@@ -51,8 +52,7 @@ public class CommentsFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAPI = new CommentAPI(GlobalContext.getInstance().getAccount()
-				.getAccessToken());
+		mAPI = new CommentAPI(mToken);
 		mArrayList = new ArrayList<Comment>();
 		mAdapter = new MyCmtListAdapter(getActivity(), mArrayList);
 	}

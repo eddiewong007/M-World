@@ -48,16 +48,11 @@ public class LeftMenuFragment extends Fragment {
 		holder.home = (LinearLayout) view.findViewById(R.id.btn_home);
 		holder.mention = (LinearLayout) view.findViewById(R.id.btn_mention);
 		holder.comment = (LinearLayout) view.findViewById(R.id.btn_comment);
+		holder.fav = (Button) view.findViewById(R.id.btn_favourite);
 		holder.search = (Button) view.findViewById(R.id.btn_search);
 		holder.profile = (Button) view.findViewById(R.id.btn_profile);
 		holder.setting = (Button) view.findViewById(R.id.btn_setting);
 		holder.logout = (Button) view.findViewById(R.id.btn_logout);
-		holder.fav = (Button) view.findViewById(R.id.btn_favourite);
-		holder.homeCount = (TextView) view.findViewById(R.id.tv_home_count);
-		holder.mentionCount = (TextView) view
-				.findViewById(R.id.tv_mention_count);
-		holder.commentCount = (TextView) view
-				.findViewById(R.id.tv_comment_count);
 
 		holder.search.setVisibility(View.GONE);
 
@@ -102,6 +97,9 @@ public class LeftMenuFragment extends Fragment {
 			case R.id.btn_comment:
 				((MainActivity) getActivity()).switchFragment(2);
 				break;
+			case R.id.btn_favourite:
+				((MainActivity) getActivity()).switchFragment(3);
+				break;
 			case R.id.btn_logout:
 				startActivity(AccountActivity.newIntent());
 				Oauth2API.revokeOauth2(GlobalContext.getInstance().getAccount()
@@ -125,12 +123,6 @@ public class LeftMenuFragment extends Fragment {
 		LinearLayout mention;
 
 		LinearLayout comment;
-
-		TextView homeCount;
-
-		TextView mentionCount;
-
-		TextView commentCount;
 
 		Button search;
 

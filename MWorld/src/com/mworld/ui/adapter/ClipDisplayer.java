@@ -23,16 +23,17 @@ public class ClipDisplayer implements Displayer {
 
 	public void loadCompletedisplay(View imageView, Bitmap bitmap,
 			BitmapDisplayConfig config) {
-		if (bitmap.getHeight() > maxheight) {
-			bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-					maxheight);
+		Bitmap newBitmap = bitmap;
+		if (newBitmap.getHeight() > maxheight) {
+			newBitmap = Bitmap.createBitmap(newBitmap, 0, 0,
+					newBitmap.getWidth(), maxheight);
 		}
 		switch (config.getAnimationType()) {
 		case BitmapDisplayConfig.AnimationType.fadeIn:
-			fadeInDisplay(imageView, bitmap);
+			fadeInDisplay(imageView, newBitmap);
 			break;
 		case BitmapDisplayConfig.AnimationType.userDefined:
-			animationDisplay(imageView, bitmap, config.getAnimation());
+			animationDisplay(imageView, newBitmap, config.getAnimation());
 			break;
 		default:
 			break;

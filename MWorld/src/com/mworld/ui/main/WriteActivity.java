@@ -12,11 +12,11 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -48,10 +48,11 @@ import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
 import com.mworld.weibo.api.CommentAPI;
 import com.mworld.weibo.api.StatusAPI;
+import com.mworld.weibo.entities.Comment;
 import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.User;
 
-public class WriteActivity extends Activity {
+public class WriteActivity extends SwipeBackActivity {
 
 	private static final String TAG = "Scroll";
 
@@ -61,9 +62,13 @@ public class WriteActivity extends Activity {
 
 	private StatusAPI mStatusAPI;
 
+	private CommentAPI mCommentAPI;
+
 	private User mUser;
 
 	private Status mStatus;
+
+	private Comment mComment;
 
 	@ViewInject(id = R.id.write_user_avatar)
 	private ImageView userAvatar;
@@ -82,6 +87,8 @@ public class WriteActivity extends Activity {
 	private ImageButton mPicButton;
 	@ViewInject(id = R.id.scroll, click = "scroll")
 	private ScrollView mScrollView;
+	@ViewInject(id = R.id.status_pic, click = "deletePic")
+	private ImageView mStatusPic;
 
 	private Handler mHandler = new Handler();
 
@@ -97,9 +104,15 @@ public class WriteActivity extends Activity {
 
 		String title = getIntent().getStringExtra("title");
 		mStatus = (Status) getIntent().getParcelableExtra("status");
+		mComment = (Comment) getIntent().getParcelableExtra("comment");
 		if (mStatus != null) {
 			mEdit.setHint("@" + mStatus.user.getScreenName() + ":"
 					+ mStatus.text);
+			mPicButton.setVisibility(View.GONE);
+		}
+		if (mComment != null) {
+			mEdit.setHint("@" + mComment.user.getScreenName() + ":"
+					+ mComment.text);
 			mPicButton.setVisibility(View.GONE);
 		}
 		if (title == null || TextUtils.isEmpty(title)) {
@@ -110,9 +123,14 @@ public class WriteActivity extends Activity {
 		} else if (title.equals("转发")) {
 			writeType = 2;
 			userName.setText(title);
+		} else if (title.equals("转发")) {
+			writeType = 3;
+			userName.setText(title);
 		}
-		mStatusAPI = new StatusAPI(GlobalContext.getInstance().getAccount()
-				.getAccessToken());
+		String token = GlobalContext.getInstance().getAccount()
+				.getAccessToken();
+		mStatusAPI = new StatusAPI(token);
+		mCommentAPI = new CommentAPI(token);
 		mEdit.addTextChangedListener(new TextNumLimitWatcher());
 
 	}
@@ -169,12 +187,12 @@ public class WriteActivity extends Activity {
 						}
 					}).show();
 
-		} else {
-			mPicPath = null;
-			mPicButton.setImageBitmap(BitmapFactory.decodeResource(
-					getResources(), R.drawable.ic_picture));
-
 		}
+	}
+
+	public void deletePic(View view) {
+		mPicPath = null;
+		mStatusPic.setVisibility(View.GONE);
 	}
 
 	public void send(View view) {
@@ -186,8 +204,7 @@ public class WriteActivity extends Activity {
 			return;
 		}
 		if (writeType == 1) {
-			new CommentAPI(GlobalContext.getInstance().getAccount()
-					.getAccessToken()).create(text, mStatus.id, false,
+			mCommentAPI.create(text, mStatus.id, false,
 					new AjaxCallBack<String>() {
 
 						@Override
@@ -226,7 +243,27 @@ public class WriteActivity extends Activity {
 						}
 
 					});
+		} else if (writeType == 3) {
+			mCommentAPI.reply(mComment.id, mComment.status.id, text, true,
+					false, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String t) {
+							super.onSuccess(t);
+							Toast.makeText(WriteActivity.this, "回复成功",
+									Toast.LENGTH_LONG).show();
+						}
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(WriteActivity.this, "回复失败",
+									Toast.LENGTH_LONG).show();
+						}
+
+					});
 		} else if (mPicPath == null) {
+
 			mStatusAPI.update(text, 0, "", 0.0F, 0.0F, "[]",
 					getLocalIpAddress(), new AjaxCallBack<String>() {
 
@@ -310,7 +347,8 @@ public class WriteActivity extends Activity {
 			statusPicture = (Bitmap) bundle.get("data");
 			saveBitmap(statusPicture, mPicPath);
 		}
-		mPicButton.setImageBitmap(statusPicture);
+		mStatusPic.setImageBitmap(statusPicture);
+		mStatusPic.setVisibility(View.VISIBLE);
 		if (TextUtils.isEmpty(mEdit.getText().toString())) {
 			mEdit.setText("分享图片");
 		}

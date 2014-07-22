@@ -1,6 +1,7 @@
 package com.mworld.ui.holder;
 
 import net.tsz.afinal.FinalBitmap;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -15,6 +16,7 @@ import com.mworld.support.utils.StatusBuilder;
 import com.mworld.support.utils.TimeUtils;
 import com.mworld.ui.adapter.ClipDisplayer;
 import com.mworld.ui.main.CommentActivity;
+import com.mworld.ui.main.PictureActivity;
 import com.mworld.ui.main.ProfileActivity;
 import com.mworld.ui.main.WriteActivity;
 import com.mworld.weibo.entities.Status;
@@ -153,6 +155,8 @@ public class StatusHolder {
 				if (i < status.pic_urls.size()) {
 					fb.display(imageView[i], status.pic_urls.get(i));
 					imageView[i].setVisibility(View.VISIBLE);
+					imageView[i].setOnClickListener(new PictureLink(mContext,
+							status.pic_urls.toArray(new String[0]), i));
 				} else
 					imageView[i].setVisibility(View.GONE);
 			}
@@ -165,6 +169,8 @@ public class StatusHolder {
 				fb.display(thumbnailPic, status.bmiddle_pic, maxHeight);
 			else
 				fb.display(thumbnailPic, status.thumbnail_pic, maxHeight);
+			thumbnailPic.setOnClickListener(new PictureLink(mContext,
+					status.pic_urls.toArray(new String[0]), -1));
 		} else {
 			layoutThumbnailPic.setVisibility(View.GONE);
 		}
@@ -187,6 +193,9 @@ public class StatusHolder {
 						fb.display(retweetImageView[i],
 								status.retweeted_status.pic_urls.get(i));
 						retweetImageView[i].setVisibility(View.VISIBLE);
+						retweetImageView[i].setOnClickListener(new PictureLink(
+								mContext, status.retweeted_status.pic_urls
+										.toArray(new String[0]), i));
 					} else
 						retweetImageView[i].setVisibility(View.GONE);
 				}
@@ -201,6 +210,9 @@ public class StatusHolder {
 				else
 					fb.display(retweetThumbnailPic,
 							status.retweeted_status.thumbnail_pic, maxHeight);
+				retweetThumbnailPic.setOnClickListener(new PictureLink(
+						mContext, status.retweeted_status.pic_urls
+								.toArray(new String[0]), -1));
 			} else {
 				layoutRetweetThumbnailPic.setVisibility(View.GONE);
 			}
@@ -251,5 +263,31 @@ public class StatusHolder {
 				mContext.startActivity(intent);
 			}
 		});
+	}
+
+	private class PictureLink implements OnClickListener {
+
+		private Context context;
+
+		private String[] urls;
+
+		private int pos;
+
+		public PictureLink(Context context, String[] urls, int pos) {
+			super();
+			this.context = context;
+			this.urls = urls;
+			this.pos = pos;
+		}
+
+		@Override
+		public void onClick(View view) {
+			if (pos == -1)
+				mContext.startActivity(PictureActivity.newInstance(
+						(Activity) context, urls[0]));
+			else
+				mContext.startActivity(PictureActivity.newInstance(
+						(Activity) context, urls, pos));
+		}
 	}
 }

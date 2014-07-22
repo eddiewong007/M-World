@@ -302,14 +302,15 @@ public class FinalBitmap {
 		}
 
 		if (bitmap != null) {
-			if (bitmap.getHeight() > maxheight) {
-				bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-						maxheight);
+			Bitmap newBitmap = bitmap;
+			if (newBitmap.getHeight() > maxheight) {
+				newBitmap = Bitmap.createBitmap(newBitmap, 0, 0,
+						newBitmap.getWidth(), maxheight);
 			}
 			if (imageView instanceof ImageView) {
-				((ImageView) imageView).setImageBitmap(bitmap);
+				((ImageView) imageView).setImageBitmap(newBitmap);
 			} else {
-				imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
+				imageView.setBackgroundDrawable(new BitmapDrawable(newBitmap));
 			}
 		} else if (checkImageTask(uri, imageView)) {
 			final BitmapLoadAndDisplayTask task = new BitmapLoadAndDisplayTask(
