@@ -86,29 +86,12 @@
         android:text="收藏" />
 
     <Button
-        android:id="@+id/btn_search"
+        android:id="@+id/btn_repost"
         style="@style/drawerMenuButton"
         android:layout_width="match_parent"
         android:layout_weight="0"
-        android:drawableLeft="@drawable/ic_menu_search"
-        android:text="搜索" />
-
-    <Button
-        android:id="@+id/btn_location"
-        style="@style/drawerMenuButton"
-        android:layout_width="match_parent"
-        android:layout_weight="0"
-        android:drawableLeft="@drawable/ic_menu_location"
-        android:text="附近"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_profile"
-        style="@style/drawerMenuButton"
-        android:layout_width="match_parent"
-        android:layout_weight="0"
-        android:drawableLeft="@drawable/ic_menu_profile"
-        android:text="个人资料" />
+        android:drawableLeft="@drawable/repost_light"
+        android:text="转发" />
 
     <Button
         android:id="@+id/btn_logout"
