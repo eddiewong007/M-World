@@ -255,14 +255,8 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		// 设置Menu可见
-		MenuItem searchItem = menu.findItem(R.id.action_search);
 		MenuItem addItem = menu.findItem(R.id.action_add);
-		MenuItem moreItem = menu.findItem(R.id.action_more);
-		MenuItemCompat.setShowAsAction(searchItem,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		MenuItemCompat.setShowAsAction(addItem,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		MenuItemCompat.setShowAsAction(moreItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 
 		return super.onCreateOptionsMenu(menu);
@@ -280,15 +274,9 @@ public class MainActivity extends FragmentActivity implements
 		case android.R.id.home:
 			menu.toggle();
 			break;
-		case R.id.action_search:
-			break;
 		case R.id.action_add:
 			Intent intent = new Intent(this, WriteActivity.class);
 			startActivity(intent);
-			break;
-		case R.id.action_more:
-			startActivity(new Intent(MainActivity.this, DialogActivity.class));
-
 			break;
 		}
 		return super.onOptionsItemSelected(item);

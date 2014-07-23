@@ -72,6 +72,7 @@ public class ProfileActivity extends SwipeBackActivity {
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayUseLogoEnabled(true);
+		actionBar.setLogo(R.drawable.ic_logo);
 		actionBar.setTitle(mUser == null ? "" : mUser.getScreenName());
 
 		tabHolder = new ProfTabHolder(this, header);
