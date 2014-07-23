@@ -20,7 +20,7 @@ import com.mworld.weibo.api.CommentAPI;
 import com.mworld.weibo.entities.CommentList;
 import com.mworld.weibo.entities.Status;
 
-public class CommentActivity extends SwipeBackActivity {
+public class DetailActivity extends SwipeBackActivity {
 
 	private Status mStatus;
 

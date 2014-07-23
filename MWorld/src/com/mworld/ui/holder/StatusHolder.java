@@ -15,7 +15,7 @@ import com.mworld.R;
 import com.mworld.support.utils.StatusBuilder;
 import com.mworld.support.utils.TimeUtils;
 import com.mworld.ui.adapter.ClipDisplayer;
-import com.mworld.ui.main.CommentActivity;
+import com.mworld.ui.main.DetailActivity;
 import com.mworld.ui.main.PictureActivity;
 import com.mworld.ui.main.ProfileActivity;
 import com.mworld.ui.main.WriteActivity;
@@ -236,7 +236,7 @@ public class StatusHolder {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, CommentActivity.class);
+				Intent intent = new Intent(mContext, DetailActivity.class);
 				intent.putExtra("status", status);
 				mContext.startActivity(intent);
 			}

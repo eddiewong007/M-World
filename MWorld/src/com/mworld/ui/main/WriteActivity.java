@@ -1,16 +1,10 @@
 package com.mworld.ui.main;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.Locale;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
@@ -348,28 +342,6 @@ public class WriteActivity extends SwipeBackActivity {
 			bitmap = BitmapFactory.decodeFile(mPicPath);
 		}
 
-		// Bundle bundle = data.getExtras();
-		// bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
-		// if (data.getData() != null) {
-		// uriImageData = data.getData();
-		// } else {
-		// uriImageData = Uri.parse(MediaStore.Images.Media.insertImage(
-		// getContentResolver(), bitmap, null, null));
-		// }
-
-		// if (requestCode == 0) {
-		// Uri selectedImage = data.getData();
-		// mPicPath = getImageUrl(this, selectedImage);
-		// statusPicture = BitmapFactory.decodeFile(mPicPath);
-		// } else {
-		// mPicPath = Environment.getExternalStorageDirectory()
-		// .getAbsolutePath()
-		// + "/mworld/picture/"
-		// + getPhotoFileName();
-		// Bundle bundle = data.getExtras();
-		// statusPicture = (Bitmap) bundle.get("data");
-		// saveBitmap(statusPicture, mPicPath);
-		// }
 		mStatusPic.setImageBitmap(bitmap);
 		mStatusPic.setVisibility(View.VISIBLE);
 		if (TextUtils.isEmpty(mEdit.getText().toString())) {
@@ -440,22 +412,8 @@ public class WriteActivity extends SwipeBackActivity {
 		return i;
 	}
 
-	private String getPhotoFileName() {
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"'IMG'_yyyyMMdd_HHmmss", Locale.CHINA);
-		return dateFormat.format(date) + ".jpg";
-	}
-
 	@SuppressWarnings("deprecation")
 	public String getRealPathFromURI(Context context, Uri uri) {
-
-		// ContentResolver cr = context.getContentResolver();
-		// Cursor cursor = cr.query(uri, null, null, null, null);
-		// int index = cursor.getColumnIndex("_data");
-		// cursor.moveToFirst();
-		// String url = cursor.getString(index);
-		// return url;
 
 		// 指定获取的列
 		String columns[] = new String[] { Media.DATA, Media._ID, Media.TITLE,
@@ -466,21 +424,6 @@ public class WriteActivity extends SwipeBackActivity {
 				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
-
-	}
-
-	private void saveBitmap(Bitmap bitmap, String path) {
-		File file = new File(path);
-		try {
-			file.createNewFile();
-			FileOutputStream fOut = null;
-			fOut = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-			fOut.flush();
-			fOut.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
