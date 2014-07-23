@@ -2,6 +2,7 @@ package com.mworld.ui.login;
 
 import java.util.List;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalDb;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
@@ -11,8 +12,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mworld.R;
@@ -21,7 +22,7 @@ import com.mworld.weibo.api.UserAPI;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.oauth.SsoHandler;
 
-public class SSOActivity extends FragmentActivity {
+public class SSOActivity extends SwipeBackActivity {
 
 	private static final String TAG = SSOActivity.class.getName();
 
@@ -32,7 +33,7 @@ public class SSOActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getActionBar().setTitle(R.string.official_app_login);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setDisplayShowHomeEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(true);
 		SsoHandler ssoHandler = new SsoHandler(SSOActivity.this);
 		ssoHandler.authorize();
 	}
@@ -114,7 +115,7 @@ public class SSOActivity extends FragmentActivity {
 			if (accounts.isEmpty()) {
 				fd.save(mAccount);
 			} else {
-				fd.update(mAccount, "uid=" + mAccount.getUid());
+				fd.update(mAccount, "uid=\'" + mAccount.getUid() + "\'");
 			}
 			finish();
 		}
@@ -154,6 +155,16 @@ public class SSOActivity extends FragmentActivity {
 			super.onCancel(dialog);
 		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	};
 
 }

@@ -102,6 +102,8 @@ public class LeftMenuFragment extends Fragment {
 				break;
 			case R.id.btn_logout:
 				startActivity(AccountActivity.newIntent());
+				GlobalContext.getInstance().setGroup(null);
+				GlobalContext.getInstance().setCurGroupNum(0);
 				Oauth2API.revokeOauth2(GlobalContext.getInstance().getAccount()
 						.getAccessToken(), new AjaxCallBack<String>() {
 				});

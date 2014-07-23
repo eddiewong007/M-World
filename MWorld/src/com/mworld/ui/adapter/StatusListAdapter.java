@@ -26,6 +26,10 @@ public class StatusListAdapter extends BaseAdapter {
 		mStatusesList = list;
 	}
 
+	public void changeData(ArrayList<Status> statusesList) {
+		mStatusesList = statusesList;
+	}
+
 	@Override
 	public int getCount() {
 		return mStatusesList.size();

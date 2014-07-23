@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
@@ -89,11 +88,11 @@ public class ProfTabHolder implements OnClickListener {
 			}
 			break;
 		case R.id.friends_tab:
-			if (!((ProfileActivity) mContext).isLoginUser) {
-				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
+//			if (!((ProfileActivity) mContext).isLoginUser) {
+//				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+//						Toast.LENGTH_SHORT).show();
+//				return;
+//			}
 			if (GlobalContext.getInstance().getCurTab() != 1) {
 				GlobalContext.getInstance().setCurTab(1);
 				for (int i = activity.mArrayList.size() - 1; i > 1; i--)
@@ -104,11 +103,11 @@ public class ProfTabHolder implements OnClickListener {
 			}
 			break;
 		case R.id.followers_tab:
-			if (!((ProfileActivity) mContext).isLoginUser) {
-				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
+//			if (!((ProfileActivity) mContext).isLoginUser) {
+//				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+//						Toast.LENGTH_SHORT).show();
+//				return;
+//			}
 			if (GlobalContext.getInstance().getCurTab() != 2) {
 				GlobalContext.getInstance().setCurTab(2);
 				for (int i = activity.mArrayList.size() - 1; i > 1; i--)

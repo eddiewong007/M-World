@@ -25,6 +25,8 @@ public class GlobalContext extends Application {
 
 	private GroupList mGroup = null;
 
+	private int mCurGroupNum = 0;
+
 	private int currentTab = 0;
 
 	@Override
@@ -64,23 +66,7 @@ public class GlobalContext extends Application {
 		return getAccount().getUserInfo().getScreenName();
 	}
 
-	public void updateGroupInfo() {
-		new GroupAPI(getAccount().getAccessToken())
-				.groups(new AjaxCallBack<String>() {
-
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						mGroup = GroupList.parse(jsonString);
-					}
-
-				});
-	}
-
 	public GroupList getGroup() {
-		if (mGroup == null) {
-			updateGroupInfo();
-		}
 		return mGroup;
 	}
 
@@ -121,6 +107,14 @@ public class GlobalContext extends Application {
 
 	public void setGroup(GroupList group) {
 		mGroup = group;
+	}
+
+	public int getCurGroupNum() {
+		return mCurGroupNum;
+	}
+
+	public void setCurGroupNum(int curGroupNum) {
+		mCurGroupNum = curGroupNum;
 	}
 
 	public int getCurTab() {

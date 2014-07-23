@@ -37,8 +37,8 @@ public class Oauth2API implements OauthConstants {
 	 * @return url
 	 */
 	public static String fetchAuthorizeUrl() {
-		return API_SERVER + "/authorize" + "?client_id=" + APP_KEY
-				+ "&redirect_uri=" + REDIRECT_URL + "&scope=" + SCOPE
+		return API_SERVER + "/authorize" + "?client_id=" + APP_KEY0
+				+ "&redirect_uri=" + REDIRECT_URL0 + "&scope=" + SCOPE
 				+ "&response_type=code&display=mobile";
 	}
 
@@ -52,11 +52,11 @@ public class Oauth2API implements OauthConstants {
 	 */
 	public static void accessToken(String code, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
-		params.put("client_id", APP_KEY);
-		params.put("client_secret", APP_SECRET);
+		params.put("client_id", APP_KEY0);
+		params.put("client_secret", APP_SECRET0);
 		params.put("grant_type", GRANT_TYPE);
 		params.put("code", code);
-		params.put("redirect_uri", REDIRECT_URL);
+		params.put("redirect_uri", REDIRECT_URL0);
 		new FinalHttp().post(API_SERVER + "/access_token", params, callBack);
 	}
 

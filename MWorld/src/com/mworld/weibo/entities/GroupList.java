@@ -50,11 +50,13 @@ public class GroupList {
 			if (jsonArray != null && jsonArray.size() > 0) {
 				int length = jsonArray.size();
 				groupList.groupList = new ArrayList<Group>(length);
-				groupList.groupStrings = new String[length];
+				groupList.groupStrings = new String[length + 1];
+				groupList.groupStrings[0] = "所有人";
 				for (int ix = 0; ix < length; ix++) {
 					groupList.groupList.add(Group.parse(jsonArray
 							.getJSONObject(ix)));
-					groupList.groupStrings[ix] = groupList.groupList.get(ix).name;
+					groupList.groupStrings[ix + 1] = groupList.groupList
+							.get(ix).name;
 				}
 			}
 		} catch (JSONException e) {

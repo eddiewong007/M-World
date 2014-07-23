@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -42,7 +44,6 @@ public class MainActivity extends FragmentActivity implements
 
 	public static Intent newIntent(Account account) {
 		GlobalContext.getInstance().setAccount(account);
-		GlobalContext.getInstance().updateGroupInfo();
 		Intent intent = newIntent();
 		intent.putExtra("account_extra", account);
 		return intent;
@@ -75,6 +76,12 @@ public class MainActivity extends FragmentActivity implements
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle(mUser.getScreenName());
 		
+		Window window = getWindow();
+		WindowManager.LayoutParams wl = window.getAttributes();
+		wl.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+		wl.alpha = 1.0f;
+		window.setAttributes(wl);
+
 		// set the Above View
 		if (savedInstanceState == null) {
 			initFragment();
@@ -92,8 +99,6 @@ public class MainActivity extends FragmentActivity implements
 
 			switchFragment(0);
 		}
-
-		// bindUserInterfaces(savedInstanceState);
 
 	}
 
@@ -257,12 +262,9 @@ public class MainActivity extends FragmentActivity implements
 		// 设置Menu可见
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		MenuItem addItem = menu.findItem(R.id.action_add);
-		MenuItem moreItem = menu.findItem(R.id.action_more);
 		MenuItemCompat.setShowAsAction(searchItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		MenuItemCompat.setShowAsAction(addItem,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		MenuItemCompat.setShowAsAction(moreItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 
 		return super.onCreateOptionsMenu(menu);
@@ -285,10 +287,6 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_add:
 			Intent intent = new Intent(this, WriteActivity.class);
 			startActivity(intent);
-			break;
-		case R.id.action_more:
-			startActivity(new Intent(MainActivity.this, DialogActivity.class));
-
 			break;
 		}
 		return super.onOptionsItemSelected(item);

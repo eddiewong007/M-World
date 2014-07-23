@@ -10,9 +10,5 @@
         android:id="@+id/action_add"
         android:icon="@drawable/ic_add"
         android:title="@string/actionbar_menu_title_add"/>
-    <item
-        android:id="@+id/action_more"
-        android:icon="@drawable/ic_more"
-        android:title="@string/actionbar_menu_title_more"/>
 
 </menu>
