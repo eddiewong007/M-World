@@ -67,6 +67,10 @@ public class LeftMenuFragment extends Fragment {
 		holder.home.setOnClickListener(onClickListener);
 		holder.mention.setOnClickListener(onClickListener);
 		holder.comment.setOnClickListener(onClickListener);
+<<<<<<< HEAD
+=======
+		holder.search.setOnClickListener(onClickListener);
+>>>>>>> origin/dev-2.0
 		holder.repost.setOnClickListener(onClickListener);
 		holder.setting.setOnClickListener(onClickListener);
 		holder.logout.setOnClickListener(onClickListener);
@@ -131,6 +135,11 @@ public class LeftMenuFragment extends Fragment {
 
 		Button logout;
 
+<<<<<<< HEAD
+=======
+		Button repost;
+
+>>>>>>> origin/dev-2.0
 		Button setting;
 
 	}

@@ -50,6 +50,7 @@ public class GuideActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("InflateParams")
 	private void initView() {
 		Drawable[] wallpaper = new Drawable[4];
@@ -63,7 +64,7 @@ public class GuideActivity extends Activity implements OnClickListener {
 		for (int i = 0; i < 4; i++) {
 			View view = mLi.inflate(R.layout.guideactivity_viewpager_layout,
 					null);
-			view.setBackground(wallpaper[i]);
+			view.setBackgroundDrawable(wallpaper[i]);
 			Button button = (Button) view.findViewById(R.id.startBtn);
 			if (i != 3)
 				button.setVisibility(View.GONE);

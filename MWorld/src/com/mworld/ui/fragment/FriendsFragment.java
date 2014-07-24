@@ -22,7 +22,10 @@ import com.mworld.support.utils.GlobalContext;
 import com.mworld.ui.adapter.StatusListAdapter;
 import com.mworld.ui.handler.StatusLoadHandler;
 import com.mworld.ui.handler.StatusRefHandler;
+<<<<<<< HEAD
 import com.mworld.ui.main.TimelineInfo;
+=======
+>>>>>>> origin/dev-2.0
 import com.mworld.weibo.api.GroupAPI;
 import com.mworld.weibo.api.StatusAPI;
 import com.mworld.weibo.entities.Account;
@@ -32,8 +35,11 @@ import com.mworld.weibo.entities.User;
 
 public class FriendsFragment extends BaseFragment {
 
+<<<<<<< HEAD
 	private ArrayList<Group> mGroupList = null;
 
+=======
+>>>>>>> origin/dev-2.0
 	private int curGroup = 0;
 
 	@SuppressWarnings("unused")
@@ -82,7 +88,6 @@ public class FriendsFragment extends BaseFragment {
 		mList.setAdapter(mAdapter);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.loading);
 		mProgressBar.setVisibility(View.VISIBLE);
-
 		((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false, 0, false,
 				new StatusRefHandler(this));
 		return view;
@@ -96,19 +101,54 @@ public class FriendsFragment extends BaseFragment {
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.i("Home", "refresh");
+<<<<<<< HEAD
 				refresh();
+=======
+				if (curGroup == 0) {
+					((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1,
+							false, 0, false, new StatusRefHandler(
+									FriendsFragment.this));
+				} else {
+					new GroupAPI(mToken).timeline(curGroup, since_id, 0, 20, 1,
+							false, 0,
+							new StatusRefHandler(FriendsFragment.this));
+				}
+
+>>>>>>> origin/dev-2.0
 			}
 		});
 		mList.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
 
 			@Override
 			public void onLastItemVisible() {
+<<<<<<< HEAD
 				load();
+=======
+				if (isLoading) {
+					Toast.makeText(getActivity(), "不要着急，正在加载",
+							Toast.LENGTH_SHORT).show();
+					mList.onRefreshComplete();
+				} else {
+					Toast.makeText(getActivity(), "加载中...", Toast.LENGTH_SHORT)
+							.show();
+					if (curGroup == 0) {
+						((StatusAPI) mAPI).friendsTimeline(0, init_id, 20,
+								page++, false, 0, false, new StatusLoadHandler(
+										FriendsFragment.this));
+					} else {
+						new GroupAPI(mToken).timeline(curGroup, 0, init_id, 20,
+								page++, false, 0, new StatusLoadHandler(
+										FriendsFragment.this));
+					}
+					isLoading = true;
+				}
+>>>>>>> origin/dev-2.0
 			}
 		});
 
 	}
 
+<<<<<<< HEAD
 	private void refresh() {
 		if (curGroup == 0) {
 			((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false, 0,
@@ -136,6 +176,22 @@ public class FriendsFragment extends BaseFragment {
 								this));
 			}
 			isLoading = true;
+=======
+	public void switchGroup(int which) {
+		if (curGroup != which) {
+			curGroup = which;
+			since_id = 0;
+			init_id = 0;
+			page = 2;
+			mArrayList = new ArrayList<Status>();
+			if (curGroup == 0) {
+				((StatusAPI) mAPI).friendsTimeline(since_id, 0, 20, 1, false,
+						0, false, new StatusRefHandler(this));
+			} else {
+				new GroupAPI(mToken).timeline(curGroup, since_id, 0, 20, 1,
+						false, 0, new StatusRefHandler(FriendsFragment.this));
+			}
+>>>>>>> origin/dev-2.0
 		}
 	}
 

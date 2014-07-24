@@ -49,7 +49,8 @@
             android:name=".ui.main.DialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <activity android:name=".ui.main.ProfileActivity" >
+        <activity android:name=".ui.main.ProfileActivity"
+            android:logo="@drawable/ic_logo" >
         </activity>
         <activity
             android:name=".ui.main.WriteActivity"
