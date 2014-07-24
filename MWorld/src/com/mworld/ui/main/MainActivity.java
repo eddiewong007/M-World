@@ -24,6 +24,7 @@ import com.mworld.ui.fragment.FriendsFragment;
 import com.mworld.ui.fragment.LeftMenuFragment;
 import com.mworld.ui.fragment.MentionsFragment;
 import com.mworld.ui.fragment.MyFavFragment;
+import com.mworld.ui.fragment.RepostFragment;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.entities.User;
 
@@ -75,7 +76,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.content_frame);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle(mUser.getScreenName());
-		
+
 		Window window = getWindow();
 		WindowManager.LayoutParams wl = window.getAttributes();
 		wl.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -108,7 +109,7 @@ public class MainActivity extends FragmentActivity implements
 		Fragment comments = getCommentsFragment();
 
 		Fragment fav = getFavFragment();
-		// Fragment myself = getMyProfileFragment();
+		Fragment repost = getRepostFragment();
 
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
 				.beginTransaction();
@@ -136,11 +137,11 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.hide(fav);
 		}
 
-		// if (!myself.isAdded()) {
-		// fragmentTransaction.add(R.id.menu_right_fl, myself,
-		// UserInfoFragment.class.getName());
-		// fragmentTransaction.hide(myself);
-		// }
+		if (!repost.isAdded()) {
+			fragmentTransaction.add(R.id.content_frame, repost,
+					RepostFragment.class.getName());
+			fragmentTransaction.hide(repost);
+		}
 
 		if (!fragmentTransaction.isEmpty()) {
 			fragmentTransaction.commit();
@@ -162,6 +163,7 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
 			fragmentTransaction.hide(getFavFragment());
+			fragmentTransaction.hide(getRepostFragment());
 			fragmentTransaction.commit();
 			break;
 		case 1:
@@ -174,6 +176,7 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.show(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
 			fragmentTransaction.hide(getFavFragment());
+			fragmentTransaction.hide(getRepostFragment());
 			fragmentTransaction.commit();
 			break;
 		case 2:
@@ -186,6 +189,7 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.show(getCommentsFragment());
 			fragmentTransaction.hide(getFavFragment());
+			fragmentTransaction.hide(getRepostFragment());
 			fragmentTransaction.commit();
 			break;
 		case 3:
@@ -198,16 +202,34 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.hide(getMentionsFragment());
 			fragmentTransaction.hide(getCommentsFragment());
 			fragmentTransaction.show(getFavFragment());
+			fragmentTransaction.hide(getRepostFragment());
 			fragmentTransaction.commit();
 			break;
+		case 4:
+			getActionBar().setLogo(R.drawable.repost_light);
+			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setTitle("转发");
+			getActionBar()
+					.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			fragmentTransaction.hide(getFriendsFragment());
+			fragmentTransaction.hide(getMentionsFragment());
+			fragmentTransaction.hide(getCommentsFragment());
+			fragmentTransaction.hide(getFavFragment());
+			fragmentTransaction.show(getRepostFragment());
+			fragmentTransaction.commit();
 		default:
 			break;
 		}
 	}
 
-	// private Fragment getMyProfileFragment() {
-	// return null;
-	// }
+	private Fragment getRepostFragment() {
+		RepostFragment fragment = ((RepostFragment) getSupportFragmentManager()
+				.findFragmentByTag(RepostFragment.class.getName()));
+		if (fragment == null) {
+			fragment = RepostFragment.newInstance(mAccount, mUser, mToken);
+		}
+		return fragment;
+	}
 
 	private Fragment getFavFragment() {
 

@@ -1,6 +1,7 @@
 package com.mworld.ui.holder;
 
 import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mworld.R;
+import com.mworld.support.utils.GlobalContext;
 import com.mworld.support.utils.StatusBuilder;
 import com.mworld.support.utils.TimeUtils;
 import com.mworld.ui.adapter.ClipDisplayer;
@@ -19,6 +22,7 @@ import com.mworld.ui.main.CommentActivity;
 import com.mworld.ui.main.PictureActivity;
 import com.mworld.ui.main.ProfileActivity;
 import com.mworld.ui.main.WriteActivity;
+import com.mworld.weibo.api.FavoritesAPI;
 import com.mworld.weibo.entities.Status;
 
 /**
@@ -54,7 +58,7 @@ public class StatusHolder {
 	public TextView textRet;
 	public View layoutCmt;
 	public TextView textCmt;
-	public ImageView btnSd;
+	public ImageView btnFav;
 
 	/**
 	 * 
@@ -115,7 +119,7 @@ public class StatusHolder {
 		textRet = (TextView) view.findViewById(R.id.text_ret);
 		layoutCmt = view.findViewById(R.id.layout_cmt);
 		textCmt = (TextView) view.findViewById(R.id.text_cmt);
-		btnSd = (ImageView) view.findViewById(R.id.btn_sd);
+		btnFav = (ImageView) view.findViewById(R.id.btn_favorate);
 	}
 
 	/**
@@ -221,6 +225,10 @@ public class StatusHolder {
 		}
 		textRet.setText(String.valueOf(status.reposts_count));
 		textCmt.setText(String.valueOf(status.comments_count));
+		if (status.favorited)
+			btnFav.setImageResource(R.drawable.favorate);
+		else
+			btnFav.setImageResource(R.drawable.un_favorate);
 
 		userAvatar.setOnClickListener(new OnClickListener() {
 
@@ -261,6 +269,67 @@ public class StatusHolder {
 				intent.putExtra("title", "评论");
 				intent.putExtra("status", status);
 				mContext.startActivity(intent);
+			}
+		});
+
+		btnFav.setOnClickListener(new OnClickListener() {
+
+			boolean isFaving = false;
+			FavoritesAPI favAPI = new FavoritesAPI(GlobalContext.getInstance()
+					.getAccount().getAccessToken());
+
+			@Override
+			public void onClick(View view) {
+				if (isFaving)
+					return;
+				isFaving = true;
+				if (status.favorited) {
+					favAPI.destroy(status.id, new AjaxCallBack<String>() {
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(mContext, "取消收藏失败", Toast.LENGTH_SHORT)
+									.show();
+							isFaving = false;
+						}
+
+						@Override
+						public void onSuccess(String t) {
+							super.onSuccess(t);
+							btnFav.setImageResource(R.drawable.un_favorate);
+							Toast.makeText(mContext, "取消收藏成功", Toast.LENGTH_SHORT)
+									.show();
+							status.favorited = true;
+							isFaving = false;
+						}
+
+					});
+				} else {
+					favAPI.create(status.id, new AjaxCallBack<String>() {
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(mContext, "收藏失败",
+									Toast.LENGTH_SHORT).show();
+							isFaving = false;
+						}
+
+						@Override
+						public void onSuccess(String t) {
+							super.onSuccess(t);
+							btnFav.setImageResource(R.drawable.favorate);
+							Toast.makeText(mContext, "收藏成功",
+									Toast.LENGTH_SHORT).show();
+							status.favorited = false;
+							isFaving = false;
+						}
+
+					});
+				}
 			}
 		});
 	}

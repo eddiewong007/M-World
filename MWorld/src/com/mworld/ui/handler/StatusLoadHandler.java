@@ -26,8 +26,8 @@ public class StatusLoadHandler extends AjaxCallBack<String> {
 			e.printStackTrace();
 		}
 		if (statusList.statuses == null || statusList.statuses.isEmpty()) {
-			Toast.makeText(mFragment.getActivity(), "加载失败", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(mFragment.getActivity(), "这就没了〒_〒",
+					Toast.LENGTH_SHORT).show();
 		} else {
 			mFragment.mArrayList.addAll(statusList.statuses);
 			mFragment.mAdapter.notifyDataSetChanged();

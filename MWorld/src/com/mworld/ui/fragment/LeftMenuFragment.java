@@ -49,12 +49,9 @@ public class LeftMenuFragment extends Fragment {
 		holder.mention = (LinearLayout) view.findViewById(R.id.btn_mention);
 		holder.comment = (LinearLayout) view.findViewById(R.id.btn_comment);
 		holder.fav = (Button) view.findViewById(R.id.btn_favourite);
-		holder.search = (Button) view.findViewById(R.id.btn_search);
-		holder.profile = (Button) view.findViewById(R.id.btn_profile);
+		holder.repost = (Button) view.findViewById(R.id.btn_repost);
 		holder.setting = (Button) view.findViewById(R.id.btn_setting);
 		holder.logout = (Button) view.findViewById(R.id.btn_logout);
-
-		holder.search.setVisibility(View.GONE);
 
 		return view;
 	}
@@ -70,8 +67,7 @@ public class LeftMenuFragment extends Fragment {
 		holder.home.setOnClickListener(onClickListener);
 		holder.mention.setOnClickListener(onClickListener);
 		holder.comment.setOnClickListener(onClickListener);
-		holder.search.setOnClickListener(onClickListener);
-		holder.profile.setOnClickListener(onClickListener);
+		holder.repost.setOnClickListener(onClickListener);
 		holder.setting.setOnClickListener(onClickListener);
 		holder.logout.setOnClickListener(onClickListener);
 		holder.fav.setOnClickListener(onClickListener);
@@ -100,6 +96,9 @@ public class LeftMenuFragment extends Fragment {
 			case R.id.btn_favourite:
 				((MainActivity) getActivity()).switchFragment(3);
 				break;
+			case R.id.btn_repost:
+				((MainActivity) getActivity()).switchFragment(4);
+				break;
 			case R.id.btn_logout:
 				startActivity(AccountActivity.newIntent());
 				GlobalContext.getInstance().setGroup(null);
@@ -126,15 +125,14 @@ public class LeftMenuFragment extends Fragment {
 
 		LinearLayout comment;
 
-		Button search;
+		Button fav;
+
+		Button repost;
 
 		Button logout;
 
-		Button profile;
-
 		Button setting;
 
-		Button fav;
 	}
 
 }

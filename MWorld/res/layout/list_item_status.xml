@@ -430,7 +430,7 @@
                 android:background="#efefef" />
 
             <ImageView
-                android:id="@+id/btn_sd"
+                android:id="@+id/btn_favorate"
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/content_description"

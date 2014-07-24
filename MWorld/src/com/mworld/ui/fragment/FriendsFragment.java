@@ -167,6 +167,8 @@ public class FriendsFragment extends BaseFragment {
 				init_id = tlInfo.init_id;
 				since_id = tlInfo.since_id;
 				page = tlInfo.page;
+				mArrayList = tlInfo.statuses;
+				((StatusListAdapter) mAdapter).changeData(mArrayList);
 				refresh();
 			}
 		}
