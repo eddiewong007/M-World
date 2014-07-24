@@ -3,6 +3,10 @@
     xmlns:testactionbar="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/actionbar_menu_title_search"/>
+    <item
         android:id="@+id/action_add"
         android:icon="@drawable/ic_add"
         android:title="@string/actionbar_menu_title_add"/>

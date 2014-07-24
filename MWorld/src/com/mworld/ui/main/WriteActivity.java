@@ -1,10 +1,16 @@
 package com.mworld.ui.main;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
@@ -12,6 +18,7 @@ import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,9 +28,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -278,16 +285,15 @@ public class WriteActivity extends SwipeBackActivity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Toast.makeText(WriteActivity.this, "发送文字失败",
-									Toast.LENGTH_LONG).show();
 							Log.i(TAG, t.getMessage() + " ; " + errorNo + " ; "
 									+ strMsg);
 						}
 
 					});
 		} else {
-			mStatusAPI.upload(mEdit.getText().toString(), 0, "", mPicPath,
-					0.0F, 0.0F, "[]", getLocalIpAddress(),
+			new StatusAPI(GlobalContext.getInstance().getAccount()
+					.getAccessToken()).upload(mEdit.getText().toString(), 0,
+					"", mPicPath, 0.0F, 0.0F, "[]", getLocalIpAddress(),
 					new AjaxCallBack<String>() {
 
 						@Override
@@ -308,8 +314,6 @@ public class WriteActivity extends SwipeBackActivity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Toast.makeText(WriteActivity.this, "发送图片失败",
-									Toast.LENGTH_LONG).show();
 							Log.i(TAG, t.getMessage() + strMsg);
 						}
 
@@ -322,27 +326,28 @@ public class WriteActivity extends SwipeBackActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != RESULT_OK || null == data) {
-			Toast.makeText(WriteActivity.this, "添加图片失败", Toast.LENGTH_LONG)
-					.show();
+		if (resultCode != RESULT_OK || null == data)
 			return;
-		}
-		Bitmap bitmap = null;
-		Uri thisUri = data.getData();
-		if (requestCode == 1) {
-			Bundle bundle = data.getExtras();
-			bitmap = (Bitmap) bundle.get("data");
-		}
-		if (thisUri == null) {
-			thisUri = Uri.parse(MediaStore.Images.Media.insertImage(
-					getContentResolver(), bitmap, null, null));
-		}
-		mPicPath = getRealPathFromURI(this, thisUri);
-		if (bitmap == null) {
-			bitmap = BitmapFactory.decodeFile(mPicPath);
-		}
 
-		mStatusPic.setImageBitmap(bitmap);
+		if (requestCode != 0 && requestCode != 1)
+			return;
+
+		Bitmap statusPicture;
+
+		if (requestCode == 0) {
+			Uri selectedImage = data.getData();
+			mPicPath = getImageUrl(this, selectedImage);
+			statusPicture = BitmapFactory.decodeFile(mPicPath);
+		} else {
+			mPicPath = Environment.getExternalStorageDirectory()
+					.getAbsolutePath()
+					+ "/mworld/picture/"
+					+ getPhotoFileName();
+			Bundle bundle = data.getExtras();
+			statusPicture = (Bitmap) bundle.get("data");
+			saveBitmap(statusPicture, mPicPath);
+		}
+		mStatusPic.setImageBitmap(statusPicture);
 		mStatusPic.setVisibility(View.VISIBLE);
 		if (TextUtils.isEmpty(mEdit.getText().toString())) {
 			mEdit.setText("分享图片");
@@ -412,18 +417,35 @@ public class WriteActivity extends SwipeBackActivity {
 		return i;
 	}
 
-	@SuppressWarnings("deprecation")
-	public String getRealPathFromURI(Context context, Uri uri) {
+	private String getPhotoFileName() {
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"'IMG'_yyyyMMdd_HHmmss", Locale.CHINA);
+		return dateFormat.format(date) + ".jpg";
+	}
 
-		// 指定获取的列
-		String columns[] = new String[] { Media.DATA, Media._ID, Media.TITLE,
-				Media.DISPLAY_NAME };
+	public static String getImageUrl(Context context, Uri uri) {
 
-		Cursor cursor = this.managedQuery(uri, columns, null, null, null);
-		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		ContentResolver cr = context.getContentResolver();
+		Cursor cursor = cr.query(uri, null, null, null, null);
+		int index = cursor.getColumnIndex("_data");
 		cursor.moveToFirst();
-		return cursor.getString(column_index);
+		String url = cursor.getString(index);
+		return url;
+	}
+
+	private void saveBitmap(Bitmap bitmap, String path) {
+		File file = new File(path);
+		try {
+			file.createNewFile();
+			FileOutputStream fOut = null;
+			fOut = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+			fOut.flush();
+			fOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

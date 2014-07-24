@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.mworld.R;
 import com.mworld.support.utils.TimeUtils;
-import com.mworld.ui.main.DetailActivity;
+import com.mworld.ui.main.CommentActivity;
 import com.mworld.ui.main.ProfileActivity;
 import com.mworld.weibo.entities.Comment;
 
@@ -113,7 +113,7 @@ public class MyCmtHolder {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, DetailActivity.class);
+				Intent intent = new Intent(mContext, CommentActivity.class);
 				intent.putExtra("status", comment.status);
 				mContext.startActivity(intent);
 			}
