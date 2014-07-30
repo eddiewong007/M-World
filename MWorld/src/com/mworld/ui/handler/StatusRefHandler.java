@@ -34,8 +34,9 @@ public class StatusRefHandler extends AjaxCallBack<String> {
 				mFragment.init_id = statusList.statuses.get(0).id;
 			mFragment.since_id = statusList.statuses.get(0).id;
 			mFragment.mArrayList.addAll(0, statusList.statuses);
-			mFragment.mAdapter.notifyDataSetChanged();
 		}
+		mFragment.mAdapter.notifyDataSetChanged();
+
 		if (null != mFragment.mProgressBar)
 			mFragment.mProgressBar.setVisibility(View.GONE);
 		mFragment.mList.onRefreshComplete();

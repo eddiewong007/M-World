@@ -55,8 +55,12 @@ public class Utility {
 					.equals(strResult)) {
 				return true;
 			}
+			if ("5E13C8E9C532AD9919681D3FF5E6723".toUpperCase(Locale.ENGLISH)
+					.equals(strResult)) {
+				return true;
+			}
 			// relaease
-			if ("59D4455C365EE4EF9B6FD52F9D397C69".toUpperCase(Locale.ENGLISH)
+			if ("F641BB3EF2B1E56CA3788482D9E67A7".toUpperCase(Locale.ENGLISH)
 					.equals(strResult)) {
 				return true;
 			}
@@ -125,4 +129,5 @@ public class Utility {
 
 		return 480;
 	}
+
 }

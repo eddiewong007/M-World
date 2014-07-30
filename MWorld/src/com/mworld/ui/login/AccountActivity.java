@@ -24,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -77,7 +79,15 @@ public class AccountActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.accountactivity_layout);
 		FinalActivity.initInjectedView(this);
-		getActionBar().setTitle(getString(R.string.app_name));
+		getActionBar().setTitle("M-World 账号管理");
+		getActionBar().setDisplayUseLogoEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(false);
+
+		Window window = getWindow();
+		WindowManager.LayoutParams wl = window.getAttributes();
+		wl.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+		wl.alpha = 1.0f;
+		window.setAttributes(wl);
 
 		listAdapter = new AccountAdapter();
 		listView.setOnItemClickListener(new AccountListItemClickListener());

@@ -2,18 +2,20 @@ package com.mworld.ui.main;
 
 import java.util.ArrayList;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
@@ -25,7 +27,9 @@ import com.mworld.weibo.entities.StatusList;
 import com.mworld.weibo.entities.User;
 import com.mworld.weibo.entities.UserList;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends SwipeBackActivity {
+
+	public boolean isLoginUser = false;
 
 	public User mUser;
 
@@ -56,7 +60,9 @@ public class ProfileActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		mUser = (User) getIntent().getParcelableExtra("user");
-
+		GlobalContext.getInstance().setCurTab(0);
+		isLoginUser = GlobalContext.getInstance().getAccount().getUserInfo()
+				.equals(mUser);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profileactivity_layout);
 		FinalActivity.initInjectedView(this);
@@ -65,6 +71,7 @@ public class ProfileActivity extends Activity {
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayUseLogoEnabled(true);
+		actionBar.setLogo(R.drawable.ic_logo);
 		actionBar.setTitle(mUser == null ? "" : mUser.getScreenName());
 
 		tabHolder = new ProfTabHolder(this, header);
@@ -84,6 +91,7 @@ public class ProfileActivity extends Activity {
 				.getAccessToken();
 		mStatusAPI = new StatusAPI(accessToken);
 		mFriendshipsAPI = new FriendshipsAPI(accessToken);
+		// if (isLoginUser) {
 		mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
 				page++, false, 0, false, new AjaxCallBack<String>() {
 
@@ -97,28 +105,49 @@ public class ProfileActivity extends Activity {
 					}
 
 				});
-
+		// } else {
+		// mStatusAPI.friendsTimeline(0, 0, 50, page++, false, 0, false,
+		// new AjaxCallBack<String>() {
+		//
+		// @Override
+		// public void onSuccess(String jsonString) {
+		// super.onSuccess(jsonString);
+		// if (GlobalContext.getInstance().getCurTab() != 0)
+		// return;
+		// StatusList statusesList = StatusList
+		// .parse(jsonString);
+		// if (statusesList.statuses != null) {
+		// for (int index = 0; index < statusesList.statuses
+		// .size(); index++) {
+		// Status status = statusesList.statuses
+		// .get(index);
+		// if (!status.user.equals(mUser)) {
+		// statusesList.statuses.remove(index--);
+		// }
+		// }
+		// mArrayList.addAll(statusesList.statuses);
+		// }
+		// adapter.notifyDataSetChanged();
+		// }
+		//
+		// });
+		// }
 		adapter = new ProfileAdapter(this, mArrayList);
 		mList.setAdapter(adapter);
 		mList.setOnScrollListener(new OnScrollListener() {
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					if (view.getLastVisiblePosition() == view.getCount() - 1) {
+						performLoad(GlobalContext.getInstance().getCurTab());
+					}
+				}
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-
-				int lastItem = firstVisibleItem + visibleItemCount;
-				if (lastItem == totalItemCount && firstVisibleItem != 0) {
-					View lastItemView = (View) mList.getChildAt(mList
-							.getChildCount() - 1);
-					if (mList.getBottom() == lastItemView.getBottom()) {
-						performLoad(GlobalContext.getInstance().getCurTab());
-					}
-				}
 
 				if (firstVisibleItem == 0) {
 					header.setVisibility(View.GONE);
@@ -134,8 +163,11 @@ public class ProfileActivity extends Activity {
 
 	public void performLoad(int tab) {
 		tabHolder.inflate(mUser);
+		Toast.makeText(ProfileActivity.this, "正在加载...", Toast.LENGTH_SHORT)
+				.show();
 		switch (tab) {
 		case 0:
+			// if (isLoginUser) {
 			mStatusAPI.userTimeline(Long.parseLong(mUser.getId()), 0, 0, 20,
 					page++, false, 0, false, new AjaxCallBack<String>() {
 
@@ -153,6 +185,35 @@ public class ProfileActivity extends Activity {
 						}
 
 					});
+			// } else {
+			// mStatusAPI.friendsTimeline(0, 0, 50, page++, false, 0, false,
+			// new AjaxCallBack<String>() {
+			//
+			// @SuppressWarnings("unchecked")
+			// @Override
+			// public void onSuccess(String jsonString) {
+			// super.onSuccess(jsonString);
+			// if (GlobalContext.getInstance().getCurTab() != 0)
+			// return;
+			// StatusList statusesList = StatusList
+			// .parse(jsonString);
+			// if (statusesList.statuses != null) {
+			// for (int index = 0; index < statusesList.statuses
+			// .size(); index++) {
+			// Status status = statusesList.statuses
+			// .get(index);
+			// if (!status.user.equals(mUser)) {
+			// statusesList.statuses
+			// .remove(index--);
+			// }
+			// }
+			// mArrayList.addAll(statusesList.statuses);
+			// }
+			// adapter.notifyDataSetChanged();
+			// }
+			//
+			// });
+			// }
 			break;
 		case 1:
 			mFriendshipsAPI.friends(Long.parseLong(mUser.getId()), 20,
@@ -164,6 +225,9 @@ public class ProfileActivity extends Activity {
 							super.onSuccess(jsonString);
 							if (GlobalContext.getInstance().getCurTab() != 1)
 								return;
+							// Toast.makeText(ProfileActivity.this,
+							// "加载成功，由于新浪的接口返回数据有问题，只能显示部分好友。",
+							// Toast.LENGTH_SHORT).show();
 							UserList usersList = UserList.parse(jsonString);
 							if (usersList.users != null) {
 								friendsCur = usersList.next_cursor;
@@ -215,6 +279,11 @@ public class ProfileActivity extends Activity {
 			}
 			break;
 		case R.id.friends_tab:
+			// if (!isLoginUser) {
+			// Toast.makeText(this, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+			// Toast.LENGTH_SHORT).show();
+			// return;
+			// }
 			if (GlobalContext.getInstance().getCurTab() != 1) {
 				GlobalContext.getInstance().setCurTab(1);
 				for (int i = mArrayList.size() - 1; i > 1; i--)
@@ -225,6 +294,11 @@ public class ProfileActivity extends Activity {
 			}
 			break;
 		case R.id.followers_tab:
+			// if (!isLoginUser) {
+			// Toast.makeText(this, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+			// Toast.LENGTH_SHORT).show();
+			// return;
+			// }
 			if (GlobalContext.getInstance().getCurTab() != 2) {
 				GlobalContext.getInstance().setCurTab(2);
 				for (int i = mArrayList.size() - 1; i > 1; i--)
@@ -239,5 +313,17 @@ public class ProfileActivity extends Activity {
 		}
 
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	};
+	
+	
 
 }

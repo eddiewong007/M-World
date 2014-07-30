@@ -46,6 +46,7 @@
                 android:singleLine="true"
                 android:textColor="#ffffff"
                 android:textColorHint="#A6A6A6"
+                android:textCursorDrawable="@null"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -66,7 +67,7 @@
             </ImageView>
 
             <EditText
-                android:id="@+id/passworld"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#2D3239"
@@ -76,6 +77,7 @@
                 android:singleLine="true"
                 android:textColor="#ffffff"
                 android:textColorHint="#A6A6A6"
+                android:textCursorDrawable="@null"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -86,7 +88,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="30dp"
-            android:background="#3A93E1"
+            android:background="@drawable/selector_login_btn"
             android:text="@string/login"
             android:textColor="#fff"
             android:textSize="19sp"

@@ -1,25 +1,17 @@
 package com.mworld.ui.main;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.Locale;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,9 +20,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,15 +37,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mworld.R;
+import com.mworld.support.utils.EmotionUtils;
 import com.mworld.support.utils.GlobalContext;
 import com.mworld.weibo.api.CommentAPI;
 import com.mworld.weibo.api.StatusAPI;
+import com.mworld.weibo.entities.Comment;
 import com.mworld.weibo.entities.Status;
 import com.mworld.weibo.entities.User;
 
-public class WriteActivity extends Activity {
+public class WriteActivity extends SwipeBackActivity {
 
 	private static final String TAG = "Scroll";
+
+	public static final int AT_FRIENDS = 2;
+	public static final int EMOTION = 3;
 
 	private String mPicPath = null;
 
@@ -61,9 +58,13 @@ public class WriteActivity extends Activity {
 
 	private StatusAPI mStatusAPI;
 
+	private CommentAPI mCommentAPI;
+
 	private User mUser;
 
 	private Status mStatus;
+
+	private Comment mComment;
 
 	@ViewInject(id = R.id.write_user_avatar)
 	private ImageView userAvatar;
@@ -79,9 +80,15 @@ public class WriteActivity extends Activity {
 	@ViewInject(id = R.id.write_hash_btn, click = "addHash")
 	private Button mHashButton;
 	@ViewInject(id = R.id.write_picture_btn, click = "selectPic")
-	private ImageButton mPicButton;
+	private Button mPicButton;
+	@ViewInject(id = R.id.write_at_btn, click = "atFriends")
+	private Button mAtButton;
+	@ViewInject(id = R.id.write_emotion_btn, click = "pickEmotion")
+	private Button mEmotionButton;
 	@ViewInject(id = R.id.scroll, click = "scroll")
 	private ScrollView mScrollView;
+	@ViewInject(id = R.id.status_pic, click = "deletePic")
+	private ImageView mStatusPic;
 
 	private Handler mHandler = new Handler();
 
@@ -97,9 +104,15 @@ public class WriteActivity extends Activity {
 
 		String title = getIntent().getStringExtra("title");
 		mStatus = (Status) getIntent().getParcelableExtra("status");
+		mComment = (Comment) getIntent().getParcelableExtra("comment");
 		if (mStatus != null) {
 			mEdit.setHint("@" + mStatus.user.getScreenName() + ":"
 					+ mStatus.text);
+			mPicButton.setVisibility(View.GONE);
+		}
+		if (mComment != null) {
+			mEdit.setHint("@" + mComment.user.getScreenName() + ":"
+					+ mComment.text);
 			mPicButton.setVisibility(View.GONE);
 		}
 		if (title == null || TextUtils.isEmpty(title)) {
@@ -110,9 +123,14 @@ public class WriteActivity extends Activity {
 		} else if (title.equals("转发")) {
 			writeType = 2;
 			userName.setText(title);
+		} else if (title.equals("转发")) {
+			writeType = 3;
+			userName.setText(title);
 		}
-		mStatusAPI = new StatusAPI(GlobalContext.getInstance().getAccount()
-				.getAccessToken());
+		String token = GlobalContext.getInstance().getAccount()
+				.getAccessToken();
+		mStatusAPI = new StatusAPI(token);
+		mCommentAPI = new CommentAPI(token);
 		mEdit.addTextChangedListener(new TextNumLimitWatcher());
 
 	}
@@ -135,45 +153,55 @@ public class WriteActivity extends Activity {
 	}
 
 	public void addHash(View view) {
-		Editable edit = mEdit.getEditableText();
 		int start = mEdit.getSelectionStart();
 		int end = mEdit.getSelectionEnd();
 		if (end - start != 0)
-			edit.delete(start, end);
-		edit.insert(start, "##");
-		mEdit.setText(edit);
+			mEdit.getText().delete(start, end);
+		mEdit.getText().insert(start, "##");
 		mEdit.setSelection(start + 1);
 	}
 
 	public void selectPic(View view) {
-		if (mPicPath == null) {
-			ArrayList<String> itemValueList = new ArrayList<String>();
-			itemValueList.add("图库");
-			itemValueList.add("拍照");
+		ArrayList<String> itemValueList = new ArrayList<String>();
+		itemValueList.add("图库");
+		itemValueList.add("拍照");
 
-			new AlertDialog.Builder(this).setItems(
-					itemValueList.toArray(new String[0]),
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							if (which == 0) {
-								Intent intent = new Intent(
-										Intent.ACTION_PICK,
-										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-								startActivityForResult(intent, 0);
-							} else {
-								Intent intent = new Intent(
-										MediaStore.ACTION_IMAGE_CAPTURE);
-								startActivityForResult(intent, 1);
-							}
+		new AlertDialog.Builder(this).setItems(
+				itemValueList.toArray(new String[0]),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (which == 0) {
+							Intent intent = new Intent(
+									Intent.ACTION_PICK,
+									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+							startActivityForResult(intent, 0);
+						} else {
+							Intent intent = new Intent(
+									MediaStore.ACTION_IMAGE_CAPTURE);
+							startActivityForResult(intent, 1);
 						}
-					}).show();
+					}
+				}).show();
 
-		} else {
-			mPicPath = null;
-			mPicButton.setImageBitmap(BitmapFactory.decodeResource(
-					getResources(), R.drawable.ic_picture));
-		}
+	}
+
+	public void atFriends(View view) {
+		int start = mEdit.getSelectionStart();
+		int end = mEdit.getSelectionEnd();
+		if (end - start != 0)
+			mEdit.getText().delete(start, end);
+		mEdit.getText().insert(start, "@");
+		mEdit.setSelection(start + 1);
+	}
+
+	public void pickEmotion(View view) {
+		startActivityForResult(EmotionActivity.newIntent(this), EMOTION);
+	}
+
+	public void deletePic(View view) {
+		mPicPath = null;
+		mStatusPic.setVisibility(View.GONE);
 	}
 
 	public void send(View view) {
@@ -185,8 +213,7 @@ public class WriteActivity extends Activity {
 			return;
 		}
 		if (writeType == 1) {
-			new CommentAPI(GlobalContext.getInstance().getAccount()
-					.getAccessToken()).create(text, mStatus.id, false,
+			mCommentAPI.create(text, mStatus.id, false,
 					new AjaxCallBack<String>() {
 
 						@Override
@@ -205,7 +232,6 @@ public class WriteActivity extends Activity {
 						}
 
 					});
-			return;
 		} else if (writeType == 2) {
 			mStatusAPI.repost(mStatus.id, text, 0, getLocalIpAddress(),
 					new AjaxCallBack<String>() {
@@ -226,9 +252,26 @@ public class WriteActivity extends Activity {
 						}
 
 					});
-			return;
-		}
-		if (mPicPath == null) {
+		} else if (writeType == 3) {
+			mCommentAPI.reply(mComment.id, mComment.status.id, text, true,
+					false, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String t) {
+							super.onSuccess(t);
+							Toast.makeText(WriteActivity.this, "回复成功",
+									Toast.LENGTH_LONG).show();
+						}
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(WriteActivity.this, "回复失败",
+									Toast.LENGTH_LONG).show();
+						}
+
+					});
+		} else if (mPicPath == null) {
 			mStatusAPI.update(text, 0, "", 0.0F, 0.0F, "[]",
 					getLocalIpAddress(), new AjaxCallBack<String>() {
 
@@ -250,15 +293,15 @@ public class WriteActivity extends Activity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(WriteActivity.this, "发送文字失败",
+									Toast.LENGTH_LONG).show();
 							Log.i(TAG, t.getMessage() + " ; " + errorNo + " ; "
 									+ strMsg);
 						}
-
 					});
 		} else {
-			new StatusAPI(GlobalContext.getInstance().getAccount()
-					.getAccessToken()).upload(mEdit.getText().toString(), 0,
-					"", mPicPath, 0.0F, 0.0F, "[]", getLocalIpAddress(),
+			mStatusAPI.upload(mEdit.getText().toString(), 0, "", mPicPath,
+					0.0F, 0.0F, "[]", getLocalIpAddress(),
 					new AjaxCallBack<String>() {
 
 						@Override
@@ -279,6 +322,8 @@ public class WriteActivity extends Activity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(WriteActivity.this, "发送图片失败",
+									Toast.LENGTH_LONG).show();
 							Log.i(TAG, t.getMessage() + strMsg);
 						}
 
@@ -291,32 +336,46 @@ public class WriteActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != RESULT_OK || null == data)
-			return;
 
-		if (requestCode != 0 && requestCode != 1)
-			return;
+		Bundle bundle = data.getExtras();
+		Bitmap bitmap = null;
+		Uri thisUri = data.getData();
+		switch (requestCode) {
+		case 0:
+			mPicPath = getRealPathFromURI(thisUri);
+			bitmap = BitmapFactory.decodeFile(mPicPath);
+			mStatusPic.setImageBitmap(bitmap);
+			mStatusPic.setVisibility(View.VISIBLE);
+			if (TextUtils.isEmpty(mEdit.getText().toString())) {
+				mEdit.setText("分享图片");
+			}
+			break;
+		case 1:
+			bitmap = (Bitmap) bundle.get("data");
+			thisUri = Uri.parse(MediaStore.Images.Media.insertImage(
+					getContentResolver(), bitmap, null, null));
+			mPicPath = getRealPathFromURI(thisUri);
+			mStatusPic.setImageBitmap(bitmap);
+			mStatusPic.setVisibility(View.VISIBLE);
+			if (TextUtils.isEmpty(mEdit.getText().toString())) {
+				mEdit.setText("分享图片");
+			}
+			break;
+		case AT_FRIENDS:
+			String name = bundle.getString("username");
+			int start = mEdit.getSelectionStart();
+			mEdit.getText().insert(start, name);
+			mEdit.setSelection(start + name.length());
+			break;
+		case EMOTION:
+			int position = bundle.getInt("index");
+			String emotion = EmotionUtils.text[position];
+			int begin = mEdit.getSelectionStart();
+			mEdit.getText().insert(begin, emotion);
+			mEdit.setSelection(begin + emotion.length());
 
-		Bitmap statusPicture;
-
-		if (requestCode == 0) {
-			Uri selectedImage = data.getData();
-			mPicPath = getImageUrl(this, selectedImage);
-			statusPicture = BitmapFactory.decodeFile(mPicPath);
-		} else {
-			mPicPath = Environment.getExternalStorageDirectory()
-					.getAbsolutePath()
-					+ "/mworld/picture/"
-					+ getPhotoFileName();
-			Bundle bundle = data.getExtras();
-			statusPicture = (Bitmap) bundle.get("data");
-			saveBitmap(statusPicture, mPicPath);
+			break;
 		}
-		mPicButton.setImageBitmap(statusPicture);
-		if (TextUtils.isEmpty(mEdit.getText().toString())) {
-			mEdit.setText("分享图片");
-		}
-
 	}
 
 	public class TextNumLimitWatcher implements TextWatcher {
@@ -342,6 +401,12 @@ public class WriteActivity extends Activity {
 
 		@Override
 		public void afterTextChanged(Editable s) {
+			int start = mEdit.getSelectionStart();
+			if (start != 0 && mEdit.getText().charAt(start - 1) == '@') {
+				startActivityForResult(
+						AtFriendsActivity.newIntent(WriteActivity.this),
+						AT_FRIENDS);
+			}
 		}
 
 	}
@@ -381,36 +446,15 @@ public class WriteActivity extends Activity {
 		return i;
 	}
 
-	private String getPhotoFileName() {
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"'IMG'_yyyyMMdd_HHmmss", Locale.CHINA);
-		return dateFormat.format(date) + ".jpg";
-	}
-
-	public static String getImageUrl(Context context, Uri uri) {
-
-		ContentResolver cr = context.getContentResolver();
-		Cursor cursor = cr.query(uri, null, null, null, null);
-		int index = cursor.getColumnIndex("_data");
+	@SuppressWarnings("deprecation")
+	private String getRealPathFromURI(Uri uri) {
+		String columns[] = new String[] { Media.DATA, Media._ID, Media.TITLE,
+				Media.DISPLAY_NAME };
+		Cursor cursor = this.managedQuery(uri, columns, null, null, null);
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
-		String url = cursor.getString(index);
-		return url;
-	}
-
-	private void saveBitmap(Bitmap bitmap, String path) {
-		File file = new File(path);
-		try {
-			file.createNewFile();
-			FileOutputStream fOut = null;
-			fOut = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-			fOut.flush();
-			fOut.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		return cursor.getString(column_index);
 	}
 
 }

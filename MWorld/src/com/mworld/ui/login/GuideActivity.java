@@ -50,20 +50,21 @@ public class GuideActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("InflateParams")
 	private void initView() {
 		Drawable[] wallpaper = new Drawable[4];
-		wallpaper[0] = getResources().getDrawable(R.drawable.wallpaper_morning);
-		wallpaper[1] = getResources().getDrawable(R.drawable.wallpaper_noon);
-		wallpaper[2] = getResources().getDrawable(R.drawable.wallpaper_evening);
-		wallpaper[3] = getResources().getDrawable(R.drawable.wallpaper_night);
+		wallpaper[0] = getResources().getDrawable(R.drawable.wallpaper_1);
+		wallpaper[1] = getResources().getDrawable(R.drawable.wallpaper_2);
+		wallpaper[2] = getResources().getDrawable(R.drawable.wallpaper_3);
+		wallpaper[3] = getResources().getDrawable(R.drawable.wallpaper_4);
 
 		ArrayList<View> views = new ArrayList<View>();
 		LayoutInflater mLi = LayoutInflater.from(this);
 		for (int i = 0; i < 4; i++) {
 			View view = mLi.inflate(R.layout.guideactivity_viewpager_layout,
 					null);
-			view.setBackground(wallpaper[i]);
+			view.setBackgroundDrawable(wallpaper[i]);
 			Button button = (Button) view.findViewById(R.id.startBtn);
 			if (i != 3)
 				button.setVisibility(View.GONE);

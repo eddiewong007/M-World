@@ -2,45 +2,64 @@ package com.mworld.ui.adapter;
 
 import java.util.ArrayList;
 
-import net.tsz.afinal.FinalBitmap;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.mworld.R;
-import com.mworld.support.utils.TimeUtils;
-import com.mworld.ui.main.ProfileActivity;
+import com.mworld.ui.holder.CommentHolder;
+import com.mworld.ui.holder.ProfTabHolder;
+import com.mworld.ui.holder.StatusHolder;
 import com.mworld.weibo.entities.Comment;
+import com.mworld.weibo.entities.Status;
+import com.mworld.weibo.entities.User;
 
 public class StatusCmtListAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private LayoutInflater mInflater;
-	public ArrayList<Comment> mCommentsList;
+	@SuppressWarnings("rawtypes")
+	public ArrayList mArrayList;
+
+	private final int STATUS_TYPE = 0;
+	private final int TAB_TYPE = 1;
+	private final int CMT_TYPE = 2;
 
 	public StatusCmtListAdapter(Context context, ArrayList<Comment> list) {
 		super();
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
-		mCommentsList = list;
+		mArrayList = list;
 	}
 
 	@Override
 	public int getCount() {
-		return mCommentsList.size();
+		return mArrayList.size();
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		if (position == 0)
+			return STATUS_TYPE;
+//		else if (position == 1)
+//			return TAB_TYPE;
+		else if (position < mArrayList.size()
+				&& mArrayList.get(position) instanceof Comment)
+			return CMT_TYPE;
+		return -1;
+	}
+
+	@Override
+	public int getViewTypeCount() {
+		return 3;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mCommentsList.get(position);
+		return mArrayList.get(position);
 	}
 
 	@Override
@@ -52,47 +71,65 @@ public class StatusCmtListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-		ViewHolder holder = null;
+		StatusHolder sHolder = null;
+		ProfTabHolder tHolder = null;
+		CommentHolder cHolder = null;
+		int type = getItemViewType(position);
 		if (null == convertView) {
-			convertView = mInflater.inflate(R.layout.list_item_comment, null);
-			holder = new ViewHolder();
-			holder.userAvatar = (ImageView) convertView
-					.findViewById(R.id.user_com_avatar);
-			holder.userName = (TextView) convertView
-					.findViewById(R.id.user_com_name);
-			holder.date = (TextView) convertView.findViewById(R.id.com_date);
-			holder.textComment = (TextView) convertView
-					.findViewById(R.id.text_comment);
-			convertView.setTag(holder);
+			switch (type) {
+			case STATUS_TYPE:
+				convertView = mInflater.inflate(
+						R.layout.list_item_status, null);
+				sHolder = new StatusHolder(mContext, convertView);
+				convertView.setTag(sHolder);
+				break;
+			case TAB_TYPE:
+				convertView = mInflater.inflate(R.layout.list_item_profile_tab,
+						null);
+				tHolder = new ProfTabHolder(mContext, convertView);
+				convertView.setTag(tHolder);
+				break;
+			case CMT_TYPE:
+				convertView = mInflater
+						.inflate(R.layout.list_item_comment, null);
+				cHolder = new CommentHolder(mContext, convertView);
+				convertView.setTag(cHolder);
+				break;
+			default:
+				break;
+			}
+
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			switch (type) {
+			case STATUS_TYPE:
+				sHolder = (StatusHolder) convertView.getTag();
+				break;
+			case TAB_TYPE:
+				tHolder = (ProfTabHolder) convertView.getTag();
+				break;
+			case CMT_TYPE:
+				cHolder = (CommentHolder) convertView.getTag();
+				break;
+			default:
+				break;
+			}
+
 		}
 
-		final Comment comment = mCommentsList.get(position);
-		FinalBitmap.create(mContext).display(holder.userAvatar,
-				comment.user.getAvatarLarge());
-
-		holder.userAvatar.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Log.i("adapter", "click");
-				Intent intent = new Intent(mContext, ProfileActivity.class);
-				intent.putExtra("user", comment.user);
-				mContext.startActivity(intent);
-			}
-		});
-		holder.userName.setText(comment.user.getScreenName());
-		holder.date.setText(TimeUtils.getTime(comment.created_at));
-		holder.textComment.setText(comment.text);
+		switch (type) {
+		case STATUS_TYPE:
+			sHolder.inflate((Status) mArrayList.get(position));
+			break;
+		case TAB_TYPE:
+			tHolder.inflate((User) mArrayList.get(position));
+			break;
+		case CMT_TYPE:
+			cHolder.inflate((Comment) mArrayList.get(position));
+			break;
+		default:
+			break;
+		}
 		return convertView;
-	}
-
-	private class ViewHolder {
-		ImageView userAvatar;
-		TextView userName;
-		TextView date;
-		TextView textComment;
 	}
 
 }

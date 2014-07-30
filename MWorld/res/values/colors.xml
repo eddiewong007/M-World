@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="host_background">#ffe5e5e5</color>
 
+    <color name="host_background">#ffe5e5e5</color>
     <color name="listview_checked_color_holo_light">#33add6</color>
-    
     <color name="gray">#808080</color>
+    <color name="ics_blue_semi">#6633b5e5</color>
+    <color name="theme_blue1">#3A93E1</color>
+    <color name="theme_blue2">#3AAAE1</color>
+
 </resources>

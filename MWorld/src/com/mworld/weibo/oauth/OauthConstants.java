@@ -3,9 +3,11 @@ package com.mworld.weibo.oauth;
 public interface OauthConstants {
 	/** 当前应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY */
 	public static final String APP_KEY = "835199715";
+	public static final String APP_KEY0 = "211160679";
 
 	/** 当前应用的 APP_SECRET，第三方应用应该使用自己的 APP_SECRET 替换该 APP_SECRET */
 	public static final String APP_SECRET = "873d848e93af04fb3c64585fb87c6249";
+	public static final String APP_SECRET0 = "63b64d531b98c2dbff2443816f274dd3";
 
 	/**
 	 * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。
@@ -16,6 +18,7 @@ public interface OauthConstants {
 	 * </p>
 	 */
 	public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+	public static final String REDIRECT_URL0 = "http://oauth.weico.cc";
 
 	/**
 	 * Scope 是 OAuth2.0 授权机制中 authorize 接口的一个参数。通过 Scope，平台将开放更多的微博

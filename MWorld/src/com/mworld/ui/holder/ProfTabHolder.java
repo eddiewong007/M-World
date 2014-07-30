@@ -40,10 +40,31 @@ public class ProfTabHolder implements OnClickListener {
 		int selected = R.drawable.profile_roundconer_relativelayout;
 		int unselected = android.R.color.transparent;
 
-		statusesCount.setText("" + user.getStatusesCount());
-		friendsCount.setText("" + user.getFriendsCount());
-		followersCount.setText("" + user.getFollowersCount());
-		
+		int statusCnt = user.getStatusesCount();
+		int friendsCnt = user.getFriendsCount();
+		int followersCnt = user.getFollowersCount();
+		if (statusCnt > 1e4) {
+			String str = statusCnt / 1e4 + "万"
+					+ (statusCnt % 1e4 == 0 ? "" : "+");
+			statusesCount.setText("" + str);
+		} else {
+			statusesCount.setText("" + statusCnt);
+		}
+		if (friendsCnt > 1e4) {
+			String str = friendsCnt / 1e4 + "万"
+					+ (friendsCnt % 1e4 == 0 ? "" : "+");
+			friendsCount.setText("" + str);
+		} else {
+			friendsCount.setText("" + friendsCnt);
+		}
+		if (followersCnt > 1e4) {
+			String str = followersCnt / 1e4 + "万"
+					+ (followersCnt % 1e4 == 0 ? "" : "+");
+			followersCount.setText("" + str);
+		} else {
+			followersCount.setText("" + followersCnt);
+		}
+
 		statusesTab.setOnClickListener(this);
 		statusesTab.setBackgroundResource(curTab == 0 ? selected : unselected);
 		friendsTab.setOnClickListener(this);
@@ -67,6 +88,11 @@ public class ProfTabHolder implements OnClickListener {
 			}
 			break;
 		case R.id.friends_tab:
+//			if (!((ProfileActivity) mContext).isLoginUser) {
+//				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+//						Toast.LENGTH_SHORT).show();
+//				return;
+//			}
 			if (GlobalContext.getInstance().getCurTab() != 1) {
 				GlobalContext.getInstance().setCurTab(1);
 				for (int i = activity.mArrayList.size() - 1; i > 1; i--)
@@ -77,6 +103,11 @@ public class ProfTabHolder implements OnClickListener {
 			}
 			break;
 		case R.id.followers_tab:
+//			if (!((ProfileActivity) mContext).isLoginUser) {
+//				Toast.makeText(mContext, "由于新浪接口的限制，不能获取他人的好友/粉丝列表",
+//						Toast.LENGTH_SHORT).show();
+//				return;
+//			}
 			if (GlobalContext.getInstance().getCurTab() != 2) {
 				GlobalContext.getInstance().setCurTab(2);
 				for (int i = activity.mArrayList.size() - 1; i > 1; i--)

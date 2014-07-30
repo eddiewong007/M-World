@@ -2,6 +2,7 @@ package com.mworld.ui.login;
 
 import java.util.List;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalDb;
 import net.tsz.afinal.annotation.view.ViewInject;
@@ -17,7 +18,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +40,8 @@ import com.mworld.weibo.api.UserAPI;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.oauth.Oauth2API;
 
-public class OauthActivity extends FragmentActivity {
+@SuppressLint("ValidFragment")
+public class OauthActivity extends SwipeBackActivity {
 	private static final String TAG = OauthActivity.class.getName();
 
 	private static boolean oauthing = false;
@@ -59,7 +60,8 @@ public class OauthActivity extends FragmentActivity {
 		FinalActivity.initInjectedView(this);
 
 		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(false);
 		actionBar.setTitle(getString(R.string.oauth));
 
 		webView.setWebViewClient(new WeiboWebViewClient());
@@ -94,10 +96,7 @@ public class OauthActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent intent = AccountActivity.newIntent();
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
+			finish();
 			return true;
 		case R.id.menu_refresh:
 			refresh();
@@ -140,7 +139,7 @@ public class OauthActivity extends FragmentActivity {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			if (url.startsWith(Oauth2API.REDIRECT_URL)) {
+			if (url.startsWith(Oauth2API.REDIRECT_URL0)) {
 				handleRedirectUrl(view, url);
 				view.stopLoading();
 			}
@@ -228,7 +227,7 @@ public class OauthActivity extends FragmentActivity {
 			if (accounts.isEmpty()) {
 				fd.save(mAccount);
 			} else {
-				fd.update(mAccount, "uid=" + mAccount.getUid());
+				fd.update(mAccount, "uid=\'" + mAccount.getUid() + "\'");
 			}
 			finish();
 		}
@@ -269,6 +268,7 @@ public class OauthActivity extends FragmentActivity {
 		}
 	}
 
+	@SuppressLint("ValidFragment")
 	private class ProgressFragment extends DialogFragment {
 
 		@Override
@@ -306,4 +306,5 @@ public class OauthActivity extends FragmentActivity {
 			return builder.create();
 		}
 	}
+
 }

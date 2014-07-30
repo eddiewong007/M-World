@@ -12,7 +12,7 @@ import android.util.Log;
 public class EmotionUtils {
 	private static final String TAG = "EmotionUtils";
 
-	private static final String[] text = { "[爱你]", "[抱抱]", "[悲伤]", "[鄙视]",
+	public static final String[] text = { "[爱你]", "[抱抱]", "[悲伤]", "[鄙视]",
 			"[闭嘴]", "[馋嘴]", "[吃惊]", "[打哈欠]", "[鼓掌]", "[哈哈]", "[害羞]", "[汗]",
 			"[呵呵]", "[黑线]", "[哼]", "[可爱]", "[可怜]", "[挖鼻屎]", "[泪]", "[酷]",
 			"[懒得理你]", "[钱]", "[亲亲]", "[花心]", "[失望]", "[书呆子]", "[衰]", "[睡觉]",
@@ -50,6 +50,14 @@ public class EmotionUtils {
 			Log.e(TAG, e.getMessage());
 		}
 		return null;
+	}
+
+	public static Bitmap getEmotion(Context context, int pos) {
+		return getEmotion(context, text[pos]);
+	}
+
+	public static int getEmotionCount() {
+		return text.length;
 	}
 
 }

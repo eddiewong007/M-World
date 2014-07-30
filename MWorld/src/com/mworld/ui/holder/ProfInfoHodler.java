@@ -3,15 +3,15 @@ package com.mworld.ui.holder;
 import net.tsz.afinal.FinalBitmap;
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mworld.R;
+import com.mworld.ui.view.CircleImageView;
 import com.mworld.weibo.entities.User;
 
 public class ProfInfoHodler {
 	private Context mContext;
-	public ImageView userAvatar;
+	public CircleImageView userAvatar;
 	public TextView userName;
 	public TextView userLocation;
 
@@ -22,7 +22,7 @@ public class ProfInfoHodler {
 	 */
 	public ProfInfoHodler(Context context, View view) {
 		mContext = context;
-		userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
+		userAvatar = (CircleImageView) view.findViewById(R.id.user_avatar);
 		userName = (TextView) view.findViewById(R.id.user_name);
 		userLocation = (TextView) view.findViewById(R.id.user_location);
 	}
