@@ -1,6 +1,9 @@
 package com.weibo.entities;
 
+import java.io.Serializable;
+
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -12,7 +15,13 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Visible {
+public class Visible implements Serializable {
+	private static final String TAG = "Visible";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5945433753546847680L;
 
 	public static final int VISIBLE_NORMAL = 0;
 	public static final int VISIBLE_PRIVACY = 1;
@@ -24,6 +33,13 @@ public class Visible {
 	/** 分组的组号 */
 	public int list_id;
 
+	/**
+	 * 将json字符串解析成Visible对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的Visible对象
+	 */
 	public static Visible parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
@@ -32,12 +48,19 @@ public class Visible {
 		try {
 			return Visible.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成Visible对象
+	 * 
+	 * @param jsonObject
+	 *            jsonString 待解析的JSONObject
+	 * @return 解析出来的Visible对象
+	 */
 	public static Visible parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;
@@ -48,4 +71,5 @@ public class Visible {
 		visible.list_id = jsonObject.getIntValue("list_id");
 		return visible;
 	}
+
 }

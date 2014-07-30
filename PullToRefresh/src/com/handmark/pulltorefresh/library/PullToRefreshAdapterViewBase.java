@@ -132,8 +132,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 		}
 	}
 
-	public final void onScrollStateChanged(final AbsListView view,
-			final int state) {
+	public final void onScrollStateChanged(final AbsListView view, final int state) {
 		/**
 		 * Check that the scrolling has stopped, and that the last item is
 		 * visible.

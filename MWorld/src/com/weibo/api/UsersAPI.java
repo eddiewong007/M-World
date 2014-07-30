@@ -2,7 +2,6 @@ package com.weibo.api;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
-import android.util.SparseArray;
 
 import com.weibo.entities.AccessToken;
 
@@ -14,19 +13,14 @@ import com.weibo.entities.AccessToken;
  */
 public class UsersAPI extends BaseAPI {
 
-	private static final int READ_USER = 0;
-	private static final int READ_USER_BY_DOMAIN = 1;
-	private static final int READ_USER_COUNT = 2;
-
 	private static final String API_BASE_URL = API_SERVER + "/users";
 
-	private static final SparseArray<String> sAPIList = new SparseArray<String>();
-	static {
-		sAPIList.put(READ_USER, API_BASE_URL + "/show.json");
-		sAPIList.put(READ_USER_BY_DOMAIN, API_BASE_URL + "/domain_show.json");
-		sAPIList.put(READ_USER_COUNT, API_BASE_URL + "/counts.json");
-	}
-
+	/**
+	 * 构造函数，使用各个 API 接口提供的服务前必须先获取 Token。
+	 * 
+	 * @param accessToken
+	 *            访问令牌
+	 */
 	public UsersAPI(AccessToken accessToken) {
 		super(accessToken);
 	}
@@ -42,7 +36,8 @@ public class UsersAPI extends BaseAPI {
 	public void show(long uid, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("uid", String.valueOf(uid));
-		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, callBack);
+		requestAsync(API_BASE_URL + "/show.json", params, HTTPMETHOD_GET,
+				callBack);
 	}
 
 	/**
@@ -56,7 +51,8 @@ public class UsersAPI extends BaseAPI {
 	public void show(String screen_name, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("screen_name", screen_name);
-		requestAsync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET, callBack);
+		requestAsync(API_BASE_URL + "/show.json", params, HTTPMETHOD_GET,
+				callBack);
 	}
 
 	/**
@@ -70,8 +66,8 @@ public class UsersAPI extends BaseAPI {
 	public void domainShow(String domain, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("domain", domain);
-		requestAsync(sAPIList.get(READ_USER_BY_DOMAIN), params, HTTPMETHOD_GET,
-				callBack);
+		requestAsync(API_BASE_URL + "/domain_show.json", params,
+				HTTPMETHOD_GET, callBack);
 	}
 
 	/**
@@ -84,7 +80,7 @@ public class UsersAPI extends BaseAPI {
 	 */
 	public void counts(long[] uids, AjaxCallBack<String> callBack) {
 		AjaxParams params = buildCountsParams(uids);
-		requestAsync(sAPIList.get(READ_USER_COUNT), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/counts.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 

@@ -8,20 +8,16 @@ import net.tsz.afinal.http.AjaxParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.SparseArray;
 
 import com.weibo.entities.AccessToken;
 
 /**
- * 该类封装了微博接口 详情请参考<a href="http://t.cn/8F3e7SE" >微博接口</a>
+ * 该类封装了微博接口 详情请参考
  * 
  * @author MengMeng
  * 
  */
 public class StatusesAPI extends BaseAPI {
-
-	/** API URL */
-	private static final String API_BASE_URL = API_SERVER + "/statuses";
 
 	/** 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐 */
 	public static final int FEATURE_ALL = 0;
@@ -64,85 +60,7 @@ public class StatusesAPI extends BaseAPI {
 	public static final String LANGUAGE_CNNAME = "cnname";
 	public static final String LANGUAGE_TWNAME = "twname";
 
-	/**
-	 * API 类型。 命名规则： <li>读取接口：READ_API_XXX <li>写入接口：WRITE_API_XXX
-	 */
-	private static final int READ_API_PUBLIC_TIMELINE = 0;
-	private static final int READ_API_FRIENDS_TIMELINE = 1;
-	private static final int READ_API_HOME_TIMELINE = 2;
-	private static final int READ_API_FRIENDS_TIMELINE_IDS = 3;
-	private static final int READ_API_USER_TIMELINE = 4;
-	private static final int READ_API_USER_TIMELINE_IDS = 5;
-	private static final int READ_API_TIMELINE_BATCH = 6;
-	private static final int READ_API_REPOST_TIMELINE = 7;
-	private static final int READ_API_REPOST_TIMELINE_IDS = 8;
-	private static final int READ_API_MENTIONS = 9;
-	private static final int READ_API_MENTIONS_IDS = 10;
-	private static final int READ_API_BILATERAL_TIMELINE = 11;
-	private static final int READ_API_SHOW = 12;
-	private static final int READ_API_SHOW_BATCH = 13;
-	private static final int READ_API_QUERYMID = 14;
-	private static final int READ_API_QUERYID = 15;
-	private static final int READ_API_COUNT = 16;
-	private static final int READ_API_TO_ME = 17;
-	private static final int READ_API_TO_ME_IDS = 18;
-	private static final int READ_API_GO = 19;
-	private static final int READ_API_EMOTIONS = 20;
-
-	private static final int WRITE_API_REPOST = 21;
-	private static final int WRITE_API_DESTROY = 22;
-	private static final int WRITE_API_UPDATE = 23;
-	private static final int WRITE_API_UPLOAD = 24;
-	private static final int WRITE_API_UPLOAD_URL_TEXT = 25;
-	private static final int WRITE_API_FILTER_CREATE = 26;
-	private static final int WRITE_API_MENTIONS_SHIELD = 27;
-
-	private static final SparseArray<String> sAPIList = new SparseArray<String>();
-	static {
-		sAPIList.put(READ_API_PUBLIC_TIMELINE, API_BASE_URL
-				+ "/public_timeline.json");
-		sAPIList.put(READ_API_FRIENDS_TIMELINE, API_BASE_URL
-				+ "/friends_timeline.json");
-		sAPIList.put(READ_API_HOME_TIMELINE, API_BASE_URL
-				+ "/home_timeline.json");
-		sAPIList.put(READ_API_FRIENDS_TIMELINE_IDS, API_BASE_URL
-				+ "/friends_timeline/ids.json");
-		sAPIList.put(READ_API_USER_TIMELINE, API_BASE_URL
-				+ "/user_timeline.json");
-		sAPIList.put(READ_API_USER_TIMELINE_IDS, API_BASE_URL
-				+ "/user_timeline/ids.json");
-		sAPIList.put(READ_API_TIMELINE_BATCH, API_BASE_URL
-				+ "/timeline_batch.json");
-		sAPIList.put(READ_API_REPOST_TIMELINE, API_BASE_URL
-				+ "/repost_timeline.json");
-		sAPIList.put(READ_API_REPOST_TIMELINE_IDS, API_BASE_URL
-				+ "/repost_timeline/ids.json");
-		sAPIList.put(READ_API_MENTIONS, API_BASE_URL + "/mentions.json");
-		sAPIList.put(READ_API_MENTIONS_IDS, API_BASE_URL + "/mentions/ids.json");
-		sAPIList.put(READ_API_BILATERAL_TIMELINE, API_BASE_URL
-				+ "/bilateral_timeline.json");
-		sAPIList.put(READ_API_SHOW, API_BASE_URL + "/show.json");
-		sAPIList.put(READ_API_SHOW_BATCH, API_BASE_URL + "/show_batch.json");
-		sAPIList.put(READ_API_QUERYMID, API_BASE_URL + "/querymid.json");
-		sAPIList.put(READ_API_QUERYID, API_BASE_URL + "/queryid.json");
-		sAPIList.put(READ_API_COUNT, API_BASE_URL + "/count.json");
-		sAPIList.put(READ_API_TO_ME, API_BASE_URL + "/to_me.json");
-		sAPIList.put(READ_API_TO_ME_IDS, API_BASE_URL + "/to_me/ids.json");
-		sAPIList.put(READ_API_GO, API_BASE_URL + "/to_me/go");
-		sAPIList.put(READ_API_EMOTIONS, API_SERVER + "/emotions.json");
-
-		sAPIList.put(WRITE_API_REPOST, API_BASE_URL + "/repost.json");
-		sAPIList.put(WRITE_API_DESTROY, API_BASE_URL + "/destroy.json");
-		sAPIList.put(WRITE_API_UPDATE, API_BASE_URL + "/update.json");
-		sAPIList.put(WRITE_API_UPLOAD, API_BASE_URL + "/upload.json");
-		sAPIList.put(WRITE_API_UPLOAD_URL_TEXT, API_BASE_URL
-				+ "/upload_url_text.json");
-		sAPIList.put(WRITE_API_FILTER_CREATE, API_BASE_URL
-				+ "/filter/create.json");
-		sAPIList.put(WRITE_API_MENTIONS_SHIELD, API_BASE_URL
-				+ "mentions/shield.json");
-
-	}
+	private static final String API_BASE_URL = API_SERVER + "/statuses";
 
 	/**
 	 * 构造函数，使用各个 API 接口提供的服务前必须先获取 Token。
@@ -165,7 +83,7 @@ public class StatusesAPI extends BaseAPI {
 	public void publicTimeline(int count, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("count", String.valueOf(count));
-		requestAsync(sAPIList.get(READ_API_PUBLIC_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/public_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -197,7 +115,7 @@ public class StatusesAPI extends BaseAPI {
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineWithAppTrim(since_id, max_id, count,
 				page, base_app, trim_user, feature);
-		requestAsync(sAPIList.get(READ_API_FRIENDS_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/friends_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -228,7 +146,7 @@ public class StatusesAPI extends BaseAPI {
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineWithAppTrim(since_id, max_id, count,
 				page, base_app, trim_user, feature);
-		requestAsync(sAPIList.get(READ_API_HOME_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/home_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -257,7 +175,7 @@ public class StatusesAPI extends BaseAPI {
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineWithApp(since_id, max_id, count, page,
 				base_app, feature);
-		requestAsync(sAPIList.get(READ_API_FRIENDS_TIMELINE_IDS), params,
+		requestAsync(API_BASE_URL + "/friends_timeline/ids.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -291,7 +209,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineWithAppTrim(since_id, max_id, count,
 				page, base_app, trim_user, feature);
 		params.put("uid", String.valueOf(uid));
-		requestAsync(sAPIList.get(READ_API_USER_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/user_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -325,7 +243,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineWithAppTrim(since_id, max_id, count,
 				page, base_app, trim_user, feature);
 		params.put("screen_name", screen_name);
-		requestAsync(sAPIList.get(READ_API_USER_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/user_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -357,7 +275,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineWithApp(since_id, max_id, count, page,
 				base_app, feature);
 		params.put("uid", String.valueOf(uid));
-		requestAsync(sAPIList.get(READ_API_USER_TIMELINE_IDS), params,
+		requestAsync(API_BASE_URL + "/user_timeline/ids.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -389,7 +307,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineWithApp(since_id, max_id, count, page,
 				base_app, feature);
 		params.put("screen_name", screen_name);
-		requestAsync(sAPIList.get(READ_API_USER_TIMELINE_IDS), params,
+		requestAsync(API_BASE_URL + "/user_timeline/ids.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -423,7 +341,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("page", String.valueOf(page));
 		params.put("count", String.valueOf(count));
 		params.put("feature", String.valueOf(feature));
-		requestAsync(sAPIList.get(READ_API_TIMELINE_BATCH), params,
+		requestAsync(API_BASE_URL + "/timeline_batch.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -457,7 +375,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("page", String.valueOf(page));
 		params.put("count", String.valueOf(count));
 		params.put("feature", String.valueOf(feature));
-		requestAsync(sAPIList.get(READ_API_TIMELINE_BATCH), params,
+		requestAsync(API_BASE_URL + "/timeline_batch.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -487,7 +405,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineBase(since_id, max_id, count, page);
 		params.put("id", String.valueOf(id));
 		params.put("filter_by_author", String.valueOf(filter_by_author));
-		requestAsync(sAPIList.get(READ_API_REPOST_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/repost_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -518,7 +436,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = buildTimeLineBase(since_id, max_id, count, page);
 		params.put("id", String.valueOf(id));
 		params.put("filter_by_author", String.valueOf(filter_by_author));
-		requestAsync(sAPIList.get(READ_API_REPOST_TIMELINE_IDS), params,
+		requestAsync(API_BASE_URL + "/repost_timeline/ids.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -558,7 +476,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("filter_by_source", String.valueOf(filter_by_source));
 		params.put("filter_by_type", String.valueOf(filter_by_type));
 		params.put("trim_user", String.valueOf(trim_user ? 1 : 0));
-		requestAsync(sAPIList.get(READ_API_MENTIONS), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/mentions.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -595,7 +513,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("filter_by_author", String.valueOf(filter_by_author));
 		params.put("filter_by_source", String.valueOf(filter_by_source));
 		params.put("filter_by_type", String.valueOf(filter_by_type));
-		requestAsync(sAPIList.get(READ_API_MENTIONS_IDS), params,
+		requestAsync(API_BASE_URL + "/mentions/ids.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -626,7 +544,7 @@ public class StatusesAPI extends BaseAPI {
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineWithAppTrim(since_id, max_id, count,
 				page, base_app, trim_user, feature);
-		requestAsync(sAPIList.get(READ_API_BILATERAL_TIMELINE), params,
+		requestAsync(API_BASE_URL + "/bilateral_timeline.json", params,
 				HTTPMETHOD_GET, callBack);
 	}
 
@@ -641,7 +559,7 @@ public class StatusesAPI extends BaseAPI {
 	public void show(long id, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("id", String.valueOf(id));
-		requestAsync(sAPIList.get(READ_API_SHOW), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/show.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -665,7 +583,7 @@ public class StatusesAPI extends BaseAPI {
 		strb.deleteCharAt(strb.length() - 1);
 		params.put("ids", strb.toString());
 		params.put("trim_user", String.valueOf(trim_user ? 1 : 0));
-		requestAsync(sAPIList.get(READ_API_SHOW), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/show_batch.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -694,7 +612,7 @@ public class StatusesAPI extends BaseAPI {
 			params.put("id", strb.toString());
 		}
 		params.put("type", String.valueOf(type));
-		requestAsync(sAPIList.get(READ_API_QUERYMID), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/querymid.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -733,7 +651,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("type", String.valueOf(type));
 		params.put("inbox", String.valueOf(inbox ? 1 : 0));
 		params.put("isBase62", String.valueOf(isBase62 ? 1 : 0));
-		requestAsync(sAPIList.get(READ_API_QUERYID), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/queryid.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -753,7 +671,7 @@ public class StatusesAPI extends BaseAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.put("ids", strb.toString());
-		requestAsync(sAPIList.get(READ_API_COUNT), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/count.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -777,7 +695,7 @@ public class StatusesAPI extends BaseAPI {
 			boolean trim_user, AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineBase(since_id, max_id, count, page);
 		params.put("trim_user", String.valueOf(trim_user ? 1 : 0));
-		requestAsync(sAPIList.get(READ_API_TO_ME), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/to_me.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -798,7 +716,7 @@ public class StatusesAPI extends BaseAPI {
 	public void toMeIds(long since_id, long max_id, int count, int page,
 			AjaxCallBack<String> callBack) {
 		AjaxParams params = buildTimeLineBase(since_id, max_id, count, page);
-		requestAsync(sAPIList.get(READ_API_TO_ME_IDS), params, HTTPMETHOD_GET,
+		requestAsync(API_BASE_URL + "/to_me/ids.json", params, HTTPMETHOD_GET,
 				callBack);
 	}
 
@@ -814,7 +732,7 @@ public class StatusesAPI extends BaseAPI {
 	 */
 	public void go(long uid, long id, Activity activity) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse(sAPIList.get(READ_API_GO)));
+		intent.setData(Uri.parse(API_BASE_URL + "/to_me/go"));
 		activity.startActivity(intent);
 	}
 
@@ -836,76 +754,8 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = new AjaxParams();
 		params.put("type", type);
 		params.put("language", language);
-		requestAsync(sAPIList.get(READ_API_EMOTIONS), params, HTTPMETHOD_GET,
+		requestAsync(API_SERVER + "/emotions.json", params, HTTPMETHOD_GET,
 				callBack);
-	}
-
-	/**
-	 * 按天返回热门微博转发榜的微博列表。
-	 * 
-	 * @param count
-	 *            返回的记录条数，最大不超过50，默认为20
-	 * @param base_app
-	 *            是否只获取当前应用的数据。false为否（所有数据），true为是（仅当前应用），默认为false
-	 * @param callBack
-	 *            异步请求回调接口
-	 */
-	public void hotRepostDaily(int count, boolean base_app,
-			AjaxCallBack<String> callBack) {
-		AjaxParams params = buildHotParams(count, base_app);
-		requestAsync(API_BASE_URL + "/hot/repost_daily.json", params,
-				HTTPMETHOD_GET, callBack);
-	}
-
-	/**
-	 * 按周返回热门微博转发榜的微博列表。
-	 * 
-	 * @param count
-	 *            返回的记录条数，最大不超过50，默认为20
-	 * @param base_app
-	 *            是否只获取当前应用的数据。false为否（所有数据），true为是（仅当前应用），默认为false
-	 * @param callBack
-	 *            异步请求回调接口
-	 */
-	public void hotRepostWeekly(int count, boolean base_app,
-			AjaxCallBack<String> callBack) {
-		AjaxParams params = buildHotParams(count, base_app);
-		requestAsync(API_BASE_URL + "/hot/repost_weekly.json", params,
-				HTTPMETHOD_GET, callBack);
-	}
-
-	/**
-	 * 按天返回热门微博评论榜的微博列表。
-	 * 
-	 * @param count
-	 *            返回的记录条数，最大不超过50，默认为20
-	 * @param base_app
-	 *            是否只获取当前应用的数据。false为否（所有数据），true为是（仅当前应用），默认为false
-	 * @param callBack
-	 *            异步请求回调接口
-	 */
-	public void hotCommentsDaily(int count, boolean base_app,
-			AjaxCallBack<String> callBack) {
-		AjaxParams params = buildHotParams(count, base_app);
-		requestAsync(API_BASE_URL + "/hot/comments_daily.json", params,
-				HTTPMETHOD_GET, callBack);
-	}
-
-	/**
-	 * 按周返回热门微博评论榜的微博列表。
-	 * 
-	 * @param count
-	 *            返回的记录条数，最大不超过50，默认为20
-	 * @param base_app
-	 *            是否只获取当前应用的数据。false为否（所有数据），true为是（仅当前应用），默认为false
-	 * @param callBack
-	 *            异步请求回调接口
-	 */
-	public void hotCommentsWeekly(int count, boolean base_app,
-			AjaxCallBack<String> callBack) {
-		AjaxParams params = buildHotParams(count, base_app);
-		requestAsync(API_BASE_URL + "/hot/comments_weekly.json", params,
-				HTTPMETHOD_GET, callBack);
 	}
 
 	/**
@@ -931,7 +781,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("status", String.valueOf(status));
 		params.put("is_comment", String.valueOf(is_comment));
 		params.put("rip", rip);
-		requestAsync(sAPIList.get(WRITE_API_REPOST), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/repost.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -946,7 +796,7 @@ public class StatusesAPI extends BaseAPI {
 	public void destroy(long id, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("id", String.valueOf(id));
-		requestAsync(sAPIList.get(WRITE_API_DESTROY), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/destroy.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -979,7 +829,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("list_id", list_id);
 		params.put("annotations", annotations);
 		params.put("rip", rip);
-		requestAsync(sAPIList.get(WRITE_API_UPDATE), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/update.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -1020,7 +870,7 @@ public class StatusesAPI extends BaseAPI {
 		}
 		params.put("annotations", annotations);
 		params.put("rip", rip);
-		requestAsync(sAPIList.get(WRITE_API_UPLOAD), params, HTTPMETHOD_POST,
+		requestAsync(API_BASE_URL + "/upload.json", params, HTTPMETHOD_POST,
 				callBack);
 	}
 
@@ -1060,7 +910,7 @@ public class StatusesAPI extends BaseAPI {
 		params.put("pic_id", pic_id);
 		params.put("annotations", annotations);
 		params.put("rip", rip);
-		requestAsync(sAPIList.get(WRITE_API_UPLOAD_URL_TEXT), params,
+		requestAsync(API_BASE_URL + "/upload_url_text.json", params,
 				HTTPMETHOD_POST, callBack);
 	}
 
@@ -1075,7 +925,7 @@ public class StatusesAPI extends BaseAPI {
 	public void filterCreate(long id, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
 		params.put("id", String.valueOf(id));
-		requestAsync(sAPIList.get(WRITE_API_FILTER_CREATE), params,
+		requestAsync(API_BASE_URL + "/filter/create.json", params,
 				HTTPMETHOD_POST, callBack);
 	}
 
@@ -1093,7 +943,7 @@ public class StatusesAPI extends BaseAPI {
 		AjaxParams params = new AjaxParams();
 		params.put("id", String.valueOf(id));
 		params.put("follow_up", String.valueOf(follow_up ? 0 : 1));
-		requestAsync(sAPIList.get(WRITE_API_FILTER_CREATE), params,
+		requestAsync(API_BASE_URL + "mentions/shield.json", params,
 				HTTPMETHOD_POST, callBack);
 	}
 

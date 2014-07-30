@@ -15,7 +15,6 @@ import com.weibo.entities.AccessToken;
  * 
  */
 public class BaseAPI {
-
 	private static final String TAG = BaseAPI.class.getName();
 
 	/** 访问微博服务接口的地址 */
@@ -49,7 +48,7 @@ public class BaseAPI {
 	 *            请求的参数
 	 * @param httpMethod
 	 *            请求方法
-	 * @param listener
+	 * @param callBack
 	 *            请求后的回调接口
 	 */
 	protected void requestAsync(String url, AjaxParams params,
@@ -61,11 +60,11 @@ public class BaseAPI {
 		}
 
 		params.put(KEY_ACCESS_TOKEN, mAccessToken.access_token);
-		FinalHttp fHttp = new FinalHttp();
+		FinalHttp fh = new FinalHttp();
 		if (httpMethod.equals(HTTPMETHOD_GET))
-			fHttp.get(url, params, callBack);
+			fh.get(url, params, callBack);
 		else if (httpMethod.equals(HTTPMETHOD_POST)) {
-			fHttp.post(url, params, callBack);
+			fh.post(url, params, callBack);
 		}
 	}
 }

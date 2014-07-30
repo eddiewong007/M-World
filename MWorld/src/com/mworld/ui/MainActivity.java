@@ -24,7 +24,7 @@ import com.mworld.adapter.TabsAdapter;
 import com.mworld.fragment.AtFragment;
 import com.mworld.fragment.CommentFragment;
 import com.mworld.fragment.HomeFragment;
-import com.mworld.utils.PreUtils;
+import com.mworld.utils.PrefUtils;
 import com.weibo.api.StatusesAPI;
 import com.weibo.api.UsersAPI;
 import com.weibo.entities.AccessToken;
@@ -74,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		obtainCurUser();
+
 	}
 
 	@Override
@@ -181,7 +182,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void obtainCurUser() {
-		sAccessToken = PreUtils.readAccessToken(this);
+		sAccessToken = PrefUtils.readAccessToken(this);
 		new UsersAPI(sAccessToken).show(Long.parseLong(sAccessToken.uid),
 				new AjaxCallBack<String>() {
 

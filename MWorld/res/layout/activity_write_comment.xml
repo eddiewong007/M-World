@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/write_head_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="#3A93E1"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="3.0" >
+
+                <TextView
+                    android:id="@+id/write_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="13dp"
+                    android:singleLine="true"
+                    android:text="评论微博"
+                    android:textColor="#fff"
+                    android:textSize="17dp"
+                    android:textStyle="bold" >
+                </TextView>
+
+                <Button
+                    android:id="@+id/write_send_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="6dp"
+                    android:background="@drawable/write_send_btn_bg"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="3dp"
+                    android:text="发送"
+                    android:textColor="#fff"
+                    android:textSize="16sp" >
+                </Button>
+
+                <TextView
+                    android:id="@+id/write_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/write_send_btn"
+                    android:text="140 X"
+                    android:textColor="#fff"
+                    android:textSize="16sp" >
+                </TextView>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_linear"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#EDEDED"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="1dp"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#fff" >
+
+                    <CheckBox
+                        android:id="@+id/radioButton1"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/checkbox_btn"
+                        android:button="@null"
+                        android:checked="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:text="同时转发微博"
+                        android:gravity="center_vertical"
+                        android:textSize="17sp"
+                        android:layout_marginLeft="6dp"
+                        android:textColor="#000000">
+                    </TextView>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/write_emotion_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/ic_emotion" />
+
+                <Button
+                    android:id="@+id/write_at_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_toLeftOf="@id/write_emotion_btn"
+                    android:background="@drawable/ic_at" />
+
+                <Button
+                    android:id="@+id/write_hash_btn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_toLeftOf="@id/write_at_btn"
+                    android:background="@drawable/ic_hash" />
+            </RelativeLayout>
+        </LinearLayout>
+        <!-- 下面部分是中间主体部分，我特意用LinearLayout包裹起来，表示这里面可以填充其他任何组合的控件 -->
+
+        <LinearLayout
+            android:id="@+id/center_linear"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/bottom_linear"
+            android:layout_below="@id/write_head_bar"
+            android:background="#EDEDED"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp" >
+
+            <TextView
+                android:id="@+id/original_weibo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="#fff"
+                android:gravity="top"
+                android:hint="原微博：简直了...//@毛绒绒的日子：耶(●&apos;◡&apos;●)叭叭叭叭叭"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textSize="16sp" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/edit"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="#fff"
+                android:gravity="top"
+                android:hint="眼见何事，情系何方，身在何处，心思何人？"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="16dp"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

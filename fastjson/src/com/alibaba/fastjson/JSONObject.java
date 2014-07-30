@@ -135,16 +135,6 @@ public class JSONObject extends JSON implements Map<String, Object>, JSONAware,
 		return castToBoolean(value);
 	}
 
-	public byte[] getBytes(String key) {
-		Object value = get(key);
-
-		if (value == null) {
-			return null;
-		}
-
-		return castToBytes(value);
-	}
-
 	public boolean getBooleanValue(String key) {
 		Object value = get(key);
 
@@ -163,6 +153,16 @@ public class JSONObject extends JSON implements Map<String, Object>, JSONAware,
 		}
 
 		return castToBoolean(value).booleanValue();
+	}
+
+	public byte[] getBytes(String key) {
+		Object value = get(key);
+
+		if (value == null) {
+			return null;
+		}
+
+		return castToBytes(value);
 	}
 
 	public Byte getByte(String key) {
@@ -234,6 +234,16 @@ public class JSONObject extends JSON implements Map<String, Object>, JSONAware,
 
 		if (value == null) {
 			return 0L;
+		}
+
+		return castToLong(value).longValue();
+	}
+
+	public long getLongValue(String key, long defaultValue) {
+		Object value = get(key);
+
+		if (value == null) {
+			return defaultValue;
 		}
 
 		return castToLong(value).longValue();

@@ -1,6 +1,9 @@
 package com.weibo.entities;
 
+import java.io.Serializable;
+
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -12,7 +15,14 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class User {
+public class User implements Serializable {
+	private static final String TAG = "User";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 959136040098298410L;
+
 	/** 用户UID */
 	public long id;
 	/** 字符串型的用户UID */
@@ -85,6 +95,13 @@ public class User {
 	/** 用户当前的语言版本，zh-cn：简体中文，zh-tw：繁体中文，en：英语 */
 	public String lang;
 
+	/**
+	 * 将json字符串解析成User对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的User对象
+	 */
 	public static User parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
@@ -93,12 +110,19 @@ public class User {
 		try {
 			return User.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成User对象
+	 * 
+	 * @param jsonObject
+	 *            待解析的JSONObject
+	 * @return 解析出来的User对象
+	 */
 	public static User parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;
@@ -131,10 +155,7 @@ public class User {
 		user.verified = jsonObject.getBooleanValue("verified", false);
 		user.verified_type = jsonObject.getIntValue("verified_type", -1);
 		user.remark = jsonObject.getString("remark", "");
-		user.status = Status.parse(jsonObject.getJSONObject("status")); // XXX:
-																		// NO
-																		// Need
-																		// ?
+		user.status = Status.parse(jsonObject.getJSONObject("status"));
 		user.allow_all_comment = jsonObject.getBooleanValue(
 				"allow_all_comment", true);
 		user.avatar_large = jsonObject.getString("avatar_large", "");

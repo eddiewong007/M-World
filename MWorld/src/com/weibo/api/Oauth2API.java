@@ -1,16 +1,12 @@
 package com.weibo.api;
 
-import java.util.Date;
-
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -18,11 +14,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.sina.weibo.sdk.utils.Utility;
 import com.weibo.constants.OauthConstants;
 import com.weibo.entities.AccessToken;
 
 /**
+ * 此类封装了授权借口。
  * 
  * @author MengMeng
  * 
@@ -39,23 +35,23 @@ public class Oauth2API implements OauthConstants {
 	protected static final String KEY_ACCESS_TOKEN = "access_token";
 
 	/**
-	 * 获取用户验证时需要引导用户跳转的url,通过用户验证后授权Token
+	 * 获取用户验证时需要引导用户跳转的url,通过用户验证后加载回调页
 	 * 
-	 * @return
+	 * @return url
 	 */
 	public static String fetchAuthorizeUrl() {
 		return API_SERVER + "/authorize" + "?client_id=" + APP_KEY
 				+ "&redirect_uri=" + REDIRECT_URL
 				+ "&response_type=code&display=mobile";
-
 	}
 
 	/**
 	 * 获取授权过的Access Token
 	 * 
 	 * @param code
-	 * @param listener
-	 *            异步请求回调接口，onComplete方法获取token
+	 *            授权完成之后回调页返回的参数，用来获取access token
+	 * @param callBack
+	 *            异步请求回调接口
 	 */
 	public static void accessToken(String code, AjaxCallBack<String> callBack) {
 		AjaxParams params = new AjaxParams();
@@ -70,9 +66,10 @@ public class Oauth2API implements OauthConstants {
 	/**
 	 * 查询用户access_token的授权相关信息
 	 * 
-	 * @param token 
+	 * @param token
+	 *            访问令牌
 	 * @param callBack
-	 *            异步请求回调接口，onComplete方法获取token信息
+	 *            异步请求回调接口
 	 */
 	public static void getTokenInfo(AccessToken token,
 			AjaxCallBack<String> callBack) {
@@ -100,8 +97,9 @@ public class Oauth2API implements OauthConstants {
 	 * </p>
 	 * 
 	 * @param token
+	 *            访问令牌
 	 * @param callBack
-	 *            异步请求回调接口 ，onComplete方法获取取消授权的结果,格式为：{"result":"true" }
+	 *            异步请求回调接口，格式为：{"result":"true" }
 	 */
 	public static void revokeOauth2(AccessToken token,
 			AjaxCallBack<String> callBack) {
@@ -114,59 +112,51 @@ public class Oauth2API implements OauthConstants {
 	 * 通过用户名密码验证
 	 * 
 	 * @param context
+	 *            上下文对象
 	 * @param username
+	 *            用户名
 	 * @param password
+	 *            密码
 	 * @param callBack
+	 *            异步回调接口
 	 */
 	@SuppressLint("SetJavaScriptEnabled")
 	public static void authorize(final Context context, final String username,
 			final String password, final AjaxCallBack<String> callBack) {
-		WebView mWebView = new WebView(context);
-
-		WebSettings webSettings = mWebView.getSettings();
+		WebView webView = new WebView(context);
+		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSupportZoom(true);
 		webSettings.setBuiltInZoomControls(true);
-
-		mWebView.setWebViewClient(new WeiboWebViewClient(username, password,
+		webView.setWebViewClient(new WeiboWebViewClient(username, password,
 				callBack));
-		WebChromeClient webChromeClient = new WebChromeClient() {
-
-			@Override
-			public boolean onJsAlert(WebView view, String url, String message,
-					JsResult result) {
-				if ("oauth_failed".equals(message)) {
-					Toast.makeText(context, "用户名/密码错误", Toast.LENGTH_SHORT)
-							.show();
-				}
-				result.confirm();
-				return true;
-			}
-
-			@Override
-			public boolean onJsConfirm(WebView view, String url,
-					String message, JsResult result) {
-				Log.i("WebChromeClient", "onJsConfirm:" + message + " url:"
-						+ url);
-				return super.onJsConfirm(view, url, message, result);
-			}
-		};
-		mWebView.setWebChromeClient(webChromeClient);
-
-		mWebView.loadUrl(Oauth2API.fetchAuthorizeUrl() + "&timestamp="
-				+ new Date().getTime());
-		Log.i("method:authorize", "Load Url:" + Oauth2API.fetchAuthorizeUrl());
+		webView.setWebChromeClient(new WeiboWebChromeClient(context));
+		webView.loadUrl(Oauth2API.fetchAuthorizeUrl());
 	}
 
-	/**
-	 * 验证页面所需要的WebViewClient 请用AjaxCallBack回调接口来构造对象，以获得AccessToken
-	 * 
-	 * @author MengMeng
-	 * 
-	 */
-	public static class WeiboWebViewClient extends WebViewClient {
-		boolean oauthFlag = false;
-		boolean reload = false;
+	private static class WeiboWebChromeClient extends WebChromeClient {
+
+		private Context mContext;
+
+		public WeiboWebChromeClient(Context context) {
+			mContext = context;
+		}
+
+		@Override
+		public boolean onJsAlert(WebView view, String url, String message,
+				JsResult result) {
+			if (message.equals("oauth_failed")) {
+				Toast.makeText(mContext, "用户名/密码错误", Toast.LENGTH_SHORT).show();
+			}
+			result.confirm();
+			return true;
+		}
+	}
+
+	private static class WeiboWebViewClient extends WebViewClient {
+
+		private boolean oauthFlag = false;
+		private boolean reload = false;
 		private String username, password;
 		private AjaxCallBack<String> mCallBack;
 
@@ -186,28 +176,14 @@ public class Oauth2API implements OauthConstants {
 			if (!oauthFlag) {
 				if (!TextUtils.isEmpty(username)
 						&& !TextUtils.isEmpty(password)) {
-					view.loadUrl("javascript:(function() {"
-							+ "   try{document.getElementById('userId').value='"
-							+ username
-							+ "';"
-							+ "   document.getElementById('passwd').value='"
-							+ password
-							+ "';"
-							+ "   document.getElementsByName('authZForm')[0].submit();"
-							+ "   }catch(err){}" + "        })();");
+					String firstSubmit = String.format(FIRST_SUBMIT, username,
+							password);
+					view.loadUrl(String.format(JS_FUNCTION, firstSubmit));
 				}
 				oauthFlag = true;
 			}
 			if (reUrl.equals(API_SERVER + "/authorize") && !reload) {
-				view.loadUrl("javascript:(function() {"
-						+ "   var node=document.getElementsByName('uid')[0];"
-						+ "   if(undefined==node){alert('oauth_failed'); return;}"
-						+ "   var uid=document.getElementsByName('uid')[0].value;"
-						+ "   if(uid==''){"
-						+ "       alert('oauth_failed');"
-						+ "   }else {"
-						+ "        document.getElementsByName('authZForm')[0].submit();"
-						+ "   }" + "        })();");
+				view.loadUrl(String.format(JS_FUNCTION, SECOND_SUBMIT));
 				reload = true;
 				return;
 			}
@@ -221,14 +197,13 @@ public class Oauth2API implements OauthConstants {
 
 		private void processUrl(WebView view, String url) {
 			if (url.startsWith(REDIRECT_URL)) {
-				Bundle values = Utility.parseUrl(url);
-				String code = values.getString("code");
+				String code = "code=";
+				int codeStart = url.indexOf(code) + code.length();
+				code = url.substring(codeStart);
 				if (null == code || TextUtils.isEmpty(code)) {
 					Context context = view.getContext();
 					Toast.makeText(context, "未能获取code", Toast.LENGTH_SHORT)
 							.show();
-					view.destroy();
-
 				} else {
 					accessToken(code, mCallBack);
 				}

@@ -5,12 +5,11 @@
     android:background="#efefef"
     android:orientation="vertical" >
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <include layout="@layout/list_item_status" />
-    </ScrollView>
+    <include
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/list_item_status" />
 
     <FrameLayout
         android:layout_width="wrap_content"

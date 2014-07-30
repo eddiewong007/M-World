@@ -1,6 +1,9 @@
 package com.weibo.entities;
 
+import java.io.Serializable;
+
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -12,7 +15,14 @@ import com.alibaba.fastjson.JSONObject;
  * @author MengMeng
  * 
  */
-public class Geo {
+public class Geo implements Serializable {
+	private static final String TAG = "Geo";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5885669474617454511L;
+
 	/** 经度坐标 */
 	public String longitude;
 	/** 维度坐标 */
@@ -32,6 +42,13 @@ public class Geo {
 	/** 更多信息，不是所有情况都会返回该字段 */
 	public String more;
 
+	/**
+	 * 将json字符串解析成Geo对象
+	 * 
+	 * @param jsonString
+	 *            待解析的json字符串
+	 * @return 解析出来的Geo对象
+	 */
 	public static Geo parse(String jsonString) {
 		if (TextUtils.isEmpty(jsonString)) {
 			return null;
@@ -39,12 +56,19 @@ public class Geo {
 		try {
 			return Geo.parse(JSON.parseObject(jsonString));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 		return null;
 	}
 
+	/**
+	 * 将JSONObject解析成Geo对象
+	 * 
+	 * @param jsonObject
+	 *            待解析的JSONObject
+	 * @return 解析出来的Geo对象
+	 */
 	public static Geo parse(JSONObject jsonObject) {
 		if (null == jsonObject) {
 			return null;
@@ -62,4 +86,5 @@ public class Geo {
 		geo.more = jsonObject.getString("more");
 		return geo;
 	}
+
 }

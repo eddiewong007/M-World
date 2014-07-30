@@ -34,4 +34,24 @@ public interface OauthConstants {
 
 	/** 请求的类型，填写authorization_code */
 	public static final String GRANT_TYPE = "authorization_code";
+
+	/** 构造javascript的function的格式字符串 */
+
+	public static final String JS_FUNCTION = "javascript:(function(){%s})();";
+
+	/** 用户名密码构造javascript语句的格式字符串 */
+	public static final String FIRST_SUBMIT = "try{"
+			+ "document.getElementById('userId').value='%s';"
+			+ "document.getElementById('passwd').value='%s';"
+			+ "document.getElementsByName('authZForm')[0].submit();"
+			+ "}catch(err){}";
+
+	/** 第二次提交用户名密码的javascript语句 */
+	public static final String SECOND_SUBMIT = "var node=document.getElementsByName('uid')[0];"
+			+ "if(undefined==node){"
+			+ "alert('oauth_failed'); return;"
+			+ "}var uid=document.getElementsByName('uid')[0].value;"
+			+ "if(uid==''){alert('oauth_failed');}"
+			+ "else {document.getElementsByName('authZForm')[0].submit();}";
+
 }
