@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,29 +28,6 @@ public class RepostFragment extends BaseFragment {
 	@SuppressWarnings("unused")
 	private Account mAccount;
 
-=======
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
-import com.mworld.R;
-import com.mworld.ui.adapter.StatusListAdapter;
-import com.mworld.weibo.api.FavoritesAPI;
-import com.mworld.weibo.api.StatusAPI;
-import com.mworld.weibo.entities.Account;
-import com.mworld.weibo.entities.FavoriteList;
-import com.mworld.weibo.entities.Status;
-import com.mworld.weibo.entities.User;
-
-public class RepostFragment extends BaseFragment {
-	@SuppressWarnings("unused")
-	private Account mAccount;
-
-	@SuppressWarnings("unused")
->>>>>>> origin/dev-2.0
 	private User mUser;
 
 	private String mToken;
@@ -82,7 +58,6 @@ public class RepostFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-<<<<<<< HEAD
 		mList = new PullToRefreshListView(getActivity());
 		mList.setAdapter(mAdapter);
 		((StatusAPI) mAPI).userTimeline(Long.parseLong(mUser.getId()),
@@ -191,48 +166,4 @@ public class RepostFragment extends BaseFragment {
 
 	}
 
-=======
-
-		PullToRefreshListView listView = (PullToRefreshListView) inflater
-				.inflate(R.layout.listview_pulltorefresh, null);
-		listView.setAdapter(mAdapter);
-		loadRepost();
-		listView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
-
-			@Override
-			public void onLastItemVisible() {
-				loadRepost();
-			}
-		});
-		return listView;
-	}
-
-	private int page = 1;
-
-	private void loadRepost() {
-		if (isLoading) {
-			Toast.makeText(getActivity(), "正在加载，(◐﹏◐)不要着急", Toast.LENGTH_SHORT)
-					.show();
-			return;
-		}
-		((StatusAPI) mAPI).userTimeline(20, page++, new AjaxCallBack<String>() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onSuccess(String jsonString) {
-				super.onSuccess(jsonString);
-				isLoading = false;
-				FavoriteList favList = FavoriteList.parse(jsonString);
-				if (favList.statuses == null || favList.statuses.size() == 0) {
-					Toast.makeText(getActivity(), "没有更多收藏了", Toast.LENGTH_SHORT)
-							.show();
-					return;
-				}
-				mArrayList.addAll(favList.statuses);
-				mAdapter.notifyDataSetChanged();
-			}
-
-		});
-	}
->>>>>>> origin/dev-2.0
 }

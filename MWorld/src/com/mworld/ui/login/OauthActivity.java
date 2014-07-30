@@ -40,6 +40,7 @@ import com.mworld.weibo.api.UserAPI;
 import com.mworld.weibo.entities.Account;
 import com.mworld.weibo.oauth.Oauth2API;
 
+@SuppressLint("ValidFragment")
 public class OauthActivity extends SwipeBackActivity {
 	private static final String TAG = OauthActivity.class.getName();
 
@@ -60,7 +61,7 @@ public class OauthActivity extends SwipeBackActivity {
 
 		ActionBar actionBar = getActionBar();
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setDisplayShowHomeEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(false);
 		actionBar.setTitle(getString(R.string.oauth));
 
 		webView.setWebViewClient(new WeiboWebViewClient());
@@ -267,6 +268,7 @@ public class OauthActivity extends SwipeBackActivity {
 		}
 	}
 
+	@SuppressLint("ValidFragment")
 	private class ProgressFragment extends DialogFragment {
 
 		@Override

@@ -36,7 +36,7 @@
             style="@style/drawerMenuButton"
             android:background="@null"
             android:clickable="false"
-            android:drawableLeft="@drawable/repost_light"
+            android:drawableLeft="@drawable/at_light"
             android:text="提及" />
 
         <TextView

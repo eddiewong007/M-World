@@ -20,7 +20,7 @@
     </style>
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/theme_blue</item>
+        <item name="android:background">@color/theme_blue1</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item>
         <item name="android:titleTextStyle">@style/ActionBar.Title.Text</item>
         <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item>

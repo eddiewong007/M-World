@@ -103,7 +103,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="6dp"
-                    android:background="@drawable/ic_emotion" />
+                    android:background="@drawable/selector_emotion_btn" />
 
                 <Button
                     android:id="@+id/write_at_btn"
@@ -113,9 +113,9 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="6dp"
                     android:layout_toLeftOf="@id/write_emotion_btn"
-                    android:background="@drawable/ic_at" />
+                    android:background="@drawable/selector_at_btn" />
 
-                <ImageButton
+                <Button
                     android:id="@+id/write_picture_btn"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -123,10 +123,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="6dp"
                     android:layout_toLeftOf="@id/write_at_btn"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/content_description"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_picture" />
+                    android:background="@drawable/selector_picture_btn"  />
 
                 <Button
                     android:id="@+id/write_hash_btn"
@@ -136,7 +133,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="6dp"
                     android:layout_toLeftOf="@id/write_picture_btn"
-                    android:background="@drawable/ic_hash" />
+                    android:background="@drawable/selector_hash_btn" />
             </RelativeLayout>
         </LinearLayout>
         <!-- 下面部分是中间主体部分，我特意用LinearLayout包裹起来，表示这里面可以填充其他任何组合的控件 -->

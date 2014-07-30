@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -33,6 +34,9 @@ public class EmotionActivity extends SwipeBackActivity {
 		FinalActivity.initInjectedView(this);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayUseLogoEnabled(false);
+		getActionBar().setTitle("表情");
+		getActionBar().setDisplayShowHomeEnabled(false);
 		
 		mGridView.setAdapter(adapter);
 
@@ -55,6 +59,7 @@ public class EmotionActivity extends SwipeBackActivity {
 					Intent intent = new Intent();
 					intent.putExtra("index", position);
 					setResult(WriteActivity.EMOTION, intent);
+					finish();
 				}
 			});
 			return convertView;

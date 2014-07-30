@@ -12,10 +12,6 @@ import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.AlertDialog;
-<<<<<<< HEAD
-=======
-import android.content.Context;
->>>>>>> origin/dev-2.0
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -84,7 +80,7 @@ public class WriteActivity extends SwipeBackActivity {
 	@ViewInject(id = R.id.write_hash_btn, click = "addHash")
 	private Button mHashButton;
 	@ViewInject(id = R.id.write_picture_btn, click = "selectPic")
-	private ImageButton mPicButton;
+	private Button mPicButton;
 	@ViewInject(id = R.id.write_at_btn, click = "atFriends")
 	private Button mAtButton;
 	@ViewInject(id = R.id.write_emotion_btn, click = "pickEmotion")
@@ -340,7 +336,6 @@ public class WriteActivity extends SwipeBackActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-<<<<<<< HEAD
 
 		Bundle bundle = data.getExtras();
 		Bitmap bitmap = null;
@@ -380,32 +375,6 @@ public class WriteActivity extends SwipeBackActivity {
 			mEdit.setSelection(begin + emotion.length());
 
 			break;
-=======
-		if (resultCode != RESULT_OK || null == data) {
-			Toast.makeText(WriteActivity.this, "添加图片失败", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}
-		Bitmap bitmap = null;
-		Uri thisUri = data.getData();
-		if (requestCode == 1) {
-			Bundle bundle = data.getExtras();
-			bitmap = (Bitmap) bundle.get("data");
-		}
-		if (thisUri == null) {
-			thisUri = Uri.parse(MediaStore.Images.Media.insertImage(
-					getContentResolver(), bitmap, null, null));
-		}
-		mPicPath = getRealPathFromURI(this, thisUri);
-		if (bitmap == null) {
-			bitmap = BitmapFactory.decodeFile(mPicPath);
-		}
-
-		mStatusPic.setImageBitmap(bitmap);
-		mStatusPic.setVisibility(View.VISIBLE);
-		if (TextUtils.isEmpty(mEdit.getText().toString())) {
-			mEdit.setText("分享图片");
->>>>>>> origin/dev-2.0
 		}
 	}
 
@@ -478,27 +447,14 @@ public class WriteActivity extends SwipeBackActivity {
 	}
 
 	@SuppressWarnings("deprecation")
-<<<<<<< HEAD
 	private String getRealPathFromURI(Uri uri) {
 		String columns[] = new String[] { Media.DATA, Media._ID, Media.TITLE,
 				Media.DISPLAY_NAME };
-=======
-	public String getRealPathFromURI(Context context, Uri uri) {
-
-		// 指定获取的列
-		String columns[] = new String[] { Media.DATA, Media._ID, Media.TITLE,
-				Media.DISPLAY_NAME };
-
->>>>>>> origin/dev-2.0
 		Cursor cursor = this.managedQuery(uri, columns, null, null, null);
 		int column_index = cursor
 				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/dev-2.0
 	}
 
 }

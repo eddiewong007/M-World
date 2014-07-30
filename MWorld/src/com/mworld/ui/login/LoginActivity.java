@@ -1,13 +1,13 @@
 package com.mworld.ui.login;
 
 import java.util.List;
-
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalDb;
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.mworld.R;
 import com.mworld.support.utils.GlobalContext;
 import com.mworld.weibo.api.UserAPI;
@@ -38,7 +37,7 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 
 	@ViewInject(id = R.id.username)
 	private EditText username;
-	@ViewInject(id = R.id.passworld)
+	@ViewInject(id = R.id.password)
 	private EditText password;
 	@ViewInject(id = R.id.login, click = "login")
 	private Button loginBtn;
@@ -143,6 +142,7 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 		finish();
 	}
 
+	@SuppressLint("ValidFragment")
 	private class ProgressFragment extends DialogFragment {
 
 		@Override
@@ -156,6 +156,7 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 			return dialog;
 		}
 
+		@SuppressLint("ValidFragment")
 		@Override
 		public void onCancel(DialogInterface dialog) {
 			oauthing = false;
@@ -165,6 +166,7 @@ public class LoginActivity extends FragmentActivity implements OauthConstants {
 
 	};
 
+	@SuppressLint("ValidFragment")
 	public class SinaWeiboErrorDialog extends DialogFragment {
 
 		@Override

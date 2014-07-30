@@ -76,6 +76,8 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.content_frame);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle(mUser.getScreenName());
+		getActionBar().setDisplayUseLogoEnabled(true);
+		getActionBar().setLogo(R.drawable.logo);
 
 		Window window = getWindow();
 		WindowManager.LayoutParams wl = window.getAttributes();
@@ -167,7 +169,7 @@ public class MainActivity extends FragmentActivity implements
 			fragmentTransaction.commit();
 			break;
 		case 1:
-			getActionBar().setLogo(R.drawable.repost_light);
+			getActionBar().setLogo(R.drawable.at_light);
 			getActionBar().setDisplayShowTitleEnabled(true);
 			getActionBar().setTitle("提及");
 			getActionBar()
@@ -283,11 +285,9 @@ public class MainActivity extends FragmentActivity implements
 
 		// 设置Menu可见
 		MenuItem addItem = menu.findItem(R.id.action_add);
-<<<<<<< HEAD
+		MenuItem searchItem = menu.findItem(R.id.action_search);
 		MenuItemCompat.setShowAsAction(searchItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-=======
->>>>>>> origin/dev-2.0
 		MenuItemCompat.setShowAsAction(addItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 

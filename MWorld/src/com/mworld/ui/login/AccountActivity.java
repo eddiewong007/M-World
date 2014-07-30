@@ -79,7 +79,9 @@ public class AccountActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.accountactivity_layout);
 		FinalActivity.initInjectedView(this);
-		getActionBar().setTitle(getString(R.string.app_name));
+		getActionBar().setTitle("M-World 账号管理");
+		getActionBar().setDisplayUseLogoEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(false);
 
 		Window window = getWindow();
 		WindowManager.LayoutParams wl = window.getAttributes();

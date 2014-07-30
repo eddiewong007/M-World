@@ -56,6 +56,8 @@ public class AtFriendsActivity extends SwipeBackActivity {
 		FinalActivity.initInjectedView(this);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayUseLogoEnabled(false);
+		getActionBar().setTitle("@好友");
 
 		mArrayList = new ArrayList<User>();
 		mAdapter = new AtFriendsAdapter(mArrayList);

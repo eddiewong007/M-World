@@ -324,7 +324,6 @@ public class StatusHolder {
 							btnFav.setImageResource(R.drawable.favorate);
 							Toast.makeText(mContext, "收藏成功",
 									Toast.LENGTH_SHORT).show();
-							status.favorited = false;
 							isFaving = false;
 						}
 
